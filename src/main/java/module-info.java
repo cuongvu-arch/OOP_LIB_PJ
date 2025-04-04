@@ -10,7 +10,15 @@ module java.oop_library_project {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.sql;
+    requires jbcrypt;
 
-    opens java.oop_library_project to javafx.fxml;
-    exports java.oop_library_project;
+    opens app to javafx.fxml;
+    exports app;
+
+    opens Controller to javafx.fxml;
+    exports Controller;
+
+    opens models to javafx.fxml;
+    exports models;
 }
