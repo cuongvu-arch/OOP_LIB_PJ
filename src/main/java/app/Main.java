@@ -1,5 +1,6 @@
 package app;
 
+import com.mysql.cj.exceptions.StreamingNotifiable;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,6 +21,9 @@ public class Main extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+    public static void main (String[] args) {
+        launch(args);
+    }
+
 }

@@ -12,6 +12,7 @@ module java.oop_library_project {
     requires com.almasb.fxgl.all;
     requires java.sql;
     requires jbcrypt;
+    requires mysql.connector.j;
 
     opens app to javafx.fxml;
     exports app;
