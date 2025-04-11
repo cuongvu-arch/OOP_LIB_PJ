@@ -123,7 +123,7 @@ public class UserManagement {
         email = email != null ? email.trim() : "";
 
         return username.length() >= 4 &&
-                password != null && password.length() >= 8 &&
+                password != null && password.length() >= 6 &&
                 email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$") &&
                 phoneNumber != null && phoneNumber.matches("^[0-9]{10,15}$");
     }
