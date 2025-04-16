@@ -5,13 +5,12 @@ public class User {
     /**
      * Khai báo thuộc tính cơ bản của user.
      */
-    private int id;
-    private String username;
-    private String password;
-    private String name;
-    private String email;
-    private String phone_number;
-    private String role;
+    private final int id;
+    private final String username;
+    private final String password;
+    private final String email;
+    private final String phone_number;
+    private final String role;
 
 
     /**
@@ -31,26 +30,6 @@ public class User {
     /**
      * tạo các phương thức get/set.
      */
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setEmail(String email) {
-      this.email = email;
-    }
-
-    public void setPhone_number(String phone_number) {
-        this.phone_number = phone_number;
-    }
-
-    public void setRole (String role) {
-        this.role = role;
-    }
 
     public String getUsername() {
         return this.username;

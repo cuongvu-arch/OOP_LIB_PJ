@@ -16,7 +16,6 @@ public class DatabaseConnection {
                 // Đăng ký driver MySQL
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
-                System.out.println("Kết nối database thành công!");
             }
         } catch (ClassNotFoundException | SQLException e) {
             System.err.println("Lỗi kết nối database: " + e.getMessage());
@@ -30,7 +29,6 @@ public class DatabaseConnection {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                System.out.println("Đã đóng kết nối database");
             }
         } catch (SQLException e) {
             System.err.println("Lỗi khi đóng kết nối: " + e.getMessage());

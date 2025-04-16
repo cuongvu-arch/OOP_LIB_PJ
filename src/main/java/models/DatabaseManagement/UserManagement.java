@@ -7,7 +7,6 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
 
 public class UserManagement {
-
     /**
      * Thuộc tính của userManagement.
      */
@@ -100,7 +99,7 @@ public class UserManagement {
             stmt.setString(2, hashedPassword);
             stmt.setString(3, email);
             stmt.setString(4, phoneNumber);
-            stmt.setString(5, "USER"); // Default role
+            stmt.setString(5, "USER");
 
             return stmt.executeUpdate() > 0;
         }

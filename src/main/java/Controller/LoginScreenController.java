@@ -1,5 +1,6 @@
 package Controller;
 
+import app.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -7,7 +8,7 @@ import javafx.scene.control.TextField;
 import models.DatabaseConnection;
 import models.DatabaseManagement.UserManagement;
 import utils.SceneController;
-
+import utils.SessionManager;
 
 
 public class LoginScreenController extends SceneController {
@@ -34,7 +35,9 @@ public class LoginScreenController extends SceneController {
             return;
         }
         try {
-            if (userManagement.login(usn, pass) != null) {
+            User user = userManagement.login(usn, pass);
+            if (user != null) {
+                SessionManager.setCurrentUser(user);
                 switchToHomeScene(event);
             } else {
                 showAlert("Lỗi", "Tên tài khoản hoặc mật khẩu của quý khách không chính xác!");

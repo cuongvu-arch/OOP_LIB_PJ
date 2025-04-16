@@ -1,5 +1,7 @@
 package utils;
 
+import Controller.HomePageScreenController;
+import app.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -22,11 +24,15 @@ public class SceneController {
 
     public void switchToHomeScene(ActionEvent event) {
         try {
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/homePageScreen.fxml")));
+            FXMLLoader loader =  new FXMLLoader(getClass().getResource("/homePageScreen.fxml"));
+            Parent root = loader.load();
             stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
+            HomePageScreenController controller = loader.getController();
+            controller.setUser(SessionManager.getCurrentUser());
+
         } catch (IOException exception) {
             exception.printStackTrace();
         }
