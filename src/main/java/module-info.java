@@ -13,6 +13,8 @@ module java.oop_library_project {
     requires java.sql;
     requires jbcrypt;
     requires mysql.connector.j;
+    requires java.net.http;
+    requires org.json;
     requires java.desktop;
 
     opens app to javafx.fxml;
@@ -23,6 +25,8 @@ module java.oop_library_project {
 
     opens models to javafx.fxml;
     exports models;
+    exports Controller.Book;
+    opens Controller.Book to javafx.fxml;
     exports models.dao;
     opens models.dao to javafx.fxml;
     exports models.entities;

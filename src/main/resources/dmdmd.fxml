@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="Controller.Book.Search" alignment="CENTER" style="-fx-padding: 20;">
+
+    <HBox spacing="10" alignment="CENTER">
+        <Label text="ISBN:" />
+        <TextField fx:id="isbnTextField" promptText="Nhập ISBN sách"/>
+        <Button fx:id="searchButton" text="Tìm kiếm" onAction="#handleSearchButtonClick"/>
+    </HBox>
+
+    <TextArea fx:id="resultTextArea" editable="false" wrapText="true" prefHeight="200"/>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Button fx:id="addBookButton" text="Thêm vào kho" onAction="#handleAddBookButtonClick" disable="true"/>
+        <Button fx:id="updateBookButton" text="Cập nhật sách" onAction="#handleUpdateBookButtonClick" disable="true"/>
+        <Button fx:id="deleteBookButton" text="Xóa sách" onAction="#handleDeleteBookButtonClick" disable="true"/>
+    </HBox>
+
+</VBox>
