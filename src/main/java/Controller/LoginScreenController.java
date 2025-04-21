@@ -1,18 +1,19 @@
 package Controller;
 
-import app.User;
-import javafx.event.ActionEvent;
+import models.entities.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import models.DatabaseConnection;
-import models.DatabaseManagement.UserManagement;
+import models.data.DatabaseConnection;
+import models.dao.UserDAO;
+import models.services.UserService;
 import utils.SceneController;
 import utils.SessionManager;
 
 
 public class LoginScreenController {
-    private final UserManagement userManagement;
+
+    private final UserService userService;
 
     @FXML
     private TextField username;
@@ -22,8 +23,7 @@ public class LoginScreenController {
 
 
     public LoginScreenController() {
-        DatabaseConnection dbConnection = new DatabaseConnection();
-        this.userManagement = new UserManagement(dbConnection);
+        this.userService = new UserService(new UserDAO());
     }
 
     public void login () {
@@ -35,7 +35,7 @@ public class LoginScreenController {
             return;
         }
         try {
-            User user = userManagement.login(usn, pass);
+            User user = userService.login(usn, pass);
             if (user != null) {
                 SessionManager.setCurrentUser(user);
                 SceneController.getInstance().switchToScene("/homePageScreen.fxml");
