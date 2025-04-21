@@ -10,7 +10,7 @@ import javafx.scene.input.MouseEvent;
 import utils.SceneController;
 
 
-public class HomePageScreenController extends SceneController {
+public class HomePageScreenController {
     @FXML
     private ChoiceBox<String> adminFunction;
     private User currentUser;
@@ -33,8 +33,8 @@ public class HomePageScreenController extends SceneController {
         }
     }
 
-    public void follow (MouseEvent event) {
-        switchToFollowScreen(event);
+    public void follow () {
+        SceneController.getInstance().switchToScene("/followScreen.fxml");
     }
 
     public void switchToThuThu(ActionEvent event) {
