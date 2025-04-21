@@ -11,7 +11,7 @@ import utils.SceneController;
 import utils.SessionManager;
 
 
-public class LoginScreenController extends SceneController {
+public class LoginScreenController {
     private final UserManagement userManagement;
 
     @FXML
@@ -26,7 +26,7 @@ public class LoginScreenController extends SceneController {
         this.userManagement = new UserManagement(dbConnection);
     }
 
-    public void login (ActionEvent event) {
+    public void login () {
         String usn = username.getText();
         String pass = password.getText();
 
@@ -38,7 +38,7 @@ public class LoginScreenController extends SceneController {
             User user = userManagement.login(usn, pass);
             if (user != null) {
                 SessionManager.setCurrentUser(user);
-                switchToHomeScene(event);
+                SceneController.getInstance().switchToScene("/homePageScreen.fxml");
             } else {
                 showAlert("Lỗi", "Tên tài khoản hoặc mật khẩu của quý khách không chính xác!");
             }
@@ -48,8 +48,8 @@ public class LoginScreenController extends SceneController {
         }
     }
 
-    public void signUp (ActionEvent event) {
-        switchToSignupScene(event);
+    public void signUp () {
+        SceneController.getInstance().switchToScene("/loginScreen");
     }
 
         public void showAlert(String title, String message) {

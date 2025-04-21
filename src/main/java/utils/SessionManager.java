@@ -9,6 +9,7 @@ public class SessionManager {
     }
 
 
+
     public static void setCurrentUser(User user) {
         currentUser = user;
     }
@@ -17,7 +18,7 @@ public class SessionManager {
         return currentUser;
     }
 
-    public void clearSession() {
+    public static void clearSession() {
         currentUser = null;
     }
 }
