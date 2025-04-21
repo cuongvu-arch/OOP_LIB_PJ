@@ -13,6 +13,7 @@ module java.oop_library_project {
     requires java.sql;
     requires jbcrypt;
     requires mysql.connector.j;
+    requires java.desktop;
 
     opens app to javafx.fxml;
     exports app;

@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="504.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomePageScreenController">
+<AnchorPane prefHeight="504.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a3c9ed" height="77.0" stroke="BLACK" strokeType="INSIDE" width="676.0" />
       <Label layoutX="22.0" layoutY="20.0" prefHeight="39.0" prefWidth="145.0" text="BaoTangSach">

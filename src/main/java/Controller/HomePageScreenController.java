@@ -6,8 +6,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import utils.SceneController;
 
-public class HomePageScreenController {
+
+public class HomePageScreenController extends SceneController {
     @FXML
     private ChoiceBox<String> adminFunction;
     private User currentUser;
@@ -28,6 +31,10 @@ public class HomePageScreenController {
             adminFunctionText.setVisible(false);
 
         }
+    }
+
+    public void follow (MouseEvent event) {
+        switchToFollowScreen(event);
     }
 
     public void switchToThuThu(ActionEvent event) {
