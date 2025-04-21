@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class Search {
     @FXML private TextField isbnTextField;
     @FXML private TextArea resultTextArea;
-    @FXML private Button searchButton; // Assuming you have a search button
+    @FXML private Button searchButton;
     @FXML private Button addBookButton;
     @FXML private Button updateBookButton; // Add this button in your FXML
     @FXML private Button deleteBookButton; // Add this button in your FXML
@@ -253,12 +253,7 @@ public class Search {
         alert.showAndWait();
     }
 
-    /**
-     * Shows a confirmation dialog.
-     * @param title The title of the dialog.
-     * @param message The confirmation question.
-     * @return true if the user clicked OK, false otherwise.
-     */
+
     private boolean showConfirmationDialog(String title, String message) {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle(title);
