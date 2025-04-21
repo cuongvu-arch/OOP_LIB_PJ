@@ -37,7 +37,7 @@ public class HomePageScreenController {
         SceneController.getInstance().switchToScene("/followScreen.fxml");
     }
 
-    public void switchToThuThu(ActionEvent event) {
-
+    public void switchToThuThu() {
+        SceneController.getInstance().switchToScene("/librarianToEdit.fxml");
     }
 }
