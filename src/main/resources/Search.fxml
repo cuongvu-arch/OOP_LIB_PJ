@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
@@ -20,6 +21,11 @@
 
     <TextArea fx:id="resultTextArea" editable="false" wrapText="true"
               style="-fx-pref-height: 200px; -fx-pref-width: 500px; -fx-font-family: monospace;"/>
+
+    <ImageView fx:id="bookImageView"
+               fitWidth="200"
+               fitHeight="300"
+               preserveRatio="true"/>
 
     <HBox spacing="10" alignment="CENTER">
         <Button fx:id="addBookButton" text="Thêm sách" onAction="#handleAddBookButtonClick"

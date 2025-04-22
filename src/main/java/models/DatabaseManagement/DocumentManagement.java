@@ -79,6 +79,7 @@ public class DocumentManagement {
         }
 
         // Mô tả
+        String thumbnailUrl = null;
         if (bookData.has("description")) {
             Object descObj = bookData.get("description");
             if (descObj instanceof String) {
@@ -86,8 +87,18 @@ public class DocumentManagement {
             } else if (descObj instanceof JSONObject) {
                 description = ((JSONObject) descObj).optString("text", "Không có mô tả");
             }
+
+            thumbnailUrl = null;
+            if (bookData.has("imageLinks")) {
+                JSONObject imageLinks = bookData.getJSONObject("imageLinks");
+                thumbnailUrl = imageLinks.optString("thumbnail", null);
+                if (thumbnailUrl != null) {
+                    thumbnailUrl = thumbnailUrl.replace("http://", "https://");
+                }
+            }
+
         }
 
-        return new Document(isbn, title, authors, publisher, publishedDate, description);
+        return new Document(isbn, title, authors, publisher, publishedDate, description, thumbnailUrl);
     }
 }

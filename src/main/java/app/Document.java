@@ -10,15 +10,16 @@ public class Document {
     private String publisher;
     private String publishedDate;
     private String description;
+    private String thumbnailUrl;
 
-
-    public Document(String isbn, String title, String[] authors, String publisher, String publishedDate, String description) {
+    public Document(String isbn, String title, String[] authors, String publisher, String publishedDate, String description, String thumbnailUrl) {
         this.isbn = isbn;
         this.title = title;
         this.authors = authors;
         this.publisher = publisher;
         this.publishedDate = publishedDate;
         this.description = description;
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     // Getter & Setter
@@ -46,6 +47,9 @@ public class Document {
         return description;
     }
 
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
 
     @Override
     public String toString() {
