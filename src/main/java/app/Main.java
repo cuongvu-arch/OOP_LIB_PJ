@@ -5,11 +5,8 @@ import javafx.stage.Stage;
 import models.dao.UserDAO;
 import models.data.DatabaseConnection;
 import models.entities.Library;
-import models.entities.User;
 import utils.SceneController;
-
 import java.sql.Connection;
-import java.util.List;
 
 public class Main extends Application {
     @Override

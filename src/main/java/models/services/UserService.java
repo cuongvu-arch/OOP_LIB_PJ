@@ -1,6 +1,9 @@
 package models.services;
 
+import Controller.ProfileScreenController;
+import javafx.concurrent.Task;
 import models.dao.UserDAO;
+import models.data.DatabaseConnection;
 import models.entities.Library;
 import models.entities.User;
 import org.mindrot.jbcrypt.BCrypt;

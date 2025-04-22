@@ -48,7 +48,7 @@ public class LoginScreenController {
     }
 
     public void signUp () {
-        SceneController.getInstance().switchToScene("/loginScreen");
+        SceneController.getInstance().switchToScene("/signUpScreen.fxml");
     }
 
         public void showAlert(String title, String message) {
