@@ -12,13 +12,8 @@ public class BookManagement {
         this.connection = connection;
     }
 
-    /**
-     * Adds a new book to the database.
-     * @param book The Document object representing the book.
-     * @return true if the book was added successfully, false otherwise.
-     */
     public boolean addBook(Document book) {
-        // Input validation (basic)
+
         if (book == null || book.getIsbn() == null || book.getIsbn().trim().isEmpty()) {
             System.err.println("Lỗi khi thêm sách: Dữ liệu sách không hợp lệ (thiếu ISBN).");
             return false;
@@ -30,7 +25,7 @@ public class BookManagement {
         try (Connection conn = connection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            // Convert authors array to comma-separated string
+
             String authorsString = (book.getAuthors() != null) ? String.join(", ", book.getAuthors()) : "";
 
             stmt.setString(1, book.getIsbn());
@@ -44,12 +39,12 @@ public class BookManagement {
             return rowsAffected > 0;
 
         } catch (SQLException e) {
-            // Check for duplicate key violation (specific error code might vary by database)
-            if (e.getSQLState().startsWith("23")) { // Common SQLState for integrity constraint violation
+
+            if (e.getSQLState().startsWith("23")) {
                 System.err.println("Lỗi khi thêm sách: ISBN '" + book.getIsbn() + "' đã tồn tại.");
             } else {
                 System.err.println("Lỗi khi thêm sách: " + e.getMessage());
-                e.printStackTrace(); // Print stack trace for debugging
+                e.printStackTrace();
             }
             return false;
         } catch (NullPointerException npe) {
@@ -59,11 +54,7 @@ public class BookManagement {
         }
     }
 
-    /**
-     * Updates an existing book in the database based on ISBN.
-     * @param book The Document object containing the updated information.
-     * @return true if the book was updated successfully, false otherwise.
-     */
+
     public boolean updateBook(Document book) {
         // Input validation (basic)
         if (book == null || book.getIsbn() == null || book.getIsbn().trim().isEmpty()) {
@@ -87,7 +78,7 @@ public class BookManagement {
             stmt.setString(6, book.getIsbn()); // WHERE clause parameter
 
             int rowsAffected = stmt.executeUpdate();
-            // Return true if exactly one row was affected (or more, if ISBN wasn't unique, but it should be)
+
             return rowsAffected > 0;
 
         } catch (SQLException e) {
@@ -101,13 +92,9 @@ public class BookManagement {
         }
     }
 
-    /**
-     * Deletes a book from the database based on ISBN.
-     * @param isbn The ISBN of the book to delete.
-     * @return true if the book was deleted successfully, false otherwise.
-     */
+
     public boolean deleteBook(String isbn) {
-        // Input validation
+
         if (isbn == null || isbn.trim().isEmpty()) {
             System.err.println("Lỗi khi xóa sách: ISBN không hợp lệ.");
             return false;
@@ -121,7 +108,7 @@ public class BookManagement {
             stmt.setString(1, isbn);
 
             int rowsAffected = stmt.executeUpdate();
-            // Return true if exactly one row was deleted
+
             return rowsAffected > 0;
 
         } catch (SQLException e) {
@@ -132,31 +119,21 @@ public class BookManagement {
     }
 
 
-    /**
-     * Checks if a book with the given ISBN exists in the database.
-     * @param isbn The ISBN to check.
-     * @return true if the book exists, false otherwise.
-     * @throws SQLException if a database access error occurs.
-     */
+
+
     public boolean bookExists(String isbn) throws SQLException {
-        // Input validation
+
         if (isbn == null || isbn.trim().isEmpty()) {
-            return false; // Or throw an IllegalArgumentException
+            return false;
         }
         String sql = "SELECT 1 FROM books WHERE isbn = ? LIMIT 1";
         try (Connection conn = connection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, isbn);
             try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next(); // Returns true if a row was found
+                return rs.next();
             }
         }
-        // Catch SQLException here or let it propagate as declared
-        // Catching it here might be better for consistent error logging within this class
-        // catch (SQLException e) {
-        //     System.err.println("Lỗi khi kiểm tra sự tồn tại của sách (ISBN: " + isbn + "): " + e.getMessage());
-        //     // Re-throwing or returning false depends on desired behavior
-        //     throw e; // Re-throw to let the caller handle it
-        // }
+
     }
 }
