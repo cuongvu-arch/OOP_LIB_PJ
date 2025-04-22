@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO {
 
@@ -27,9 +29,9 @@ public class UserDAO {
         }
     }
 
-    public boolean isUserExists(Connection conn, String username, String email) throws SQLException {
+    public boolean isUserExists(Connection connection, String username, String email) throws SQLException {
         String sql = "SELECT 1 FROM users WHERE LOWER(TRIM(username)) = LOWER(TRIM(?)) OR LOWER(TRIM(email)) = LOWER(TRIM(?))";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, username);
             stmt.setString(2, email);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -38,9 +40,9 @@ public class UserDAO {
         }
     }
 
-    public User findUserByUsername(Connection conn, String username) {
+    public User findUserByUsername(Connection connection, String username) {
         String sql = "SELECT id, username, password, email, phone_number, role FROM users WHERE username = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -53,6 +55,27 @@ public class UserDAO {
                         rs.getString("role")
                 );
             }
+        } catch (SQLException e) {
+            System.err.println("Find user error: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public List<User> getAllUser(Connection connection) {
+        List<User> Result = new ArrayList<>();
+        String sql = "SELECT * FROM users";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()) {
+                Result.add(new User(
+                        resultSet.getInt("id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("password"),
+                        resultSet.getString("email"),
+                        resultSet.getString("phone_number"),
+                        resultSet.getString("role")));
+            }
+            return Result;
         } catch (SQLException e) {
             System.err.println("Find user error: " + e.getMessage());
         }

@@ -1,15 +1,14 @@
 package models.services;
 
 import models.dao.UserDAO;
-import models.data.DatabaseConnection;
+import models.entities.Library;
 import models.entities.User;
 import org.mindrot.jbcrypt.BCrypt;
 import utils.SessionManager;
-
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
 
 import static models.data.DatabaseConnection.*;
 
@@ -81,20 +80,11 @@ public class UserService {
     }
 
     public User login(String username, String password) {
-        Connection conn = null;
-        try {
-            conn = getConnection();
-            if (conn == null) return null;
-
-            User user = userDAO.findUserByUsername(conn, username);
-            if (user != null && BCrypt.checkpw(password, user.getPassword())) {
-                SessionManager.setCurrentUser(user);
+        List<User> userList = Library.getUserList();
+        for (User user : userList) {
+            if (Objects.equals(user.getUsername(), username) && BCrypt.checkpw(password, user.getPassword())) {
                 return user;
             }
-        } catch (Exception e) {
-            System.err.println("Login error: " + e.getMessage());
-        } finally {
-            closeQuietly(conn);
         }
         return null;
     }
