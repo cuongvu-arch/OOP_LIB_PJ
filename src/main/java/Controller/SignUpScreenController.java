@@ -4,58 +4,44 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import models.DatabaseConnection;
-import models.DatabaseManagement.UserManagement;
+import models.dao.UserDAO;
+import models.services.UserService;
 import utils.SceneController;
 
-public class SignUpScreenController extends SceneController {
+public class SignUpScreenController {
 
-    private final UserManagement userManagement;
+    private final UserService userService;
 
     public SignUpScreenController() {
-        DatabaseConnection dbconnection = new DatabaseConnection();
-        this.userManagement = new UserManagement(dbconnection);
+        this.userService = new UserService(new UserDAO());
     }
 
-
-    @FXML
-    private TextField userName;
-
-    @FXML
-    private TextField password;
-
-    @FXML
-    private TextField email;
-
-    @FXML
-    private TextField phoneNumber;
+    @FXML private TextField userName;
+    @FXML private TextField password;
+    @FXML private TextField email;
+    @FXML private TextField phoneNumber;
 
     public void signUpFinal(ActionEvent event) {
-        try {
-            String usn = userName.getText();
-            String pass = password.getText();
-            String eml = email.getText();
-            String phn = phoneNumber.getText();
+        String usn = userName.getText();
+        String pass = password.getText();
+        String eml = email.getText();
+        String phn = phoneNumber.getText();
 
-            if (usn.isEmpty() || pass.isEmpty() || eml.isEmpty() || phn.isEmpty()) {
-                showAlert("Lỗi", "Vui lòng điền đầy đủ thông tin");
-                return;
-            }
+        if (usn.isEmpty() || pass.isEmpty() || eml.isEmpty() || phn.isEmpty()) {
+            showAlert("Lỗi", "Vui lòng điền đầy đủ thông tin");
+            return;
+        }
 
-            if (userManagement.signup(usn, pass, eml, phn)) {
-                showAlert("Thành công", "Đăng ký thành công!");
-                switchToLoginScene(event);
-            } else {
-                showAlert("Lỗi", "Đăng ký thất bại (username/email đã tồn tại hoặc thông tin không hợp lệ)");
-            }
-        } catch (Exception e) {
-            showAlert("Lỗi hệ thống", "Đã xảy ra lỗi khi đăng ký!");
-            e.printStackTrace();
+        if (userService.signup(usn, pass, eml, phn)) {
+            showAlert("Thành công", "Đăng ký thành công!");
+            SceneController.getInstance().switchToScene("/loginScreen.fxml");
+        } else {
+            showAlert("Lỗi", "Đăng ký thất bại (username/email đã tồn tại hoặc thông tin không hợp lệ)");
         }
     }
 
-    public void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
