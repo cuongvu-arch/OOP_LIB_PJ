@@ -106,13 +106,13 @@ public class Search {
 
     private void loadBookImage(String imageUrl) {
         try {
-            Image image = new Image(imageUrl, true); // true = tải nền
+            Image image = new Image(imageUrl, true);
             bookImageView.setImage(image);
             bookImageView.setPreserveRatio(true);
             bookImageView.setFitWidth(200);
             bookImageView.setFitHeight(300);
 
-            // Xử lý khi tải ảnh lỗi
+
             image.errorProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     bookImageView.setImage(null);
