@@ -1,18 +1,20 @@
 package app;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
+import models.dao.UserDAO;
+import models.data.DatabaseConnection;
+import models.entities.Library;
 import utils.SceneController;
-
-import java.util.Objects;
+import java.sql.Connection;
 
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         try {
+            Connection connection = DatabaseConnection.getConnection();
+            UserDAO userDAO= new UserDAO();
+            Library.setUserList(userDAO.getAllUser(connection));
             SceneController.getInstance().setPrimaryStage(stage);
             SceneController.getInstance().switchToScene("/loginScreen.fxml");
 

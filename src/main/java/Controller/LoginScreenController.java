@@ -4,7 +4,6 @@ import models.entities.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import models.data.DatabaseConnection;
 import models.dao.UserDAO;
 import models.services.UserService;
 import utils.SceneController;
@@ -49,7 +48,7 @@ public class LoginScreenController {
     }
 
     public void signUp () {
-        SceneController.getInstance().switchToScene("/loginScreen");
+        SceneController.getInstance().switchToScene("/signUpScreen.fxml");
     }
 
         public void showAlert(String title, String message) {

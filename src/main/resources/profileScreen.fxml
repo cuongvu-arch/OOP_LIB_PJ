@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
@@ -12,7 +13,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="504.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomePageScreenController">
+<AnchorPane prefHeight="504.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ProfileScreenController">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a3c9ed" height="77.0" stroke="BLACK" strokeType="INSIDE" width="676.0" />
       <Label layoutX="22.0" layoutY="20.0" prefHeight="39.0" prefWidth="145.0" text="BaoTangSach">
@@ -54,12 +55,12 @@
          </font>
       </Label>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="63.0" layoutX="14.0" layoutY="132.0" stroke="BLACK" strokeType="INSIDE" width="128.0" />
-      <Label layoutX="22.0" layoutY="126.0" prefHeight="63.0" prefWidth="111.0" text="Tài khoản của @@@" wrapText="true">
+      <Label layoutX="22.0" layoutY="131.0" prefHeight="26.0" prefWidth="111.0" text="Tài khoản của " wrapText="true">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label layoutX="172.0" layoutY="131.0" prefHeight="53.0" prefWidth="212.0" text="THÔNG TIN CHUNG" textFill="#ed6e6e">
+      <Label layoutX="173.0" layoutY="131.0" prefHeight="53.0" prefWidth="212.0" text="THÔNG TIN CHUNG" textFill="#ed6e6e">
          <font>
             <Font name="System Italic" size="23.0" />
          </font>
@@ -71,26 +72,34 @@
       <Label layoutX="22.0" layoutY="220.0" prefHeight="39.0" prefWidth="111.0" text="Truyện đang mượn" textFill="#6e377b" wrapText="true" />
       <Label layoutX="22.0" layoutY="280.0" prefHeight="39.0" prefWidth="111.0" text="Truyện đã trả" textFill="#dd12d7" wrapText="true" />
       <Label layoutX="22.0" layoutY="345.0" prefHeight="39.0" prefWidth="111.0" text="Đổi mật khẩu" textFill="#1fe029" wrapText="true" />
-      <Label layoutX="22.0" layoutY="405.0" prefHeight="39.0" prefWidth="111.0" text="Thoát" textFill="#1020d2" wrapText="true">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </Label>
       <StackPane layoutX="159.0" layoutY="211.0" prefHeight="244.0" prefWidth="260.0">
          <children>
             <Pane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Label layoutX="20.0" prefHeight="25.0" prefWidth="224.0" text="Họ và tên: @@@">
+                  <Label layoutX="20.0" layoutY="38.0" prefHeight="25.0" prefWidth="67.0" text="Họ và tên: ">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label layoutX="20.0" layoutY="25.0" prefHeight="25.0" prefWidth="224.0" text="Email: ">
+                  <Label layoutX="20.0" layoutY="72.0" prefHeight="25.0" prefWidth="67.0" text="Email: ">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label layoutX="17.0" layoutY="50.0" prefHeight="25.0" prefWidth="224.0" text="Số điện thoại: ">
+                  <Label layoutX="20.0" layoutY="110.0" prefHeight="25.0" prefWidth="91.0" text="Số điện thoại: ">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="usernameField" layoutX="110.0" layoutY="38.0" />
+                  <TextField fx:id="emailField" layoutX="110.0" layoutY="72.0" />
+                  <TextField fx:id="phoneField" layoutX="110.0" layoutY="110.0" />
+                  <Label layoutX="20.0" layoutY="147.0" prefHeight="25.0" prefWidth="50.0" text="Vai trò:" wrapText="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="roleLabel" layoutX="111.0" layoutY="147.0" prefHeight="25.0" prefWidth="146.0" wrapText="true">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -102,5 +111,15 @@
             <Pane prefHeight="200.0" prefWidth="200.0" visible="false" />
          </children>
       </StackPane>
+      <Label fx:id="nameLabel" layoutX="22.0" layoutY="158.0" prefHeight="26.0" prefWidth="111.0" wrapText="true">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Button layoutX="22.0" layoutY="415.0" mnemonicParsing="false" onAction="#Exit" prefHeight="26.0" prefWidth="58.0" text="Thoát" textFill="#1020d2">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

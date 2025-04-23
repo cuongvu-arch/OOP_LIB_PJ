@@ -9,7 +9,7 @@ public class User {
     private final String username;
     private final String password;
     private final String email;
-    private final String phone_number;
+    private final String phoneNumber;
     private final String role;
 
 
@@ -17,12 +17,12 @@ public class User {
      * Tạo constructor.
      */
 
-    public User(int id, String username, String password, String email, String phone_number, String role) {
+    public User(int id, String username, String password, String email, String phoneNumber, String role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.phone_number = phone_number;
+        this.phoneNumber = phoneNumber;
         this.role = role;
 
     }
@@ -44,11 +44,9 @@ public class User {
         return email;
     }
 
-    public String getPhone_number() {
-        return phone_number;
-    }
-
     public String getRole() {
         return role;
     }
+
+    public String getPhoneNumber() { return phoneNumber;}
 }

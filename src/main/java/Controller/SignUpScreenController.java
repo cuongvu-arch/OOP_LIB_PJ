@@ -1,6 +1,5 @@
 package Controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -21,7 +20,7 @@ public class SignUpScreenController {
     @FXML private TextField email;
     @FXML private TextField phoneNumber;
 
-    public void signUpFinal(ActionEvent event) {
+    public void signUpFinal() {
         String usn = userName.getText();
         String pass = password.getText();
         String eml = email.getText();

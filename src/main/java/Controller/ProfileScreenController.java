@@ -1,0 +1,70 @@
+package Controller;
+
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import models.entities.User;
+import utils.SceneController;
+import utils.SessionManager;
+
+public class ProfileScreenController {
+
+    @FXML
+    private TextField usernameField;
+
+    @FXML
+    private TextField emailField;
+
+    @FXML
+    private TextField phoneField;
+
+    @FXML
+    private Label roleLabel;
+
+    @FXML
+    private Label nameLabel;
+
+    @FXML
+    public void initialize() {
+        Task<User> loadUserTask = new Task<>() {
+            @Override
+            protected User call() {
+                return SessionManager.getCurrentUser();
+            }
+        };
+
+        // Sau khi load xong, cập nhật lên UI thread
+        loadUserTask.setOnSucceeded(event -> {
+            User user = loadUserTask.getValue();
+            if (user != null) {
+                usernameField.setText(user.getUsername());
+                usernameField.setDisable(true);
+                nameLabel.setText(user.getUsername());
+                emailField.setText(user.getEmail());
+                emailField.setDisable(true);
+                phoneField.setText(user.getPhoneNumber());
+                emailField.setDisable(true);
+                roleLabel.setText(user.getRole());
+            } else {
+                showError("Không có thông tin người dùng.");
+            }
+        });
+
+        new Thread(loadUserTask).start();
+    }
+
+    private void showError(String msg) {
+        Platform.runLater(() -> {
+            usernameField.setText("Lỗi");
+            emailField.setText("Lỗi");
+            phoneField.setText("Lỗi");
+            roleLabel.setText("Lỗi: " + msg);
+        });
+    }
+
+    public void Exit() {
+        SceneController.getInstance().switchToScene("/homePageScreen.fxml");
+    }
+}
