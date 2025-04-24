@@ -131,7 +131,6 @@ public class Search {
         }
     }
 
-    // Các phương thức còn lại giữ nguyên...
     @FXML
     private void handleAddBookButtonClick() {
         if (currentDocument == null || currentDocument.getIsbn() == null) {

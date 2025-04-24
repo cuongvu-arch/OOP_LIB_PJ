@@ -23,7 +23,7 @@ public class Document {
     }
 
     // Getter & Setter
-    public String getIsbn() { // <<< THÊM GETTER CHO ISBN
+    public String getIsbn() {
         return isbn;
     }
 
