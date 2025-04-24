@@ -9,7 +9,7 @@ import java.time.Duration;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
-import app.Document;
+import models.entities.Document;
 
 public class DocumentManagement {
     private static final String GOOGLE_BOOKS_API = "https://www.googleapis.com/books/v1/volumes?q=isbn:%s";

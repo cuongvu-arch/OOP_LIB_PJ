@@ -1,6 +1,4 @@
-package app;
-
-import java.util.Arrays;
+package models.entities;
 
 public class Document {
 

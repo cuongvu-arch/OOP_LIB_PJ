@@ -1,6 +1,6 @@
 package models.DatabaseManagement;
 
-import app.Document;
+import models.entities.Document;
 import models.DatabaseConnection;
 import org.json.JSONArray;
 

@@ -37,16 +37,20 @@ public class HomePageScreenController {
         }
     }
 
-    public void switchToThuThu() {
-        SceneController.getInstance().switchToScene("/librarianToEdit.fxml");
-    }
-
-    public void switchToFollowScreen() {
+    public void follow() {
         SceneController.getInstance().switchToScene("/followScreen.fxml");
     }
 
-    public void follow() {
+    public void history() {
+        SceneController.getInstance().switchToScene("/historyScreen.fxml");
+    }
+
+    public void profile() {
         SceneController.getInstance().switchToScene("/profileScreen.fxml");
+    }
+
+    public void searching() {
+        SceneController.getInstance().switchToScene("/searchingScreen.fxml");
     }
 
     @FXML

@@ -1,9 +1,9 @@
 package Controller.Book;
 
-import app.Document;
+import models.entities.Document;
 import models.DatabaseManagement.DocumentManagement;
 import models.DatabaseManagement.BookManagement;
-import models.DatabaseConnection;
+import models.data.DatabaseConnection;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
