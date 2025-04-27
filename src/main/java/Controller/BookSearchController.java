@@ -1,9 +1,7 @@
-package Controller.Book;
+package Controller;
 
 import models.entities.Document;
 import models.DatabaseManagement.DocumentManagement;
-import models.DatabaseManagement.BookManagement;
-import models.data.DatabaseConnection;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -14,7 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import java.sql.SQLException;
 
-public class Search {
+public class BookSearchController {
     @FXML private TextField isbnTextField;
     @FXML private TextArea resultTextArea;
     @FXML private Button searchButton;
@@ -24,7 +22,7 @@ public class Search {
     @FXML private ImageView bookImageView;
 
     private Document currentDocument;
-    private BookManagement bookManagement;
+    private UpdateBookController updateBookController;
 
     @FXML
     private void initialize() {
@@ -38,9 +36,7 @@ public class Search {
 
         // Thiết lập sự kiện click cho ImageView
         bookImageView.setOnMouseClicked(event -> handleImageClick());
-
-        DatabaseConnection dbConnection = new DatabaseConnection();
-        bookManagement = new BookManagement(dbConnection);
+        updateBookController = new UpdateBookController();
     }
 
     @FXML
@@ -77,7 +73,7 @@ public class Search {
                     resultTextArea.setVisible(true);
                 }
 
-                boolean existsInDb = bookManagement.bookExists(isbn);
+                boolean existsInDb = updateBookController.bookExists(isbn);
 
                 if (existsInDb) {
                     addBookButton.setDisable(true);
@@ -141,7 +137,7 @@ public class Search {
         String isbn = currentDocument.getIsbn();
 
         try {
-            if (bookManagement.bookExists(isbn)) {
+            if (updateBookController.bookExists(isbn)) {
                 showAlert(AlertType.INFORMATION, "Thông tin", "Sách này đã tồn tại trong kho.");
                 addBookButton.setDisable(true);
                 updateBookButton.setDisable(false);
@@ -149,7 +145,7 @@ public class Search {
                 return;
             }
 
-            if (bookManagement.addBook(currentDocument)) {
+            if (updateBookController.addBook(currentDocument)) {
                 showAlert(AlertType.INFORMATION, "Thành công", "Đã thêm sách '" + currentDocument.getTitle() + "' vào kho.");
                 resetUIState();
             } else {
@@ -171,13 +167,13 @@ public class Search {
         }
 
         try {
-            if (!bookManagement.bookExists(currentDocument.getIsbn())) {
+            if (!updateBookController.bookExists(currentDocument.getIsbn())) {
                 showAlert(AlertType.WARNING, "Cảnh báo", "Sách không còn tồn tại trong kho để cập nhật.");
                 resetUIState();
                 return;
             }
 
-            if (bookManagement.updateBook(currentDocument)) {
+            if (updateBookController.updateBook(currentDocument)) {
                 showAlert(AlertType.INFORMATION, "Thành công", "Đã cập nhật thông tin sách '" + currentDocument.getTitle() + "'.");
                 addBookButton.setDisable(true);
                 updateBookButton.setDisable(true);
@@ -219,13 +215,13 @@ public class Search {
 
     private void performDelete(String isbn) {
         try {
-            if (!bookManagement.bookExists(isbn)) {
+            if (!updateBookController.bookExists(isbn)) {
                 showAlert(AlertType.WARNING, "Cảnh báo", "Sách không còn tồn tại trong kho để xóa.");
                 resetUIState();
                 return;
             }
 
-            if (bookManagement.deleteBook(isbn)) {
+            if (updateBookController.deleteBook(isbn)) {
                 showAlert(AlertType.INFORMATION, "Thành công", "Đã xóa sách với ISBN: " + isbn + " khỏi kho.");
                 resetUIState();
             } else {

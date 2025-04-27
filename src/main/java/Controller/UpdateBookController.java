@@ -1,18 +1,13 @@
-package models.DatabaseManagement;
+package Controller;
 
+import models.data.DatabaseConnection;
 import models.entities.Document;
-import models.DatabaseConnection;
 import org.json.JSONArray;
 
 import java.sql.*;
 import java.util.List;
 
-public class BookManagement {
-    private DatabaseConnection connection;
-
-    public BookManagement(DatabaseConnection connection) {
-        this.connection = connection;
-    }
+public class UpdateBookController {
 
     public boolean addBook(Document book) {
 
@@ -25,31 +20,33 @@ public class BookManagement {
         String sql = "INSERT INTO books (isbn, title, authors, publisher, publish_date, description) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = connection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            assert conn != null;
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
 
-            String authorsJsonString;
-            List<String> authorsList = List.of(book.getAuthors());
-            if (authorsList != null && !authorsList.isEmpty()) {
-                JSONArray authorsJsonArray = new JSONArray(authorsList);
-                authorsJsonString = authorsJsonArray.toString();
-            } else {
-                authorsJsonString = "[]";
+                String authorsJsonString;
+                List<String> authorsList = List.of(book.getAuthors());
+                if (!authorsList.isEmpty()) {
+                    JSONArray authorsJsonArray = new JSONArray(authorsList);
+                    authorsJsonString = authorsJsonArray.toString();
+                } else {
+                    authorsJsonString = "[]";
+                }
+
+
+                stmt.setString(1, book.getIsbn());
+                stmt.setString(2, book.getTitle());
+                stmt.setString(3, authorsJsonString);
+                stmt.setString(4, book.getPublisher());
+                stmt.setString(5, book.getPublishedDate());
+                stmt.setString(6, book.getDescription());
+
+
+                int rowsAffected = stmt.executeUpdate();
+                return rowsAffected > 0;
+
             }
-
-
-            stmt.setString(1, book.getIsbn());
-            stmt.setString(2, book.getTitle());
-            stmt.setString(3, authorsJsonString);
-            stmt.setString(4, book.getPublisher());
-            stmt.setString(5, book.getPublishedDate());
-            stmt.setString(6, book.getDescription());
-
-
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
-
         } catch (SQLException e) {
 
             if (e.getSQLState().startsWith("23")) {
@@ -79,30 +76,32 @@ public class BookManagement {
         String sql = "UPDATE books SET title = ?, authors = ?, publisher = ?, publish_date = ?, description = ? " +
                 "WHERE isbn = ?";
 
-        try (Connection conn = connection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            assert conn != null;
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
 
-            String authorsJsonString;
-            List<String> authorsList = List.of(book.getAuthors());
-            if (authorsList != null && !authorsList.isEmpty()) {
-                JSONArray authorsJsonArray = new JSONArray(authorsList);
-                authorsJsonString = authorsJsonArray.toString();
-            } else {
-                authorsJsonString = "[]";
+                String authorsJsonString;
+                List<String> authorsList = List.of(book.getAuthors());
+                if (!authorsList.isEmpty()) {
+                    JSONArray authorsJsonArray = new JSONArray(authorsList);
+                    authorsJsonString = authorsJsonArray.toString();
+                } else {
+                    authorsJsonString = "[]";
+                }
+
+
+                stmt.setString(1, book.getTitle());
+                stmt.setString(2, authorsJsonString);
+                stmt.setString(3, book.getPublisher());
+                stmt.setString(4, book.getPublishedDate());
+                stmt.setString(5, book.getDescription());
+                stmt.setString(6, book.getIsbn());
+
+                int rowsAffected = stmt.executeUpdate();
+                return rowsAffected > 0;
+
             }
-
-
-            stmt.setString(1, book.getTitle());
-            stmt.setString(2, authorsJsonString);
-            stmt.setString(3, book.getPublisher());
-            stmt.setString(4, book.getPublishedDate());
-            stmt.setString(5, book.getDescription());
-            stmt.setString(6, book.getIsbn());
-
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
-
         } catch (SQLException e) {
             System.err.println("Lỗi khi cập nhật sách (ISBN: " + book.getIsbn() + "): " + e.getMessage());
             e.printStackTrace();
@@ -125,7 +124,7 @@ public class BookManagement {
 
         String sql = "DELETE FROM books WHERE isbn = ?";
 
-        try (Connection conn = connection.getConnection();
+        try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, isbn);
@@ -145,11 +144,13 @@ public class BookManagement {
             return false;
         }
         String sql = "SELECT 1 FROM books WHERE isbn = ? LIMIT 1";
-        try (Connection conn = connection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, isbn);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next(); // Trả về true nếu tìm thấy, false nếu không
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            assert conn != null;
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, isbn);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    return rs.next(); // Trả về true nếu tìm thấy, false nếu không
+                }
             }
         }
 

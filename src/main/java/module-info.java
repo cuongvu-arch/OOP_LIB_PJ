@@ -25,8 +25,6 @@ module java.oop_library_project {
 
     opens models to javafx.fxml;
     exports models;
-    exports Controller.Book;
-    opens Controller.Book to javafx.fxml;
     exports models.dao;
     opens models.dao to javafx.fxml;
     exports models.entities;

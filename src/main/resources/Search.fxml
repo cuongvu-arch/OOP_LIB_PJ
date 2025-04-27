@@ -7,7 +7,7 @@
 <?import javafx.geometry.*?>
 
 <VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="Controller.Book.Search" spacing="10" alignment="TOP_CENTER"
+      fx:controller="Controller.BookSearchController" spacing="10" alignment="TOP_CENTER"
       style="-fx-padding: 20; -fx-background-color: #f5f5f5;">
 
     <Label text="Tìm kiếm sách bằng ISBN" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>

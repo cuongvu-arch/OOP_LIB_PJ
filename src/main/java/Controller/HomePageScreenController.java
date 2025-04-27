@@ -20,12 +20,11 @@ public class HomePageScreenController {
     @FXML
     private Label adminFunctionText;
 
-    public void initialize() {
+
     @FXML
     private Button searchButton;
 
-    public void setUser(User user) {
-        this.currentUser = user;
+    public void initialize() {
         updateUIByRole();
     }
 
@@ -54,7 +53,7 @@ public class HomePageScreenController {
     }
 
     @FXML
-    private void handleSearchButtonClick(ActionEvent event) {
+    private void handleSearchButtonClick() {
         try {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Search.fxml"));
