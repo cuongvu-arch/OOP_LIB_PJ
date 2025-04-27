@@ -1,5 +1,6 @@
 package Controller;
 
+import models.dao.DocumentDAO;
 import models.entities.Document;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -23,7 +24,7 @@ public class BookSearchController {
     @FXML private ImageView bookImageView;
 
     private Document currentDocument;
-    private UpdateBookController updateBookController;
+    private DocumentDAO documentDAO;
 
     @FXML
     private void initialize() {
@@ -37,7 +38,7 @@ public class BookSearchController {
 
         // Thiết lập sự kiện click cho ImageView
         bookImageView.setOnMouseClicked(event -> handleImageClick());
-        updateBookController = new UpdateBookController();
+        documentDAO = new DocumentDAO();
     }
 
     @FXML
@@ -74,7 +75,7 @@ public class BookSearchController {
                     resultTextArea.setVisible(true);
                 }
 
-                boolean existsInDb = updateBookController.bookExists(isbn);
+                boolean existsInDb = documentDAO.bookExists(isbn);
 
                 if (existsInDb) {
                     addBookButton.setDisable(true);
@@ -138,7 +139,7 @@ public class BookSearchController {
         String isbn = currentDocument.getIsbn();
 
         try {
-            if (updateBookController.bookExists(isbn)) {
+            if (documentDAO.bookExists(isbn)) {
                 showAlert(AlertType.INFORMATION, "Thông tin", "Sách này đã tồn tại trong kho.");
                 addBookButton.setDisable(true);
                 updateBookButton.setDisable(false);
@@ -146,7 +147,7 @@ public class BookSearchController {
                 return;
             }
 
-            if (updateBookController.addBook(currentDocument)) {
+            if (documentDAO.addBook(currentDocument)) {
                 showAlert(AlertType.INFORMATION, "Thành công", "Đã thêm sách '" + currentDocument.getTitle() + "' vào kho.");
                 resetUIState();
             } else {
@@ -168,13 +169,13 @@ public class BookSearchController {
         }
 
         try {
-            if (!updateBookController.bookExists(currentDocument.getIsbn())) {
+            if (!documentDAO.bookExists(currentDocument.getIsbn())) {
                 showAlert(AlertType.WARNING, "Cảnh báo", "Sách không còn tồn tại trong kho để cập nhật.");
                 resetUIState();
                 return;
             }
 
-            if (updateBookController.updateBook(currentDocument)) {
+            if (documentDAO.updateBook(currentDocument)) {
                 showAlert(AlertType.INFORMATION, "Thành công", "Đã cập nhật thông tin sách '" + currentDocument.getTitle() + "'.");
                 addBookButton.setDisable(true);
                 updateBookButton.setDisable(true);
@@ -216,13 +217,13 @@ public class BookSearchController {
 
     private void performDelete(String isbn) {
         try {
-            if (!updateBookController.bookExists(isbn)) {
+            if (!documentDAO.bookExists(isbn)) {
                 showAlert(AlertType.WARNING, "Cảnh báo", "Sách không còn tồn tại trong kho để xóa.");
                 resetUIState();
                 return;
             }
 
-            if (updateBookController.deleteBook(isbn)) {
+            if (documentDAO.deleteBook(isbn)) {
                 showAlert(AlertType.INFORMATION, "Thành công", "Đã xóa sách với ISBN: " + isbn + " khỏi kho.");
                 resetUIState();
             } else {
