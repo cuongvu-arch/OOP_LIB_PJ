@@ -1,7 +1,6 @@
 package Controller;
 
 import models.entities.Document;
-import models.DatabaseManagement.DocumentManagement;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -10,6 +9,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import models.services.GoogleBooksAPIService;
+
 import java.sql.SQLException;
 
 public class BookSearchController {
@@ -58,7 +59,7 @@ public class BookSearchController {
         resultTextArea.setVisible(false);
 
         try {
-            Document fetchedDoc = DocumentManagement.fetchBookInfo(isbn);
+            Document fetchedDoc = GoogleBooksAPIService.fetchBookInfo(isbn);
 
             if (fetchedDoc != null) {
                 currentDocument = fetchedDoc;

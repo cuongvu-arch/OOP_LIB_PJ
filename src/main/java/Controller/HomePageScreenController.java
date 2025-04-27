@@ -37,15 +37,15 @@ public class HomePageScreenController {
     }
 
     public void follow() {
-        SceneController.getInstance().switchToScene("/followScreen.fxml");
+        SceneController.getInstance().switchToScene("/FollowScene.fxml");
     }
 
     public void history() {
-        SceneController.getInstance().switchToScene("/historyScreen.fxml");
+        SceneController.getInstance().switchToScene("/HistoryScene.fxml");
     }
 
     public void profile() {
-        SceneController.getInstance().switchToScene("/profileScreen.fxml");
+        SceneController.getInstance().switchToScene("/ProfileScene.fxml");
     }
 
     public void searching() {

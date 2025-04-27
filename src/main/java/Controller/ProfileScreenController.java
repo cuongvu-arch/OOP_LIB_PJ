@@ -45,7 +45,7 @@ public class ProfileScreenController {
                 emailField.setText(user.getEmail());
                 emailField.setDisable(true);
                 phoneField.setText(user.getPhoneNumber());
-                emailField.setDisable(true);
+                phoneField.setDisable(true);
                 roleLabel.setText(user.getRole());
             } else {
                 showError("Không có thông tin người dùng.");
@@ -65,6 +65,6 @@ public class ProfileScreenController {
     }
 
     public void Exit() {
-        SceneController.getInstance().switchToScene("/homePageScreen.fxml");
+        SceneController.getInstance().switchToScene("/HomePageScene.fxml");
     }
 }
