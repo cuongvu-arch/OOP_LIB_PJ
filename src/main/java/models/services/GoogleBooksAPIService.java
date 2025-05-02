@@ -38,11 +38,22 @@ public class GoogleBooksAPIService{
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-        if (response.statusCode() != 200 || response.body().contains("\"totalItems\":0")) {
+        if (response.statusCode() != 200) {
+            System.err.println("API request failed with status code: " + response.statusCode());
             return null;
         }
 
         JSONObject jsonResponse = new JSONObject(response.body());
+        if (jsonResponse.has("totalItems") && jsonResponse.getInt("totalItems") == 0) {
+            System.out.println("No books found for ISBN: " + isbn);
+            return null;
+        }
+
+        if (!jsonResponse.has("items")) {
+            System.err.println("Response does not contain 'items' key.");
+            return null;
+        }
+
         return jsonResponse.getJSONArray("items").getJSONObject(0).getJSONObject("volumeInfo");
     }
 

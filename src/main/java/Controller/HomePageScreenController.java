@@ -15,14 +15,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class HomePageScreenController {
-    @FXML
-    private ChoiceBox<String> adminFunction;
-    @FXML
-    private Label adminFunctionText;
-
-
-    @FXML
-    private Button searchButton;
+    @FXML private ChoiceBox<String> adminFunction;
+    @FXML private Label adminFunctionText;
+    @FXML private Button searchButton;
 
     public void initialize() {
         updateUIByRole();
@@ -55,18 +50,14 @@ public class HomePageScreenController {
     @FXML
     private void handleSearchButtonClick() {
         try {
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Search.fxml"));
             Parent root = loader.load();
-
-
-
-
+            BookSearchController controller = loader.getController();
+            controller.setUser(SessionManager.getCurrentUser());
             Stage searchStage = new Stage();
             searchStage.setScene(new Scene(root));
             searchStage.setTitle("Tìm kiếm sách");
             searchStage.show();
-
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Lỗi khi mở trang tìm kiếm: " + e.getMessage());

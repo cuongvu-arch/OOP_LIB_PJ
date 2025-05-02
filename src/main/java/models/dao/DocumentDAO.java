@@ -9,145 +9,167 @@ import java.util.ArrayList;
 import java.util.List;
 public class DocumentDAO {
 
-        public boolean addBook(Document book) {
-
-            if (book == null || book.getIsbn() == null || book.getIsbn().trim().isEmpty()) {
-                System.err.println("Lỗi khi thêm sách: Dữ liệu sách không hợp lệ (thiếu ISBN).");
-                return false;
-            }
-
-            // Câu lệnh SQL không đổi
-            String sql = "INSERT INTO books (isbn, title, authors, publisher, publish_date, description) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
-
-            try (Connection conn = DatabaseConnection.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-                // *** THAY ĐỔI Ở ĐÂY: Chuyển đổi danh sách authors thành chuỗi JSON ***
-                String authorsJsonString;
-                List<String> authorsList = List.of(book.getAuthors()); // Lấy danh sách tác giả
-                if (authorsList != null && !authorsList.isEmpty()) {
-                    JSONArray authorsJsonArray = new JSONArray(authorsList); // Tạo JSONArray từ List
-                    authorsJsonString = authorsJsonArray.toString();      // Chuyển thành chuỗi, ví dụ: ["Author A", "Author B"]
-                } else {
-                    authorsJsonString = "[]"; // Nếu không có tác giả, lưu mảng JSON rỗng
-                }
-                // *** KẾT THÚC THAY ĐỔI ***
-
-                stmt.setString(1, book.getIsbn());
-                stmt.setString(2, book.getTitle());
-                stmt.setString(3, authorsJsonString); // <-- Gửi chuỗi JSON vào cột authors
-                stmt.setString(4, book.getPublisher());
-                stmt.setString(5, book.getPublishedDate()); // Đảm bảo hàm này trả về chuỗi ngày hợp lệ
-                stmt.setString(6, book.getDescription());
-
-                // Dòng thực thi không đổi (gần dòng 38 cũ)
-                int rowsAffected = stmt.executeUpdate();
-                return rowsAffected > 0;
-
-            } catch (SQLException e) {
-                // Xử lý lỗi không đổi
-                if (e.getSQLState().startsWith("23")) { // Mã lỗi cho vi phạm ràng buộc (như unique key)
-                    System.err.println("Lỗi khi thêm sách: ISBN '" + book.getIsbn() + "' đã tồn tại.");
-                } else {
-                    System.err.println("Lỗi khi thêm sách: " + e.getMessage());
-                    e.printStackTrace(); // In đầy đủ stack trace để debug các lỗi khác
-                }
-                return false;
-            } catch (NullPointerException npe) { // Bắt lỗi NullPointer nếu cần
-                System.err.println("Lỗi khi thêm sách: Dữ liệu sách bị null. " + npe.getMessage());
-                npe.printStackTrace();
-                return false;
-            }
-            // Cân nhắc thêm catch (org.json.JSONException e) nếu có thao tác JSON phức tạp hơn
+    public boolean addBook(Document book) {
+        if (book == null || book.getIsbn() == null || book.getIsbn().trim().isEmpty()) {
+            System.err.println("Lỗi khi thêm sách: Dữ liệu sách không hợp lệ (thiếu ISBN).");
+            return false;
         }
 
+        String sql = "INSERT INTO books (isbn, title, authors, publisher, publish_date, description, thumbnail_url) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        public boolean updateBook(Document book) {
-            // Input validation không đổi
-            if (book == null || book.getIsbn() == null || book.getIsbn().trim().isEmpty()) {
-                System.err.println("Lỗi khi cập nhật sách: Dữ liệu sách không hợp lệ (thiếu ISBN).");
-                return false;
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            String authorsJsonString;
+            List<String> authorsList = List.of(book.getAuthors());
+            if (authorsList != null && !authorsList.isEmpty()) {
+                JSONArray authorsJsonArray = new JSONArray(authorsList);
+                authorsJsonString = authorsJsonArray.toString();
+            } else {
+                authorsJsonString = "[]";
             }
 
-            // Câu lệnh SQL không đổi (đã sửa publish_date)
-            String sql = "UPDATE books SET title = ?, authors = ?, publisher = ?, publish_date = ?, description = ? " +
-                    "WHERE isbn = ?";
+            stmt.setString(1, book.getIsbn());
+            stmt.setString(2, book.getTitle());
+            stmt.setString(3, authorsJsonString);
+            stmt.setString(4, book.getPublisher());
+            stmt.setString(5, book.getPublishedDate());
+            stmt.setString(6, book.getDescription());
+            stmt.setString(7, book.getThumbnailUrl()); // Thêm thumbnail_url
 
-            try (Connection conn = DatabaseConnection.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
 
-                // *** THAY ĐỔI Ở ĐÂY: Chuyển đổi danh sách authors thành chuỗi JSON ***
-                String authorsJsonString;
-                List<String> authorsList = List.of(book.getAuthors());
-                if (authorsList != null && !authorsList.isEmpty()) {
-                    JSONArray authorsJsonArray = new JSONArray(authorsList);
-                    authorsJsonString = authorsJsonArray.toString();
-                } else {
-                    authorsJsonString = "[]"; // Mảng JSON rỗng
-                }
-                // *** KẾT THÚC THAY ĐỔI ***
-
-                stmt.setString(1, book.getTitle());
-                stmt.setString(2, authorsJsonString); // <-- Gửi chuỗi JSON vào cột authors (vị trí thứ 2)
-                stmt.setString(3, book.getPublisher());
-                stmt.setString(4, book.getPublishedDate());
-                stmt.setString(5, book.getDescription());
-                stmt.setString(6, book.getIsbn()); // ISBN cho điều kiện WHERE
-
-                int rowsAffected = stmt.executeUpdate();
-                return rowsAffected > 0;
-
-            } catch (SQLException e) {
-                System.err.println("Lỗi khi cập nhật sách (ISBN: " + book.getIsbn() + "): " + e.getMessage());
+        } catch (SQLException e) {
+            if (e.getSQLState().startsWith("23")) {
+                System.err.println("Lỗi khi thêm sách: ISBN '" + book.getIsbn() + "' đã tồn tại.");
+            } else {
+                System.err.println("Lỗi khi thêm sách: " + e.getMessage());
                 e.printStackTrace();
-                return false;
-            } catch (NullPointerException npe) {
-                System.err.println("Lỗi khi cập nhật sách: Dữ liệu sách bị null. " + npe.getMessage());
-                npe.printStackTrace();
-                return false;
             }
-            // Cân nhắc thêm catch (org.json.JSONException e)
+            return false;
+        } catch (Exception e) {
+            System.err.println("Lỗi khi thêm sách: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    public boolean updateBook(Document book) {
+        if (book == null || book.getIsbn() == null || book.getIsbn().trim().isEmpty()) {
+            System.err.println("Lỗi khi cập nhật sách: Dữ liệu sách không hợp lệ (thiếu ISBN).");
+            return false;
         }
 
+        String sql = "UPDATE books SET title = ?, authors = ?, publisher = ?, publish_date = ?, description = ?, thumbnail_url = ? " +
+                "WHERE isbn = ?";
 
-        public boolean deleteBook(String isbn) {
-            // Không cần thay đổi vì không thao tác với cột authors
-            if (isbn == null || isbn.trim().isEmpty()) {
-                System.err.println("Lỗi khi xóa sách: ISBN không hợp lệ.");
-                return false;
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            String authorsJsonString;
+            List<String> authorsList = List.of(book.getAuthors());
+            if (authorsList != null && !authorsList.isEmpty()) {
+                JSONArray authorsJsonArray = new JSONArray(authorsList);
+                authorsJsonString = authorsJsonArray.toString();
+            } else {
+                authorsJsonString = "[]";
             }
 
-            String sql = "DELETE FROM books WHERE isbn = ?";
+            stmt.setString(1, book.getTitle());
+            stmt.setString(2, authorsJsonString);
+            stmt.setString(3, book.getPublisher());
+            stmt.setString(4, book.getPublishedDate());
+            stmt.setString(5, book.getDescription());
+            stmt.setString(6, book.getThumbnailUrl()); // Thêm thumbnail_url
+            stmt.setString(7, book.getIsbn());
 
-            try (Connection conn = DatabaseConnection.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
 
-                stmt.setString(1, isbn);
-                int rowsAffected = stmt.executeUpdate();
-                return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi cập nhật sách (ISBN: " + book.getIsbn() + "): " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            System.err.println("Lỗi khi cập nhật sách: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 
-            } catch (SQLException e) {
-                System.err.println("Lỗi khi xóa sách (ISBN: " + isbn + "): " + e.getMessage());
-                e.printStackTrace();
-                return false;
-            }
+    public boolean deleteBook(String isbn) {
+        // Không cần thay đổi vì không thao tác với cột authors
+        if (isbn == null || isbn.trim().isEmpty()) {
+            System.err.println("Lỗi khi xóa sách: ISBN không hợp lệ.");
+            return false;
         }
 
-        public boolean bookExists(String isbn) throws SQLException {
-            // Không cần thay đổi
-            if (isbn == null || isbn.trim().isEmpty()) {
-                return false; // Hoặc ném IllegalArgumentException
+        String sql = "DELETE FROM books WHERE isbn = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, isbn);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi xóa sách (ISBN: " + isbn + "): " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean bookExists(String isbn) throws SQLException {
+        String sql = "SELECT 1 FROM books WHERE isbn = ? LIMIT 1";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, isbn);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
             }
-            String sql = "SELECT 1 FROM books WHERE isbn = ? LIMIT 1";
-            try (Connection conn = DatabaseConnection.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setString(1, isbn);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    return rs.next();
+        }
+    }
+
+    public Document getBookByIsbn(String isbn) throws SQLException {
+        String sql = "SELECT isbn, title, authors, publisher, publish_date, description, thumbnail_url " +
+                "FROM books WHERE isbn = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, isbn);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String authorsJson = rs.getString("authors");
+                String[] authors;
+                try {
+                    JSONArray authorsArray = new JSONArray(authorsJson);
+                    authors = new String[authorsArray.length()];
+                    for (int i = 0; i < authorsArray.length(); i++) {
+                        authors[i] = authorsArray.getString(i);
+                    }
+                } catch (Exception e) {
+                    authors = new String[0]; // Nếu JSON không hợp lệ
                 }
+
+                return new Document(
+                        rs.getString("isbn"),
+                        rs.getString("title"),
+                        authors,
+                        rs.getString("publisher"),
+                        rs.getString("publish_date"),
+                        rs.getString("description"),
+                        rs.getString("thumbnail_url")
+                );
             }
+            return null;
         }
+    }
 
     public static List<Document> getAllDocs(Connection conn) throws SQLException {
         List<Document> documents = new ArrayList<>();
@@ -156,22 +178,30 @@ public class DocumentDAO {
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                String isbn = rs.getString("isbn");
-                String title = rs.getString("title");
                 String authorsJson = rs.getString("authors");
-                String publisher = rs.getString("publisher");
-                String publishDate = rs.getString("publish_date");
-                String description = rs.getString("description");
-                String thumbnailUrl = rs.getString("thumbnail_url");
+                String[] authors;
+                try {
+                    JSONArray authorsArray = new JSONArray(authorsJson);
+                    authors = new String[authorsArray.length()];
+                    for (int i = 0; i < authorsArray.length(); i++) {
+                        authors[i] = authorsArray.getString(i);
+                    }
+                } catch (Exception e) {
+                    authors = new String[0]; // Nếu JSON không hợp lệ
+                }
 
-                // Chuyển chuỗi authors JSON thành mảng authors
-                String[] authors = authorsJson != null ? authorsJson.replace("[", "").replace("]", "").split(", ") : new String[0];
-
-                // Tạo đối tượng Document và thêm vào danh sách
-                Document document = new Document(isbn, title, authors, publisher, publishDate, description, thumbnailUrl);
+                Document document = new Document(
+                        rs.getString("isbn"),
+                        rs.getString("title"),
+                        authors,
+                        rs.getString("publisher"),
+                        rs.getString("publish_date"),
+                        rs.getString("description"),
+                        rs.getString("thumbnail_url")
+                );
                 documents.add(document);
             }
         }
         return documents;
     }
-    }
+}

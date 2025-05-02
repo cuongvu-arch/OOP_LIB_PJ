@@ -8,8 +8,6 @@ public class SessionManager {
     private SessionManager() {
     }
 
-
-
     public static void setCurrentUser(User user) {
         currentUser = user;
     }
@@ -20,5 +18,9 @@ public class SessionManager {
 
     public static void clearSession() {
         currentUser = null;
+    }
+
+    public static boolean isAdmin() {
+        return currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole());
     }
 }
