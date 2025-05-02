@@ -7,6 +7,7 @@ public class Library {
     private static List<User> userList;
     private static List<Document> documentList;
     private static List<BorrowRecord> borrowRecords = new ArrayList<>();
+    private static List<Review> reviewList = new ArrayList<>();
 
     public static List<User> getUserList() {
         return userList;
@@ -34,5 +35,13 @@ public class Library {
 
     public static void removeBorrowRecord(BorrowRecord record) {
         borrowRecords.remove(record);
+    }
+
+    public static List<Review> getReviewList() {
+        return reviewList;
+    }
+
+    public static void setReviewList(List<Review> reviews) {
+        reviewList = reviews;
     }
 }
