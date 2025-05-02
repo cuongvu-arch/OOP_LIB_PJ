@@ -61,7 +61,7 @@ public class UserDAO {
         return null;
     }
 
-    public List<User> getAllUser(Connection connection) {
+    public static List<User> getAllUser(Connection connection) {
         List<User> Result = new ArrayList<>();
         String sql = "SELECT * FROM users";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {

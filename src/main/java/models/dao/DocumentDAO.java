@@ -5,6 +5,7 @@ import models.entities.Document;
 import org.json.JSONArray; // <-- Thêm import này
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 public class DocumentDAO {
 
@@ -143,8 +144,34 @@ public class DocumentDAO {
                  PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, isbn);
                 try (ResultSet rs = stmt.executeQuery()) {
-                    return rs.next(); // Trả về true nếu tìm thấy, false nếu không
+                    return rs.next();
                 }
             }
         }
+
+    public static List<Document> getAllDocs(Connection conn) throws SQLException {
+        List<Document> documents = new ArrayList<>();
+        String sql = "SELECT isbn, title, authors, publisher, publish_date, description, thumbnail_url FROM books";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String isbn = rs.getString("isbn");
+                String title = rs.getString("title");
+                String authorsJson = rs.getString("authors");
+                String publisher = rs.getString("publisher");
+                String publishDate = rs.getString("publish_date");
+                String description = rs.getString("description");
+                String thumbnailUrl = rs.getString("thumbnail_url");
+
+                // Chuyển chuỗi authors JSON thành mảng authors
+                String[] authors = authorsJson != null ? authorsJson.replace("[", "").replace("]", "").split(", ") : new String[0];
+
+                // Tạo đối tượng Document và thêm vào danh sách
+                Document document = new Document(isbn, title, authors, publisher, publishDate, description, thumbnailUrl);
+                documents.add(document);
+            }
+        }
+        return documents;
+    }
     }
