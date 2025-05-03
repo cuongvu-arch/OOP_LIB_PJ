@@ -1,7 +1,7 @@
 package Controller;
 
-import models.dao.DocumentDAO;
 import models.entities.Document;
+import models.services.DocumentService;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -10,7 +10,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import models.entities.User;
-import models.services.GoogleBooksAPIService;
 import utils.BookImageLoader;
 import utils.SessionManager;
 
@@ -26,7 +25,7 @@ public class BookSearchController {
     @FXML private ImageView bookImageView;
 
     private Document currentDocument;
-    private DocumentDAO documentDAO;
+    private DocumentService documentService;
     private User currentUser;
 
     public void setUser(User user) {
@@ -43,7 +42,7 @@ public class BookSearchController {
 
     @FXML
     private void initialize() {
-        documentDAO = new DocumentDAO();
+        documentService = new DocumentService();
         bookImageView.setVisible(false);
         resultTextArea.setVisible(false);
         bookImageView.setOnMouseClicked(event -> handleImageClick());
@@ -68,37 +67,16 @@ public class BookSearchController {
         searchButton.setDisable(true);
 
         try {
-            User currentUser = SessionManager.getCurrentUser();
-            boolean isAdmin = currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole());
-
-            Document fetchedDoc = null;
-
-            if (isAdmin) {
-                try {
-                    fetchedDoc = GoogleBooksAPIService.fetchBookInfo(isbn);
-                    System.out.println("Fetched from API: " + (fetchedDoc != null ? fetchedDoc.getTitle() : "null"));
-                } catch (Exception e) {
-                    System.err.println("Google Books API error: " + e.getMessage());
-                }
-                if (fetchedDoc == null) {
-                    fetchedDoc = documentDAO.getBookByIsbn(isbn);
-                    System.out.println("Fetched from DB: " + (fetchedDoc != null ? fetchedDoc.getTitle() : "null"));
-                }
-            } else {
-                fetchedDoc = documentDAO.getBookByIsbn(isbn);
-                System.out.println("Fetched from DB (user): " + (fetchedDoc != null ? fetchedDoc.getTitle() : "null"));
-            }
-
+            Document fetchedDoc = documentService.searchBook(isbn, currentUser);
             if (fetchedDoc != null) {
                 currentDocument = fetchedDoc;
                 displayBookImageOnly(fetchedDoc);
-                boolean existsInDb = documentDAO.bookExists(isbn);
-                updateButtonStates(existsInDb, isAdmin);
+                boolean existsInDb = documentService.bookExists(isbn);
+                updateButtonStates(existsInDb);
             } else {
                 showAlert(AlertType.INFORMATION, "Không tìm thấy", "Không tìm thấy sách với ISBN: " + isbn);
                 resetUIState(false);
             }
-
         } catch (SQLException e) {
             showAlert(AlertType.ERROR, "Lỗi", "Không thể truy vấn cơ sở dữ liệu: " + e.getMessage());
             e.printStackTrace();
@@ -112,11 +90,11 @@ public class BookSearchController {
 
     private void displayBookImageOnly(Document doc) {
         if (doc.getThumbnailUrl() != null && !doc.getThumbnailUrl().isEmpty()) {
-            System.out.println("Loading image from: " + doc.getThumbnailUrl());
+            System.out.println("Tải ảnh từ: " + doc.getThumbnailUrl());
             BookImageLoader.loadImage(doc.getThumbnailUrl(), bookImageView);
             bookImageView.setVisible(true);
         } else {
-            System.out.println("No thumbnail URL available for ISBN: " + doc.getIsbn());
+            System.out.println("Không có URL ảnh cho ISBN: " + doc.getIsbn());
             bookImageView.setVisible(false);
         }
         resultTextArea.setVisible(false);
@@ -130,7 +108,8 @@ public class BookSearchController {
         }
     }
 
-    private void updateButtonStates(boolean existsInDb, boolean isAdmin) {
+    private void updateButtonStates(boolean existsInDb) {
+        boolean isAdmin = currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole());
         if (!isAdmin) {
             addBookButton.setDisable(true);
             updateBookButton.setDisable(true);
@@ -144,38 +123,20 @@ public class BookSearchController {
 
     @FXML
     private void handleAddBookButtonClick() {
-        User currentUser = SessionManager.getCurrentUser();
-        if (currentUser == null || !"admin".equalsIgnoreCase(currentUser.getRole())) {
-            showAlert(AlertType.ERROR, "Lỗi", "Bạn không có quyền thực hiện thao tác này");
-            return;
-        }
-
         if (currentDocument == null || currentDocument.getIsbn() == null) {
             showAlert(AlertType.WARNING, "Thiếu thông tin", "Không có thông tin sách hợp lệ để thêm.");
             return;
         }
 
-        String isbn = currentDocument.getIsbn();
         try {
-            if (documentDAO.bookExists(isbn)) {
-                showAlert(AlertType.INFORMATION, "Thông tin", "Sách này đã tồn tại trong kho.");
-                addBookButton.setDisable(true);
-                updateBookButton.setDisable(false);
-                deleteBookButton.setDisable(false);
-                return;
-            }
-
-            Document standardizedDoc = standardizeDocument(currentDocument);
-            if (documentDAO.addBook(standardizedDoc)) {
-                showAlert(AlertType.INFORMATION, "Thành công", "Đã thêm sách '" + standardizedDoc.getTitle() + "' vào kho.");
+            if (documentService.addBook(currentDocument, currentUser)) {
+                showAlert(AlertType.INFORMATION, "Thành công", "Đã thêm sách '" + currentDocument.getTitle() + "' vào kho.");
                 resetUIState();
             } else {
-                showAlert(AlertType.ERROR, "Lỗi", "Thêm sách thất bại. Kiểm tra console log.");
+                showAlert(AlertType.ERROR, "Lỗi", "Thêm sách thất bại. Vui lòng kiểm tra quyền hoặc thông tin sách.");
             }
-        } catch (SQLException dbEx) {
-            showAlert(AlertType.ERROR, "Lỗi cơ sở dữ liệu", "Lỗi khi kiểm tra/thêm sách: " + dbEx.getMessage());
-        } catch (Exception e) {
-            showAlert(AlertType.ERROR, "Lỗi hệ thống", "Đã xảy ra lỗi: " + e.getMessage());
+        } catch (SQLException e) {
+            showAlert(AlertType.ERROR, "Lỗi cơ sở dữ liệu", "Lỗi khi thêm sách: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -188,68 +149,42 @@ public class BookSearchController {
         }
 
         try {
-            if (!documentDAO.bookExists(currentDocument.getIsbn())) {
-                showAlert(AlertType.WARNING, "Cảnh báo", "Sách không còn tồn tại trong kho để cập nhật.");
+            if (documentService.updateBook(currentDocument, currentUser)) {
+                showAlert(AlertType.INFORMATION, "Thành công", "Đã cập nhật thông tin sách '" + currentDocument.getTitle() + "'.");
                 resetUIState();
-                return;
-            }
-
-            Document standardizedDoc = standardizeDocument(currentDocument);
-            if (documentDAO.updateBook(standardizedDoc)) {
-                showAlert(AlertType.INFORMATION, "Thành công", "Đã cập nhật thông tin sách '" + standardizedDoc.getTitle() + "'.");
-                addBookButton.setDisable(true);
-                updateBookButton.setDisable(true);
-                deleteBookButton.setDisable(true);
             } else {
-                showAlert(AlertType.ERROR, "Lỗi", "Cập nhật sách thất bại. Kiểm tra console log.");
+                showAlert(AlertType.ERROR, "Lỗi", "Cập nhật sách thất bại. Vui lòng kiểm tra quyền hoặc thông tin sách.");
             }
-        } catch (SQLException dbEx) {
-            showAlert(AlertType.ERROR, "Lỗi cơ sở dữ liệu", "Lỗi khi cập nhật sách: " + dbEx.getMessage());
-        } catch (Exception e) {
-            showAlert(AlertType.ERROR, "Lỗi hệ thống", "Đã xảy ra lỗi: " + e.getMessage());
+        } catch (SQLException e) {
+            showAlert(AlertType.ERROR, "Lỗi cơ sở dữ liệu", "Lỗi khi cập nhật sách: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     @FXML
     private void handleDeleteBookButtonClick() {
-        if (currentDocument == null || currentDocument.getIsbn() == null) {
-            String isbn = isbnTextField.getText().trim();
-            if (isbn.isEmpty()) {
-                showAlert(AlertType.WARNING, "Thiếu thông tin", "Không có ISBN sách để xóa.");
-                return;
-            }
-            if (!showConfirmationDialog("Xác nhận xóa", "Bạn có chắc chắn muốn xóa sách với ISBN: " + isbn + "?")) {
-                return;
-            }
-            performDelete(isbn);
-        } else {
-            String isbn = currentDocument.getIsbn();
-            String title = currentDocument.getTitle() != null ? currentDocument.getTitle() : "không rõ tiêu đề";
-            if (!showConfirmationDialog("Xác nhận xóa", "Bạn có chắc chắn muốn xóa sách '" + title + "' (ISBN: " + isbn + ")?")) {
-                return;
-            }
-            performDelete(isbn);
+        String isbn = isbnTextField.getText().trim();
+        if (isbn.isEmpty() && (currentDocument == null || currentDocument.getIsbn() == null)) {
+            showAlert(AlertType.WARNING, "Thiếu thông tin", "Không có ISBN sách để xóa.");
+            return;
         }
-    }
 
-    private void performDelete(String isbn) {
+        isbn = (currentDocument != null && currentDocument.getIsbn() != null) ? currentDocument.getIsbn() : isbn;
+        String title = (currentDocument != null && currentDocument.getTitle() != null) ? currentDocument.getTitle() : "không rõ tiêu đề";
+
+        if (!showConfirmationDialog("Xác nhận xóa", "Bạn có chắc chắn muốn xóa sách '" + title + "' (ISBN: " + isbn + ")?")) {
+            return;
+        }
+
         try {
-            if (!documentDAO.bookExists(isbn)) {
-                showAlert(AlertType.WARNING, "Cảnh báo", "Sách không còn tồn tại trong kho để xóa.");
-                resetUIState();
-                return;
-            }
-            if (documentDAO.deleteBook(isbn)) {
+            if (documentService.deleteBook(isbn, currentUser)) {
                 showAlert(AlertType.INFORMATION, "Thành công", "Đã xóa sách với ISBN: " + isbn + " khỏi kho.");
                 resetUIState();
             } else {
-                showAlert(AlertType.ERROR, "Lỗi", "Xóa sách thất bại. Kiểm tra console log.");
+                showAlert(AlertType.ERROR, "Lỗi", "Xóa sách thất bại. Vui lòng kiểm tra quyền hoặc thông tin sách.");
             }
-        } catch (SQLException dbEx) {
-            showAlert(AlertType.ERROR, "Lỗi cơ sở dữ liệu", "Lỗi khi xóa sách: " + dbEx.getMessage());
-        } catch (Exception e) {
-            showAlert(AlertType.ERROR, "Lỗi hệ thống", "Đã xảy ra lỗi: " + e.getMessage());
+        } catch (SQLException e) {
+            showAlert(AlertType.ERROR, "Lỗi cơ sở dữ liệu", "Lỗi khi xóa sách: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -289,16 +224,5 @@ public class BookSearchController {
     private boolean isValidIsbn(String isbn) {
         isbn = isbn.replaceAll("[^0-9X]", "");
         return isbn.length() == 10 || isbn.length() == 13;
-    }
-
-    private Document standardizeDocument(Document doc) {
-        String publishDate = doc.getPublishedDate();
-        if (publishDate != null && publishDate.matches("\\d{4}")) {
-            publishDate = publishDate + "-01-01";
-        } else if (publishDate == null || publishDate.trim().isEmpty()) {
-            publishDate = null;
-        }
-        return new Document(doc.getIsbn(), doc.getTitle(), doc.getAuthors(), doc.getPublisher(),
-                publishDate, doc.getDescription(), doc.getThumbnailUrl());
     }
 }
