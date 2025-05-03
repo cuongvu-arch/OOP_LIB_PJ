@@ -1,5 +1,7 @@
 package models.services;
 
+import models.data.DatabaseConnection;
+
 import models.dao.DocumentDAO;
 import models.dao.UserDAO;
 import models.entities.BorrowRecord;
@@ -11,10 +13,12 @@ import java.sql.Connection;
 import java.util.List;
 
 public class LibraryService {
+    Connection conn = DatabaseConnection.getConnection();
+
     public void displayAllUsers() {
         try {
             // Gọi phương thức từ UserDAO để lấy tất cả người dùng
-            List<User> users = UserDAO.getAllUser();
+            List<User> users = UserDAO.getAllUser(conn);
             if (users != null && !users.isEmpty()) {
                 for (User user : users) {
                     System.out.println("Username: " + user.getUsername() + ", Email: " + user.getEmail());
@@ -30,7 +34,7 @@ public class LibraryService {
     public void displayAllDocs() {
         try {
             // Gọi phương thức từ DocumentDAO để lấy tất cả tài liệu
-            List<Document> docs = DocumentDAO.getAllDocs();
+            List<Document> docs = DocumentDAO.getAllDocs(conn);
             if (docs == null || docs.isEmpty()) {
                 System.out.println("Không có sách nào trong thư viện.");
                 return;
