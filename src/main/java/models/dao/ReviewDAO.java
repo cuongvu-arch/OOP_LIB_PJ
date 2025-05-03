@@ -69,4 +69,91 @@ public class ReviewDAO {
             System.err.println("Lỗi khi thêm đánh giá: " + e.getMessage());
         }
     }
+
+    public static void updateReview(Review review) {
+        String sql = "UPDATE review SET rating = ?, comment = ? WHERE user_id = ? AND document_isbn = ? AND created_at = ?";
+
+        // Lấy createdAt từ database (truy vấn review trước)
+        LocalDateTime createdAt = getCreatedAtFromDatabase(review.getUserId(), review.getDocumentIsbn());
+
+        if (createdAt == null) {
+            System.out.println("Review không tồn tại để cập nhật.");
+            return;
+        }
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, review.getRating());
+            stmt.setString(2, review.getComment());
+            stmt.setInt(3, review.getUserId());
+            stmt.setString(4, review.getDocumentIsbn());
+            stmt.setTimestamp(5, Timestamp.valueOf(createdAt));
+
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Review đã được cập nhật.");
+            } else {
+                System.out.println("Không tìm thấy review để cập nhật.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi cập nhật review: " + e.getMessage());
+        }
+    }
+
+    private static LocalDateTime getCreatedAtFromDatabase(int userId, String documentIsbn) {
+        String sql = "SELECT created_at FROM review WHERE user_id = ? AND document_isbn = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+            stmt.setString(2, documentIsbn);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getTimestamp("created_at").toLocalDateTime();
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi lấy createdAt: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    public static void deleteReview(int userId, String documentIsbn) {
+        // Lấy createdAt từ database trước khi xoá review
+        LocalDateTime createdAt = getCreatedAtFromDatabase(userId, documentIsbn);
+
+        if (createdAt == null) {
+            System.out.println("Review không tồn tại để xoá.");
+            return;
+        }
+
+        // SQL để xoá review với điều kiện chính là userId, documentIsbn và createdAt
+        String sql = "DELETE FROM review WHERE user_id = ? AND document_isbn = ? AND created_at = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            // Set các tham số cần thiết
+            stmt.setInt(1, userId);  // Set userId
+            stmt.setString(2, documentIsbn);  // Set documentIsbn
+            stmt.setTimestamp(3, Timestamp.valueOf(createdAt));  // Set createdAt
+
+            // Thực thi câu lệnh delete
+            int rowsDeleted = stmt.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("Review đã được xoá.");
+            } else {
+                System.out.println("Không tìm thấy review để xoá.");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi xoá review: " + e.getMessage());
+        }
+    }
+
 }

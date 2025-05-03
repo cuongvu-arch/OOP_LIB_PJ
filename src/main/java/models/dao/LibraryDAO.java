@@ -1,6 +1,7 @@
 package models.dao;
 
 import models.data.DatabaseConnection;
+import models.entities.BorrowRecord;
 import models.entities.Document;
 import models.entities.Library;
 import models.entities.User;
@@ -13,9 +14,11 @@ public class LibraryDAO {
         try (Connection conn = DatabaseConnection.getConnection()) {
             List<User> users = UserDAO.getAllUser(conn);
             List<Document> documents = DocumentDAO.getAllDocs(conn);
+            List<BorrowRecord> borrowRecords = BorrowRecordDAO.getAll(conn);
 
             Library.setUserList(users);
             Library.setDocumentList(documents);
+            borrowRecords.forEach(Library::addBorrowRecord);
 
             System.out.println("Dữ liệu thư viện đã được tải vào bộ nhớ.");
         } catch (Exception e) {
