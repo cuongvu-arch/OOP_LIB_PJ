@@ -2,7 +2,6 @@ package models.services;
 
 import models.dao.DocumentDAO;
 import models.dao.UserDAO;
-import models.data.DatabaseConnection;
 import models.entities.BorrowRecord;
 import models.entities.Document;
 import models.entities.Library;
@@ -13,8 +12,9 @@ import java.util.List;
 
 public class LibraryService {
     public void displayAllUsers() {
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            List<User> users = UserDAO.getAllUser(conn);
+        try {
+            // Gọi phương thức từ UserDAO để lấy tất cả người dùng
+            List<User> users = UserDAO.getAllUser();
             if (users != null && !users.isEmpty()) {
                 for (User user : users) {
                     System.out.println("Username: " + user.getUsername() + ", Email: " + user.getEmail());
@@ -27,28 +27,10 @@ public class LibraryService {
         }
     }
 
-    public void displayAllUsersWithBorrowedBooks() {
-        for (User user : Library.getUserList()) {
-            System.out.println("Username: " + user.getUsername());
-
-            List<String> borrowedBooks = Library.getBorrowRecords().stream()
-                    .filter(r -> r.getUserId() == user.getId())
-                    .map(BorrowRecord::getIsbn)
-                    .toList();
-
-            if (borrowedBooks.isEmpty()) {
-                System.out.println("  - Chưa mượn sách nào");
-            } else {
-                System.out.println("  - Đã mượn các sách với ISBN: " + String.join(", ", borrowedBooks));
-            }
-        }
-    }
-
-
     public void displayAllDocs() {
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            List<Document> docs = DocumentDAO.getAllDocs(conn);
-
+        try {
+            // Gọi phương thức từ DocumentDAO để lấy tất cả tài liệu
+            List<Document> docs = DocumentDAO.getAllDocs();
             if (docs == null || docs.isEmpty()) {
                 System.out.println("Không có sách nào trong thư viện.");
                 return;
@@ -71,6 +53,24 @@ public class LibraryService {
         } catch (Exception e) {
             System.err.println("Lỗi khi hiển thị danh sách sách: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+
+    public void displayAllUsersWithBorrowedBooks() {
+        for (User user : Library.getUserList()) {
+            System.out.println("Username: " + user.getUsername());
+
+            List<String> borrowedBooks = Library.getBorrowRecords().stream()
+                    .filter(r -> r.getUserId() == user.getId())
+                    .map(BorrowRecord::getIsbn)
+                    .toList();
+
+            if (borrowedBooks.isEmpty()) {
+                System.out.println("  - Chưa mượn sách nào");
+            } else {
+                System.out.println("  - Đã mượn các sách với ISBN: " + String.join(", ", borrowedBooks));
+            }
         }
     }
 
