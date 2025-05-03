@@ -11,9 +11,6 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.paint.RadialGradient?>
-<?import javafx.scene.paint.Stop?>
-<?import javafx.scene.paint.Color?>
 <AnchorPane prefHeight="504.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomePageScreenController">
     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a3c9ed" height="77.0" onMouseClicked="#follow" stroke="BLACK" strokeType="INSIDE" width="676.0" />
     <Label layoutX="22.0" layoutY="20.0" prefHeight="39.0" prefWidth="145.0" text="BaoTangSach">
@@ -79,30 +76,6 @@
             <Image url="@img.png" />
         </image>
     </ImageView>
-    <Label layoutX="26.0" layoutY="259.0" prefHeight="17.0" prefWidth="117.0" text="Truyện tranh 1" />
-    <Label layoutX="161.0" layoutY="259.0" prefHeight="17.0" prefWidth="117.0" text="Truyện tranh 2" />
-    <Label layoutX="296.0" layoutY="259.0" prefHeight="17.0" prefWidth="117.0" text="Truyện tranh 3" />
-    <Label layoutX="26.0" layoutY="462.0" prefHeight="17.0" prefWidth="117.0" text="Truyện tranh 4" />
-    <Label layoutX="160.0" layoutY="462.0" prefHeight="17.0" prefWidth="117.0" text="Truyện tranh 5" />
-    <Label layoutX="296.0" layoutY="462.0" prefHeight="17.0" prefWidth="117.0" text="Truyện tranh 6" />
-   <Button layoutX="601.0" layoutY="18.0" mnemonicParsing="false" text="Search" textAlignment="CENTER">
-      <textFill>
-         <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
-            <stops>
-               <Stop>
-                  <color>
-                     <Color />
-                  </color>
-               </Stop>
-               <Stop offset="1.0">
-                  <color>
-                     <Color red="0.18944768607616425" green="0.1586744636297226" blue="0.38947367668151855" />
-                  </color>
-               </Stop>
-            </stops>
-         </RadialGradient>
-      </textFill>
-   </Button>
     <Label layoutX="26.0" layoutY="259.0" prefHeight="17.0" prefWidth="117.0" text="Truyện tranh 1" />
     <Label layoutX="161.0" layoutY="259.0" prefHeight="17.0" prefWidth="117.0" text="Truyện tranh 2" />
     <Label layoutX="296.0" layoutY="259.0" prefHeight="17.0" prefWidth="117.0" text="Truyện tranh 3" />
