@@ -27,4 +27,14 @@ public class ReviewService {
     public void addReview(Review review) {
         ReviewDAO.addReview(review);
     }
+
+    public void updateReview(Review review) {
+        // Gọi phương thức DAO để cập nhật review
+        ReviewDAO.updateReview(review);
+    }
+
+    public void deleteReview(int userId, String documentIsbn) {
+        // Gọi phương thức DAO để xoá review
+        ReviewDAO.deleteReview(userId, documentIsbn);
+    }
 }
