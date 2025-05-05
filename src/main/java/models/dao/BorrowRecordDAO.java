@@ -53,4 +53,21 @@ public class BorrowRecordDAO {
         }
     }
 
+    public static List<BorrowRecord> getByUserId(Connection conn, int userId) throws SQLException {
+        List<BorrowRecord> records = new ArrayList<>();
+        String sql = "SELECT user_id, isbn FROM borrow_records WHERE user_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String isbn = rs.getString("isbn");
+                    records.add(new BorrowRecord(userId, isbn));
+                }
+            }
+        }
+
+        return records;
+    }
+
 }
