@@ -65,6 +65,6 @@ public class ProfileScreenController {
     }
 
     public void Exit() {
-        SceneController.getInstance().switchToScene("/HomePageScene.fxml");
+        SceneController.getInstance().switchToScene("/fxml/HomePageScene.fxml");
     }
 }

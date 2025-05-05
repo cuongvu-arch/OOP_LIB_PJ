@@ -33,7 +33,7 @@ public class SignUpScreenController {
 
         if (userService.signup(usn, pass, eml, phn)) {
             showAlert("Thành công", "Đăng ký thành công!");
-            SceneController.getInstance().switchToScene("/loginScreen.fxml");
+            SceneController.getInstance().switchToScene("/fxml/loginScreen.fxml");
         } else {
             showAlert("Lỗi", "Đăng ký thất bại (username/email đã tồn tại hoặc thông tin không hợp lệ)");
         }

@@ -2,14 +2,42 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginScreenController">
-   <children>
-      <Button fx:id="loginButton" layoutX="300.0" layoutY="288.0" mnemonicParsing="false" onAction="#login" text="Login" />
-      <TextField fx:id="username" layoutX="195.0" layoutY="167.0" />
-      <TextField fx:id="password" layoutX="195.0" layoutY="223.0" />
-      <Label alignment="CENTER" layoutX="121.0" layoutY="171.0" prefHeight="17.0" prefWidth="73.0" text="username" textAlignment="CENTER" />
-      <Label alignment="CENTER" layoutX="127.0" layoutY="227.0" prefHeight="17.0" prefWidth="67.0" text="password" />
-      <Button layoutX="182.0" layoutY="288.0" mnemonicParsing="false" onAction="#signUp" text="Sign Up" />
-   </children>
-</Pane>
+<?import java.net.URL?>
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.LoginScreenController">
+   <stylesheets>
+      <URL value="@../css/styles.css" />
+   </stylesheets>
+
+   <center>
+      <VBox alignment="CENTER" spacing="20" style="-fx-padding: 40; -fx-background-color: white;">
+         <Label text="Đăng nhập hệ thống" styleClass="title" style="-fx-font-size: 28px;"/>
+
+         <GridPane hgap="10" vgap="15" alignment="CENTER">
+            <columnConstraints>
+               <ColumnConstraints halignment="RIGHT" prefWidth="100.0"/>
+               <ColumnConstraints prefWidth="200.0"/>
+            </columnConstraints>
+
+            <rowConstraints>
+               <RowConstraints prefHeight="30.0"/>
+               <RowConstraints prefHeight="30.0"/>
+            </rowConstraints>
+
+            <Label text="Tên đăng nhập:" styleClass="subtitle"/>
+            <TextField fx:id="username" GridPane.columnIndex="1"/>
+
+            <Label text="Mật khẩu:" styleClass="subtitle" GridPane.rowIndex="1"/>
+            <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+         </GridPane>
+
+         <HBox alignment="CENTER" spacing="20">
+            <Button text="Đăng ký" onAction="#signUp" styleClass="button" style="-fx-background-color: #95a5a6;"/>
+            <Button fx:id="loginButton" text="Đăng nhập" onAction="#login" styleClass="button"/>
+         </HBox>
+      </VBox>
+   </center>
+</BorderPane>

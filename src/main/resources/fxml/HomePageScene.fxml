@@ -1,40 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
+<?import java.net.URL?>
+<?import javafx.css.StyleClass?>
+<?import java.lang.String?>
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomePageScreenController">
+    <stylesheets>
+        <URL value="@../css/styles.css" />
+    </stylesheets>
+
     <top>
         <fx:include source="NavBar.fxml" />
     </top>
-   <right>
-      <VBox prefHeight="463.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-             <TableView maxHeight="300.0" maxWidth="200.0">
-                 <columns>
-                     <TableColumn prefWidth="222.66668701171875" text="Bảng top sách tháng này " />
-                 </columns>
-             </TableView>
-         </children>
-      </VBox>
-   </right>
-   <center>
-      <GridPane BorderPane.alignment="CENTER">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="190.79998779296875" minWidth="10.0" prefWidth="186.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="209.20001220703125" minWidth="10.0" prefWidth="194.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-      </GridPane>
-   </center>
+
+    <right>
+        <VBox styleClass="card" spacing="10" alignment="TOP_CENTER" prefWidth="250.0" BorderPane.alignment="CENTER" style="-fx-padding: 15; -fx-margin: 20;">
+            <children>
+                <Label text="Bảng xếp hạng sách" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: -fx-dark-color;"/>
+
+                <TableView prefHeight="300.0" prefWidth="220.0">
+                    <columns>
+                        <TableColumn prefWidth="220.0" text="Top sách tháng này">
+                            <styleClass>
+                                <String fx:value="table-header" />
+                            </styleClass>
+                        </TableColumn>
+                    </columns>
+                </TableView>
+
+            </children>
+        </VBox>
+    </right>
+
+    <center>
+        <GridPane style="-fx-padding: 20;" BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="150.0" prefWidth="200.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="150.0" prefWidth="200.0" />
+            </columnConstraints>
+
+            <rowConstraints>
+                <RowConstraints minHeight="150.0" prefHeight="200.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="150.0" prefHeight="200.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+
+            <!-- Các thành phần sách sẽ được thêm vào đây -->
+        </GridPane>
+    </center>
 </BorderPane>

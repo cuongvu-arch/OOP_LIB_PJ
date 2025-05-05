@@ -7,84 +7,65 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
+<?import java.net.URL?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <stylesheets>
+      <URL value="@../css/styles.css" />
+   </stylesheets>
+
    <top>
       <fx:include source="NavBar.fxml" />
    </top>
+
    <center>
-      <AnchorPane prefHeight="504.0" prefWidth="676.0">
+      <AnchorPane style="-fx-padding: 20;">
          <children>
-            <ImageView fitHeight="123.0" fitWidth="100.0" layoutX="26.0" layoutY="127.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@img.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="26.0" layoutY="252.0" prefHeight="17.0" prefWidth="97.0" text="Truyện tranh 1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <Label layoutX="22.0" layoutY="84.0" prefHeight="25.0" prefWidth="173.0" text="Trang chủ &gt;&gt; Theo dõi">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label layoutX="76.0" layoutY="271.0" prefHeight="17.0" prefWidth="46.0" text="Trả sách" textFill="#f40b0b" />
-            <ImageView fitHeight="123.0" fitWidth="100.0" layoutX="158.0" layoutY="127.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@img.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="167.0" layoutY="252.0" prefHeight="17.0" prefWidth="97.0" text="Truyện tranh 1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <Label layoutX="207.0" layoutY="271.0" prefHeight="17.0" prefWidth="46.0" text="Trả sách" textFill="#f40b0b" />
-            <ImageView fitHeight="123.0" fitWidth="100.0" layoutX="289.0" layoutY="127.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@img.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="289.0" layoutY="252.0" prefHeight="17.0" prefWidth="97.0" text="Truyện tranh 1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <Label layoutX="339.0" layoutY="271.0" prefHeight="17.0" prefWidth="46.0" text="Trả sách" textFill="#f40b0b" />
-            <ImageView fitHeight="123.0" fitWidth="100.0" layoutX="26.0" layoutY="305.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@img.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="26.0" layoutY="430.0" prefHeight="17.0" prefWidth="97.0" text="Truyện tranh 1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <Label layoutX="76.0" layoutY="449.0" prefHeight="17.0" prefWidth="46.0" text="Trả sách" textFill="#f40b0b" />
-            <ImageView fitHeight="123.0" fitWidth="100.0" layoutX="158.0" layoutY="305.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@img.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="167.0" layoutY="430.0" prefHeight="17.0" prefWidth="97.0" text="Truyện tranh 1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <Label layoutX="207.0" layoutY="448.0" prefHeight="17.0" prefWidth="46.0" text="Trả sách" textFill="#f40b0b" />
-            <ImageView fitHeight="123.0" fitWidth="100.0" layoutX="289.0" layoutY="305.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@img.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="289.0" layoutY="430.0" prefHeight="17.0" prefWidth="97.0" text="Truyện tranh 1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <Label layoutX="339.0" layoutY="449.0" prefHeight="17.0" prefWidth="46.0" text="Trả sách" textFill="#f40b0b" />
+            <Label styleClass="subtitle" layoutX="20.0" layoutY="20.0" text="Trang chủ &gt;&gt; Theo dõi"/>
+
+            <FlowPane layoutX="20.0" layoutY="60.0" hgap="20" vgap="30" prefWidth="700.0">
+               <children>
+                  <!-- Book 1 -->
+                  <VBox styleClass="card" spacing="10" alignment="TOP_CENTER" prefWidth="150.0">
+                     <children>
+                        <ImageView fitHeight="180.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="Truyện tranh 1" style="-fx-font-weight: bold; -fx-text-alignment: center;"/>
+                        <Label text="Trả sách" style="-fx-text-fill: -fx-accent-color; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                     </children>
+                  </VBox>
+
+                  <!-- Book 2 -->
+                  <VBox styleClass="card" spacing="10" alignment="TOP_CENTER" prefWidth="150.0">
+                     <children>
+                        <ImageView fitHeight="180.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="Truyện tranh 2" style="-fx-font-weight: bold; -fx-text-alignment: center;"/>
+                        <Label text="Trả sách" style="-fx-text-fill: -fx-accent-color; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                     </children>
+                  </VBox>
+
+                  <!-- Book 3 -->
+                  <VBox styleClass="card" spacing="10" alignment="TOP_CENTER" prefWidth="150.0">
+                     <children>
+                        <ImageView fitHeight="180.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="Truyện tranh 3" style="-fx-font-weight: bold; -fx-text-alignment: center;"/>
+                        <Label text="Trả sách" style="-fx-text-fill: -fx-accent-color; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                     </children>
+                  </VBox>
+               </children>
+            </FlowPane>
          </children>
       </AnchorPane>
    </center>

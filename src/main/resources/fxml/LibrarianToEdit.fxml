@@ -1,69 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Line?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="504.0" prefWidth="676.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ProfileScreenController">
-   <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#a3c9ed" height="77.0" stroke="BLACK" strokeType="INSIDE" width="676.0" />
-      <Label layoutX="22.0" layoutY="20.0" prefHeight="39.0" prefWidth="145.0" text="BaoTangSach">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Label layoutX="184.0" layoutY="29.0" text="Tra cứu">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="253.0" layoutY="30.0" text="Cá nhân">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="328.0" layoutY="30.0" text="Sách theo dõi">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="434.0" layoutY="30.0" text="Lịch sử">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <ChoiceBox fx:id="adminFunction" layoutX="512.0" layoutY="27.0" prefHeight="25.0" prefWidth="79.0" />
-      <Label fx:id="adminFunctionText" layoutX="519.0" layoutY="31.0" prefHeight="17.0" prefWidth="50.0" text="Thủ thư" />
-      <Button layoutX="601.0" layoutY="52.0" mnemonicParsing="false" text="Dark mode" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="371.0" layoutX="22.0" layoutY="116.0" stroke="BLACK" strokeType="INSIDE" width="638.0" />
-      <Label layoutX="22.0" layoutY="83.0" prefHeight="25.0" prefWidth="228.0" text="Trang chủ &gt;&gt; Thủ thư &gt;&gt; Chỉnh sửa">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Label>
-      <Line endX="224.8333282470703" endY="117.50000762939453" layoutX="14.0" layoutY="-1.0" startX="224.83331298828125" startY="487.0" />
-      <Line endX="224.8333282470703" endY="117.50000762939453" layoutX="230.0" layoutY="-1.0" startX="224.83331298828125" startY="487.0" />
-      <Label layoutX="29.0" layoutY="124.0" prefHeight="17.0" prefWidth="46.0" text="Thêm" />
-      <Label layoutX="250.0" layoutY="124.0" prefHeight="17.0" prefWidth="46.0" text="Xóa" />
-      <Label layoutX="466.0" layoutY="124.0" prefHeight="17.0" prefWidth="46.0" text="Sửa" />
-      <TextField layoutX="38.0" layoutY="179.0" prefHeight="25.0" prefWidth="180.0" />
-      <Label layoutX="38.0" layoutY="152.0" prefHeight="17.0" prefWidth="180.0" text="Hãy nhập ISBN bạn muốn thêm :" />
-      <TextArea layoutX="38.0" layoutY="245.0" prefHeight="200.0" prefWidth="180.0" />
-      <Button layoutX="170.0" layoutY="213.0" mnemonicParsing="false" text="NHẬP" />
-      <Button layoutX="167.0" layoutY="453.0" mnemonicParsing="false" text="THÊM" />
-      <TextField layoutX="260.0" layoutY="179.0" prefHeight="25.0" prefWidth="180.0" />
-      <Label layoutX="260.0" layoutY="152.0" prefHeight="17.0" prefWidth="180.0" text="Hãy nhập ISBN bạn xóa :" />
-      <TextArea layoutX="260.0" layoutY="245.0" prefHeight="200.0" prefWidth="180.0" />
-      <Button layoutX="392.0" layoutY="213.0" mnemonicParsing="false" text="NHẬP" />
-      <Button layoutX="400.0" layoutY="453.0" mnemonicParsing="false" text="XÓA" />
-      <TextField layoutX="466.0" layoutY="179.0" prefHeight="25.0" prefWidth="180.0" />
-      <Label layoutX="466.0" layoutY="152.0" prefHeight="17.0" prefWidth="180.0" text="Hãy nhập ISBN bạn sửa :" />
-      <Button layoutX="606.0" layoutY="213.0" mnemonicParsing="false" text="SỬA" />
-   </children>
-</AnchorPane>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ProfileScreenController">
+   <stylesheets>
+      <URL value="@../css/styles.css" />
+   </stylesheets>
+
+   <top>
+      <fx:include source="../fxml/NavBar.fxml" />
+   </top>
+
+   <center>
+      <AnchorPane style="-fx-padding: 20;">
+         <children>
+            <Label styleClass="subtitle" layoutX="20.0" layoutY="20.0" text="Trang chủ &gt;&gt; Thủ thư &gt;&gt; Chỉnh sửa"/>
+
+            <TabPane layoutX="20.0" layoutY="60.0" prefWidth="760.0" prefHeight="500.0" styleClass="card">
+               <tabs>
+                  <Tab text="Thêm sách">
+                     <content>
+                        <VBox spacing="15" style="-fx-padding: 20;">
+                           <Label text="Thêm sách mới" styleClass="title"/>
+
+                           <HBox spacing="10" alignment="CENTER_LEFT">
+                              <Label text="Nhập ISBN:" styleClass="subtitle"/>
+                              <TextField fx:id="addIsbnField" prefWidth="200.0"/>
+                              <Button text="NHẬP" styleClass="button"/>
+                           </HBox>
+
+                           <Label text="Thông tin sách:" styleClass="subtitle"/>
+                           <TextArea fx:id="addBookInfoArea" prefHeight="200.0" prefWidth="700.0"/>
+
+                           <Button text="THÊM" styleClass="button" style="-fx-background-color: #4CAF50;" alignment="CENTER_RIGHT">
+                              <VBox.margin>
+                                 <Insets right="20.0"/>
+                              </VBox.margin>
+                           </Button>
+                        </VBox>
+                     </content>
+                  </Tab>
+
+                  <Tab text="Xóa sách">
+                     <content>
+                        <VBox spacing="15" style="-fx-padding: 20;">
+                           <Label text="Xóa sách" styleClass="title"/>
+
+                           <HBox spacing="10" alignment="CENTER_LEFT">
+                              <Label text="Nhập ISBN:" styleClass="subtitle"/>
+                              <TextField fx:id="deleteIsbnField" prefWidth="200.0"/>
+                              <Button text="NHẬP" styleClass="button"/>
+                           </HBox>
+
+                           <Label text="Thông tin sách sẽ bị xóa:" styleClass="subtitle"/>
+                           <TextArea fx:id="deleteBookInfoArea" prefHeight="200.0" prefWidth="700.0"/>
+
+                           <Button text="XÓA" styleClass="button-danger" alignment="CENTER_RIGHT">
+                              <VBox.margin>
+                                 <Insets right="20.0"/>
+                              </VBox.margin>
+                           </Button>
+                        </VBox>
+                     </content>
+                  </Tab>
+
+                  <Tab text="Sửa sách">
+                     <content>
+                        <VBox spacing="15" style="-fx-padding: 20;">
+                           <Label text="Sửa thông tin sách" styleClass="title"/>
+
+                           <HBox spacing="10" alignment="CENTER_LEFT">
+                              <Label text="Nhập ISBN:" styleClass="subtitle"/>
+                              <TextField fx:id="editIsbnField" prefWidth="200.0"/>
+                              <Button text="NHẬP" styleClass="button"/>
+                           </HBox>
+
+                           <Label text="Thông tin sách hiện tại:" styleClass="subtitle"/>
+                           <TextArea fx:id="currentBookInfoArea" prefHeight="100.0" prefWidth="700.0"/>
+
+                           <Label text="Thông tin sách mới:" styleClass="subtitle"/>
+                           <TextArea fx:id="newBookInfoArea" prefHeight="100.0" prefWidth="700.0"/>
+
+                           <Button text="CẬP NHẬT" styleClass="button" style="-fx-background-color: #FF9800;" alignment="CENTER_RIGHT">
+                              <VBox.margin>
+                                 <Insets right="20.0"/>
+                              </VBox.margin>
+                           </Button>
+                        </VBox>
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

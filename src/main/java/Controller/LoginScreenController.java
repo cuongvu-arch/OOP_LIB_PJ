@@ -37,7 +37,7 @@ public class LoginScreenController {
             User user = userService.login(usn, pass);
             if (user != null) {
                 SessionManager.setCurrentUser(user);
-                SceneController.getInstance().switchToScene("/HomePageScene.fxml");
+                SceneController.getInstance().switchToScene("/fxml/HomePageScene.fxml");
             } else {
                 showAlert("Lỗi", "Tên tài khoản hoặc mật khẩu của quý khách không chính xác!");
             }
@@ -48,7 +48,7 @@ public class LoginScreenController {
     }
 
     public void signUp () {
-        SceneController.getInstance().switchToScene("/SignUpScene.fxml");
+        SceneController.getInstance().switchToScene("/fxml/SignUpScene.fxml");
     }
 
         public void showAlert(String title, String message) {

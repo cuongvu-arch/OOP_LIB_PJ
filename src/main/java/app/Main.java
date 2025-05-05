@@ -16,7 +16,9 @@ public class Main extends Application {
             UserDAO userDAO= new UserDAO();
             Library.setUserList(userDAO.getAllUser(connection));
             SceneController.getInstance().setPrimaryStage(stage);
-            SceneController.getInstance().switchToScene("/loginScreen.fxml");
+            SceneController.getInstance().switchToScene("/fxml/loginScreen.fxml");
+            stage.centerOnScreen();
+            stage.show();
 
         } catch (Exception e) {
             e.printStackTrace();

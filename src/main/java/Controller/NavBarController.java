@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import models.entities.User;
 import utils.SceneController;
@@ -22,23 +21,26 @@ public class NavBarController {
         updateUIByRole();
     }
     public void home() {
-        SceneController.getInstance().switchToScene("/HomePageScene.fxml");
+        SceneController.getInstance().switchToScene("/fxml/HomePageScene.fxml");
     }
 
+    public void ToAdminScene() {
+        SceneController.getInstance().switchToScene("/fxml/AdminScene.fxml");
+    }
     public void follow() {
-        SceneController.getInstance().switchToScene("/FollowScene.fxml");
+        SceneController.getInstance().switchToScene("/fxml/FollowScene.fxml");
     }
 
     public void history() {
-        SceneController.getInstance().switchToScene("/HistoryScene.fxml");
+        SceneController.getInstance().switchToScene("/fxml/HistoryScene.fxml");
     }
 
     public void profile() {
-        SceneController.getInstance().switchToScene("/ProfileScene.fxml");
+        SceneController.getInstance().switchToScene("/fxml/ProfileScene.fxml");
     }
 
     public void searching() {
-        SceneController.getInstance().switchToScene("/searchingScreen.fxml");
+        SceneController.getInstance().switchToScene("/fxml/searchingScreen.fxml");
     }
 
     private void updateUIByRole() {
@@ -51,7 +53,7 @@ public class NavBarController {
     @FXML
     private void handleSearchButtonClick() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Search.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Search.fxml"));
             Parent root = loader.load();
             BookSearchController controller = loader.getController();
             controller.setUser(SessionManager.getCurrentUser());
