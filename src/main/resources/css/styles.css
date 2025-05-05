@@ -1,0 +1,116 @@
+/* Màu sắc chủ đạo - pastel hiện đại */
+.root {
+    -fx-primary-color: #4DB6AC;      /* xanh mint */
+    -fx-secondary-color: #546E7A;    /* xám xanh */
+    -fx-accent-color: #FF6F61;       /* hồng san hô */
+    -fx-light-color: #F1F8E9;        /* trắng ngà nhạt */
+    -fx-dark-color: #37474F;         /* xám than */
+}
+
+/* Navbar styles */
+.nav-brand {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 0 15 0 0;
+    -fx-cursor: hand;
+}
+
+.nav-item {
+    -fx-text-fill: #CFD8DC;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-padding: 0 10;
+}
+
+.nav-item:hover {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Button styles */
+.button {
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #26A69A;
+}
+
+.button-danger {
+    -fx-background-color: -fx-accent-color;
+}
+
+.button-danger:hover {
+    -fx-background-color: #E53935;
+}
+
+/* Text field styles */
+.text-field, .text-area, .choice-box {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #B0BEC5;
+    -fx-padding: 5 10;
+}
+
+.text-field:focused, .text-area:focused {
+    -fx-border-color: -fx-primary-color;
+}
+
+/* Table styles */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #B0BEC5;
+    -fx-border-radius: 5;
+}
+
+.table-view .column-header {
+    -fx-background-color: -fx-secondary-color;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: -fx-light-color;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: white;
+}
+
+/* Card styles */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 0);
+    -fx-padding: 15;
+}
+
+/* Label styles */
+.title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-dark-color;
+}
+
+.subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #90A4AE;
+}
+
+/* Layout spacing */
+.vbox-spacing {
+    -fx-spacing: 15;
+    -fx-padding: 15;
+}
+
+.hbox-spacing {
+    -fx-spacing: 10;
+    -fx-padding: 10;
+}
