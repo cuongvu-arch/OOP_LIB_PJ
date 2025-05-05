@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import java.net.URL?>
-<?import javafx.css.StyleClass?>
 <?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomePageScreenController">
     <stylesheets>
         <URL value="@../css/styles.css" />
@@ -16,13 +21,13 @@
     </top>
 
     <right>
-        <VBox styleClass="card" spacing="10" alignment="TOP_CENTER" prefWidth="250.0" BorderPane.alignment="CENTER" style="-fx-padding: 15; -fx-margin: 20;">
+        <VBox alignment="TOP_CENTER" prefWidth="250.0" spacing="10" style="-fx-padding: 15; -fx-margin: 20;" styleClass="card" BorderPane.alignment="CENTER">
             <children>
-                <Label text="Bảng xếp hạng sách" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: -fx-dark-color;"/>
+                <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: -fx-dark-color;" text="Bảng xếp hạng sách" />
 
-                <TableView prefHeight="300.0" prefWidth="220.0">
+                <TableView fx:id="documentTableView" prefHeight="300.0" prefWidth="220.0">
                     <columns>
-                        <TableColumn prefWidth="220.0" text="Top sách tháng này">
+                        <TableColumn fx:id="documentInfoColumn" prefWidth="220.0" text="Top sách tháng này">
                             <styleClass>
                                 <String fx:value="table-header" />
                             </styleClass>
