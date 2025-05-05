@@ -1,40 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomePageScreenController">
+<?import java.net.URL?>
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.SearchingScreenController">
+   <stylesheets>
+      <URL value="@../css/styles.css" />
+   </stylesheets>
+
    <top>
       <fx:include source="NavBar.fxml" />
    </top>
+
+   <right>
+      <VBox styleClass="card" spacing="10" prefWidth="300.0" style="-fx-padding: 15;">
+         <Label text="Bảng xếp hạng sách" styleClass="title"/>
+         <TableView prefHeight="500.0" styleClass="right-pane-table">
+            <columns>
+               <TableColumn prefWidth="140.0" text="Tên sách">
+               </TableColumn>
+               <TableColumn prefWidth="140.0" text="Lượt mượn">
+               </TableColumn>
+            </columns>
+         </TableView>
+      </VBox>
+   </right>
+
    <center>
-      <AnchorPane prefHeight="1080.0" prefWidth="1920.0">
-         <children>
-            <Label layoutX="22.0" layoutY="91.0" prefHeight="25.0" prefWidth="183.0" text="Trang chủ &gt;&gt; Thể loại">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <DatePicker layoutX="165.0" layoutY="131.0" promptText="ngày/ tháng/ năm" />
-            <TextField layoutX="394.0" layoutY="131.0" promptText="Tên tác phẩm" />
-            <ChoiceBox fx:id="adminFunction1" layoutX="53.0" layoutY="199.0" prefHeight="25.0" prefWidth="145.0" />
-            <ChoiceBox fx:id="adminFunction11" layoutX="479.0" layoutY="199.0" prefHeight="25.0" prefWidth="145.0" />
-            <ChoiceBox fx:id="adminFunction12" layoutX="265.0" layoutY="199.0" prefHeight="25.0" prefWidth="145.0" />
-            <ChoiceBox fx:id="adminFunction13" layoutX="54.0" layoutY="343.0" prefHeight="25.0" prefWidth="145.0" />
-            <ChoiceBox fx:id="adminFunction111" layoutX="480.0" layoutY="343.0" prefHeight="25.0" prefWidth="145.0" />
-            <ChoiceBox fx:id="adminFunction121" layoutX="266.0" layoutY="343.0" prefHeight="25.0" prefWidth="145.0" />
-            <Label fx:id="adminFunctionText1" layoutX="64.0" layoutY="203.0" prefHeight="17.0" prefWidth="110.0" text="Kinh tế" />
-            <Label fx:id="adminFunctionText11" layoutX="273.0" layoutY="203.0" prefHeight="17.0" prefWidth="110.0" text="Xã hội" />
-            <Label fx:id="adminFunctionText12" layoutX="488.0" layoutY="203.0" prefHeight="17.0" prefWidth="110.0" text="Chính trị" />
-            <Label fx:id="adminFunctionText13" layoutX="64.0" layoutY="347.0" prefHeight="17.0" prefWidth="110.0" text="Ngôn tình" />
-            <Label fx:id="adminFunctionText14" layoutX="273.0" layoutY="347.0" prefHeight="17.0" prefWidth="110.0" text="Kiếm hiệp" />
-            <Label fx:id="adminFunctionText15" layoutX="488.0" layoutY="347.0" prefHeight="17.0" prefWidth="110.0" text="Tu tiên" />
-         </children>
-      </AnchorPane>
+      <VBox styleClass="card" spacing="20" style="-fx-padding: 20;">
+         <Label styleClass="subtitle" text="Trang chủ &gt;&gt; Tìm kiếm nâng cao"/>
+
+         <HBox spacing="15" alignment="CENTER_LEFT">
+            <DatePicker styleClass="filter-control" promptText="Ngày/Tháng/Năm"/>
+            <TextField styleClass="filter-control" promptText="Tên tác phẩm" prefWidth="250.0"/>
+         </HBox>
+
+         <Label text="Thể loại sách" styleClass="subtitle"/>
+
+         <GridPane hgap="15" vgap="15">
+            <columnConstraints>
+               <ColumnConstraints prefWidth="200.0" halignment="CENTER"/>
+               <ColumnConstraints prefWidth="200.0" halignment="CENTER"/>
+               <ColumnConstraints prefWidth="200.0" halignment="CENTER"/>
+            </columnConstraints>
+
+            <rowConstraints>
+               <RowConstraints prefHeight="40.0"/>
+               <RowConstraints prefHeight="40.0"/>
+            </rowConstraints>
+
+            <!-- Hàng 1 -->
+            <VBox alignment="CENTER" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+               <Label text="Kinh tế" styleClass="genre-label"/>
+               <ChoiceBox fx:id="economicGenre" prefWidth="150.0"/>
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+               <Label text="Xã hội" styleClass="genre-label"/>
+               <ChoiceBox fx:id="socialGenre" prefWidth="150.0"/>
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="0">
+               <Label text="Chính trị" styleClass="genre-label"/>
+               <ChoiceBox fx:id="politicalGenre" prefWidth="150.0"/>
+            </VBox>
+
+            <!-- Hàng 2 -->
+            <VBox alignment="CENTER" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+               <Label text="Ngôn tình" styleClass="genre-label"/>
+               <ChoiceBox fx:id="romanceGenre" prefWidth="150.0"/>
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <Label text="Kiếm hiệp" styleClass="genre-label"/>
+               <ChoiceBox fx:id="martialArtsGenre" prefWidth="150.0"/>
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <Label text="Tu tiên" styleClass="genre-label"/>
+               <ChoiceBox fx:id="fantasyGenre" prefWidth="150.0"/>
+            </VBox>
+         </GridPane>
+
+         <Button text="Tìm kiếm" styleClass="button" style="-fx-font-size: 16px; -fx-pref-width: 200.0;" alignment="CENTER">
+            <VBox.margin>
+               <Insets top="20.0"/>
+            </VBox.margin>
+         </Button>
+      </VBox>
    </center>
 </BorderPane>

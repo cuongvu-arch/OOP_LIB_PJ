@@ -3,6 +3,7 @@ package utils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -32,13 +33,32 @@ public class SceneController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Parent root = loader.load();
             Scene scene = new Scene(root);
+
+            // Thiết lập stage
             primaryStage.setScene(scene);
-            primaryStage.setWidth(1920);  // Đặt chiều rộng
-            primaryStage.setHeight(1080); // Đặt chiều cao
+
+            // Tự động điều chỉnh kích thước theo nội dung
+            primaryStage.sizeToScene();
+
+            // Căn giữa màn hình
+            primaryStage.centerOnScreen();
+
+            // Cho phép maximize nhưng không cố định kích thước
             primaryStage.setMaximized(true);
+
+            // Thiết lập kích thước tối thiểu nếu cần
+            primaryStage.setMinWidth(1000);
+            primaryStage.setMinHeight(700);
+
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
+            // Xử lý lỗi tốt hơn
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Lỗi tải giao diện");
+            alert.setHeaderText("Không thể tải trang");
+            alert.setContentText("Lỗi khi tải file: " + fxmlPath);
+            alert.showAndWait();
         }
     }
 }

@@ -1,5 +1,6 @@
 package Controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -45,5 +46,9 @@ public class SignUpScreenController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void cancelSignUp() {
+        SceneController.getInstance().switchToScene("/fxml/loginScreen.fxml");
     }
 }

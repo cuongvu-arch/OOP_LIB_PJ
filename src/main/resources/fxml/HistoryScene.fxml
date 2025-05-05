@@ -6,10 +6,22 @@
 <?import javafx.scene.text.*?>
 
 <?import java.net.URL?>
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HistoryScreenController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.HistoryScreenController">
    <stylesheets>
       <URL value="@../css/styles.css" />
    </stylesheets>
+
+   <right>
+      <VBox styleClass="card" spacing="10" prefWidth="300.0" style="-fx-padding: 15;">
+         <Label text="Bảng xếp hạng sách" styleClass="title"/>
+         <TableView prefHeight="500.0">
+            <columns>
+               <TableColumn prefWidth="280.0" text="Top sách được mượn"/>
+            </columns>
+         </TableView>
+      </VBox>
+   </right>
 
    <top>
       <fx:include source="NavBar.fxml" />
