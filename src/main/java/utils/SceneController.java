@@ -33,6 +33,9 @@ public class SceneController {
             Parent root = loader.load();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
+            primaryStage.setWidth(1920);  // Đặt chiều rộng
+            primaryStage.setHeight(1080); // Đặt chiều cao
+            primaryStage.setMaximized(true);
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();

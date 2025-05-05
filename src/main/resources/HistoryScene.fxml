@@ -20,12 +20,12 @@
                </font>
             </Label>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="340.0" layoutX="14.0" layoutY="50.0" stroke="BLACK" strokeType="INSIDE" width="390.0" />
-            <Label layoutX="67.0" layoutY="63.0" prefHeight="65.0" prefWidth="284.0" text="Lịch sử mượn sách và trả sách" textAlignment="CENTER">
+            <Label layoutX="67.0" layoutY="63.0" text="Lịch sử mượn sách và trả sách" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
             </Label>
-            <TextArea layoutX="27.0" layoutY="122.0" prefHeight="245.0" prefWidth="364.0" />
+            <TextArea layoutX="27.0" layoutY="122.0" prefHeight="228.0" prefWidth="344.0" />
          </children>
       </AnchorPane>
    </center>

@@ -12,12 +12,12 @@
             <font>
                <Font name="Calibri Light" size="18.0" />
             </font></Label>
-         <Label prefHeight="18.0" prefWidth="49.0" text="Tra cứu" />
+         <Label onMouseClicked="#searching" prefHeight="18.0" prefWidth="49.0" text="Tra cứu" />
          <Label onMouseClicked="#profile" prefHeight="18.0" prefWidth="56.0" text="Cá nhân" />
          <Label onMouseClicked="#follow" prefHeight="18.0" prefWidth="84.0" text="Sách theo dõi" />
          <Label onMouseClicked="#history" prefHeight="18.0" prefWidth="47.0" text="Lịch sử" />
          <Label onMouseClicked="#handleSearchButtonClick" prefHeight="18.0" prefWidth="78.0" text="Tìm kiếm " />
-         <Label prefHeight="18.0" prefWidth="63.0" text="Thủ thư" />
+         <Label fx:id="adminFunctionText" prefHeight="18.0" prefWidth="63.0" text="Thủ thư" />
       </children>
     </HBox>
 </AnchorPane>
