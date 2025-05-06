@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <AnchorPane style="-fx-padding: 20;">
          <children>
@@ -59,4 +59,4 @@
          </children>
       </AnchorPane>
    </center>
-</fx:root>
+</BorderPane>

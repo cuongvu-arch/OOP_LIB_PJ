@@ -32,15 +32,15 @@ public class NavBarController {
     }
 
     public void history() {
-        SceneController.getInstance().switchToScene("/fxml/HistoryScene.fxml");
+        SceneController.getInstance().switchCenterContent("/fxml/HistoryScene.fxml");
     }
 
     public void profile() {
-        SceneController.getInstance().switchToScene("/fxml/ProfileScene.fxml");
+        SceneController.getInstance().switchCenterContent("/fxml/ProfileScene.fxml");
     }
 
     public void searching() {
-        SceneController.getInstance().switchToScene("/fxml/searchingScreen.fxml");
+        SceneController.getInstance().switchCenterContent("/fxml/searchingScreen.fxml");
     }
 
     private void updateUIByRole() {
