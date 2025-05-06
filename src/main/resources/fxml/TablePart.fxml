@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controller.TablePartController"
+            prefHeight="400.0"
+    styleClass="card" spacing="10" prefWidth="300.0" style="-fx-padding: 15;">
+        <Label text="Bảng xếp hạng sách" styleClass="title"/>
+        <TableView prefHeight="500.0" styleClass="right-pane-table">
+            <columns>
+                <TableColumn prefWidth="140.0" text="Tên sách"/>
+                <TableColumn prefWidth="140.0" text="Lượt mượn"/>
+            </columns>
+        </TableView>
+    </VBox>
+

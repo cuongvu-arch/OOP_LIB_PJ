@@ -6,35 +6,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
-
-<?import java.net.URL?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TableColumn?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="600.0" prefWidth="1000.0"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Controller.AdminSceneController">
-    <stylesheets>
-        <URL value="@../css/styles.css" />
-    </stylesheets>
 
-    <top>
-        <fx:include source="NavBar.fxml" />
-    </top>
-
-    <right>
-        <VBox styleClass="card" spacing="10" prefWidth="300.0" style="-fx-padding: 15;">
-            <Label text="Bảng xếp hạng sách" styleClass="title"/>
-            <TableView prefHeight="500.0">
-                <columns>
-                    <TableColumn prefWidth="280.0" text="Lịch sử hoạt động" />
-                </columns>
-            </TableView>
-        </VBox>
-    </right>
-
+<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="Controller.AdminSceneController">
     <center>
         <GridPane styleClass="vbox-spacing" BorderPane.alignment="CENTER">
             <columnConstraints>
@@ -60,4 +35,4 @@
             </Pane>
         </GridPane>
     </center>
-</BorderPane>
+</fx:root>

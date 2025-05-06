@@ -5,31 +5,8 @@
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 
-<?import java.net.URL?>
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Controller.SearchingScreenController">
-   <stylesheets>
-      <URL value="@../css/styles.css" />
-   </stylesheets>
-
-   <top>
-      <fx:include source="NavBar.fxml" />
-   </top>
-
-   <right>
-      <VBox styleClass="card" spacing="10" prefWidth="300.0" style="-fx-padding: 15;">
-         <Label text="Bảng xếp hạng sách" styleClass="title"/>
-         <TableView prefHeight="500.0" styleClass="right-pane-table">
-            <columns>
-               <TableColumn prefWidth="140.0" text="Tên sách">
-               </TableColumn>
-               <TableColumn prefWidth="140.0" text="Lượt mượn">
-               </TableColumn>
-            </columns>
-         </TableView>
-      </VBox>
-   </right>
-
+<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="Controller.SearchingScreenController">
    <center>
       <VBox styleClass="card" spacing="20" style="-fx-padding: 20;">
          <Label styleClass="subtitle" text="Trang chủ &gt;&gt; Tìm kiếm nâng cao"/>
@@ -93,4 +70,4 @@
          </Button>
       </VBox>
    </center>
-</BorderPane>
+</fx:root>

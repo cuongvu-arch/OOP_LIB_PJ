@@ -2,35 +2,10 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<?import java.net.URL?>
-<BorderPane prefHeight="700.0" prefWidth="1000.0"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Controller.ProfileScreenController">
-   <stylesheets>
-      <URL value="@../css/styles.css" />
-   </stylesheets>
-
-   <right>
-      <VBox styleClass="card" spacing="10" prefWidth="300.0" style="-fx-padding: 15;">
-         <Label text="Bảng xếp hạng sách" styleClass="title"/>
-         <TableView prefHeight="500.0">
-            <columns>
-               <TableColumn prefWidth="140.0" text="Loại"/>
-               <TableColumn prefWidth="140.0" text="Số lượng"/>
-            </columns>
-            <!-- Có thể thêm dữ liệu mẫu -->
-         </TableView>
-      </VBox>
-   </right>
-
-   <top>
-      <fx:include source="NavBar.fxml" />
-   </top>
-
+<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="Controller.ProfileScreenController">
    <center>
       <AnchorPane BorderPane.alignment="CENTER_LEFT" style="-fx-padding: 20;">
          <children>
@@ -87,4 +62,4 @@
          </children>
       </AnchorPane>
    </center>
-</BorderPane>
+</fx:root>

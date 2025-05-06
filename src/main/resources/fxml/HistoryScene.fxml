@@ -2,31 +2,10 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<?import java.net.URL?>
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Controller.HistoryScreenController">
-   <stylesheets>
-      <URL value="@../css/styles.css" />
-   </stylesheets>
-
-   <right>
-      <VBox styleClass="card" spacing="10" prefWidth="300.0" style="-fx-padding: 15;">
-         <Label text="Bảng xếp hạng sách" styleClass="title"/>
-         <TableView prefHeight="500.0">
-            <columns>
-               <TableColumn prefWidth="280.0" text="Top sách được mượn"/>
-            </columns>
-         </TableView>
-      </VBox>
-   </right>
-
-   <top>
-      <fx:include source="NavBar.fxml" />
-   </top>
-
+<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="Controller.HistoryScreenController">
    <center>
       <AnchorPane style="-fx-padding: 20;">
          <children>
@@ -35,11 +14,10 @@
             <Pane styleClass="card" layoutX="20.0" layoutY="60.0" prefWidth="600.0" prefHeight="400.0">
                <children>
                   <Label text="Lịch sử mượn sách và trả sách" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-alignment: center;" layoutX="150.0" layoutY="20.0"/>
-
                   <TextArea layoutX="30.0" layoutY="60.0" prefHeight="300.0" prefWidth="540.0" style="-fx-font-family: 'Arial'; -fx-font-size: 14px;"/>
                </children>
             </Pane>
          </children>
       </AnchorPane>
    </center>
-</BorderPane>
+</fx:root>
