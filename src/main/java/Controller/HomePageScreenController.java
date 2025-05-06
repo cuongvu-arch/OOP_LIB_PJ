@@ -25,11 +25,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class HomePageScreenController {
+/**
     @FXML private ChoiceBox<String> adminFunction;
     @FXML private Label adminFunctionText;
     @FXML private Button searchButton;
     @FXML private TableView<BookRatingView> documentTableView; // TableView để hiển thị danh sách tài liệu
     @FXML private TableColumn<BookRatingView, BookRatingView> documentInfoColumn;
+
 
     public void initialize() {
         setupDocumentTable();
@@ -68,5 +70,6 @@ public class HomePageScreenController {
 
         documentTableView.setItems(FXCollections.observableArrayList(viewModels));
     }
-
+ */
 }
+
