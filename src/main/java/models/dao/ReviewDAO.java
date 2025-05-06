@@ -1,6 +1,7 @@
 package models.dao;
 
 import models.data.DatabaseConnection;
+import models.entities.Document;
 import models.entities.Library;
 import models.entities.Review;
 
@@ -154,6 +155,41 @@ public class ReviewDAO {
         } catch (SQLException e) {
             System.err.println("Lỗi khi xoá review: " + e.getMessage());
         }
+    }
+
+    public List<Document> getTopRatedDocuments(int topN) {
+        List<Document> result = new ArrayList<>();
+
+        String sql = """
+        SELECT d.isbn, d.title, d.thumbnailUrl, AVG(r.rating) as avg_rating
+        FROM review r
+        JOIN documents d ON r.documentIsbn = d.isbn
+        GROUP BY d.isbn, d.title, d.thumbnailUrl
+        ORDER BY avg_rating DESC
+        LIMIT ?
+    """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, topN);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String isbn = rs.getString("isbn");
+                String title = rs.getString("title");
+                String thumbnail = rs.getString("thumbnailUrl");
+
+                // Bạn có thể gọi DocumentDAO để lấy thông tin đầy đủ nếu muốn
+                Document doc = new Document(title, isbn, thumbnail);
+                result.add(doc);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
 }

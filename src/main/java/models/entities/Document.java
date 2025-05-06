@@ -21,6 +21,12 @@ public class Document {
     }
 
     // Getter & Setter
+    public Document(String title, String isbn, String thumbnailUrl) {
+        this.title = title;
+        this.isbn = isbn;
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
     public String getIsbn() {
         return isbn;
     }
