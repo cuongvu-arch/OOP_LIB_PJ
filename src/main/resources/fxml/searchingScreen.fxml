@@ -5,7 +5,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 
-<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="Controller.SearchingScreenController">
    <center>
       <VBox styleClass="card" spacing="20" style="-fx-padding: 20;">
@@ -70,4 +70,4 @@
          </Button>
       </VBox>
    </center>
-</fx:root>
+</BorderPane>

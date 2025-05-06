@@ -9,11 +9,6 @@
    <stylesheets>
       <URL value="@../css/styles.css" />
    </stylesheets>
-
-   <top>
-      <fx:include source="../fxml/NavBar.fxml" />
-   </top>
-
    <center>
       <AnchorPane style="-fx-padding: 20;">
          <children>

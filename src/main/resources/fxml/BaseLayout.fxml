@@ -15,14 +15,10 @@
     </top>
 
     <right>
-        <VBox styleClass="card" spacing="10" prefWidth="300.0" style="-fx-padding: 15;">
-            <Label text="Bảng xếp hạng sách" styleClass="title"/>
-            <TableView prefHeight="500.0" styleClass="right-pane-table">
-                <columns>
-                    <TableColumn prefWidth="140.0" text="Tên sách"/>
-                    <TableColumn prefWidth="140.0" text="Lượt mượn"/>
-                </columns>
-            </TableView>
-        </VBox>
+        <fx:include source="TablePart.fxml" />
     </right>
+
+    <center>
+        <fx:include source="HomePageScene.fxml" />
+    </center>
 </BorderPane>
