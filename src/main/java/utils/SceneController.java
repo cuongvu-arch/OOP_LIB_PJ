@@ -40,8 +40,10 @@ public class SceneController {
 
             primaryStage.setScene(scene);
             primaryStage.setMaximized(true);
-            primaryStage.setMinWidth(1920);
-            primaryStage.setMinHeight(1080);
+            primaryStage.setMaxWidth(1920);
+            primaryStage.setMaxHeight(1080);
+            primaryStage.setMinWidth(1000);
+            primaryStage.setMinHeight(700);
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
