@@ -21,7 +21,6 @@ public class BookRatingView {
     public StringProperty titleProperty() { return title; }
     public StringProperty isbnProperty() { return isbn; }
     public StringProperty thumbnailUrlProperty() { return thumbnailUrl; }
-
     public Document getBook() {
         return book;
     }
