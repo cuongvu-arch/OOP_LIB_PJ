@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root type="BorderPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane  xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="Controller.HomePageScreenController">
     <center>
         <GridPane style="-fx-padding: 20;" BorderPane.alignment="CENTER">
@@ -18,4 +18,4 @@
             </rowConstraints>
         </GridPane>
     </center>
-</fx:root>
+</BorderPane>

@@ -38,7 +38,7 @@ public class LoginScreenController {
             if (user != null) {
                 SessionManager.setCurrentUser(user);
                 SceneController.getInstance().initRootLayout("/fxml/BaseLayout.fxml");
-                SceneController.getInstance().switchCenterContent("/fxml/HomePageScreen.fxml");
+                SceneController.getInstance().switchCenterContent("/fxml/HomePageScene.fxml");
             } else {
                 showAlert("Lỗi", "Tên tài khoản hoặc mật khẩu của quý khách không chính xác!");
             }

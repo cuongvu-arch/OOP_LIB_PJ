@@ -21,14 +21,14 @@ public class NavBarController {
         updateUIByRole();
     }
     public void home() {
-        SceneController.getInstance().switchToScene("/fxml/HomePageScene.fxml");
+        SceneController.getInstance().switchCenterContent("/fxml/HomePageScene.fxml");
     }
 
     public void ToAdminScene() {
-        SceneController.getInstance().switchToScene("/fxml/AdminScene.fxml");
+        SceneController.getInstance().switchCenterContent("/fxml/AdminScene.fxml");
     }
     public void follow() {
-        SceneController.getInstance().switchToScene("/fxml/FollowScene.fxml");
+        SceneController.getInstance().switchCenterContent("/fxml/FollowScene.fxml");
     }
 
     public void history() {
