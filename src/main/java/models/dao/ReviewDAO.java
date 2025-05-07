@@ -161,13 +161,14 @@ public class ReviewDAO {
         List<Document> result = new ArrayList<>();
 
         String sql = """
-        SELECT d.isbn, d.title, d.thumbnailUrl, AVG(r.rating) as avg_rating
-        FROM review r
-        JOIN documents d ON r.documentIsbn = d.isbn
-        GROUP BY d.isbn, d.title, d.thumbnailUrl
+        SELECT d.isbn, d.title, AVG(r.rating) AS avg_rating
+        FROM books d
+        JOIN review r ON d.isbn = r.document_isbn
+        GROUP BY d.isbn, d.title
+        HAVING AVG(r.rating) > 0
         ORDER BY avg_rating DESC
         LIMIT ?
-    """;
+        """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -178,10 +179,10 @@ public class ReviewDAO {
             while (rs.next()) {
                 String isbn = rs.getString("isbn");
                 String title = rs.getString("title");
-                String thumbnail = rs.getString("thumbnailUrl");
+                double avgRating = rs.getDouble("avg_rating");
 
-                // Bạn có thể gọi DocumentDAO để lấy thông tin đầy đủ nếu muốn
-                Document doc = new Document(title, isbn, thumbnail);
+                Document doc = new Document(isbn, title);
+                doc.setAvgRating(avgRating);
                 result.add(doc);
             }
 
@@ -190,6 +191,41 @@ public class ReviewDAO {
         }
 
         return result;
+    }
+
+    public double calculateAverageRating(String isbn) {
+        double avgRating = 0;
+        int totalRating = 0;
+        int count = 0;
+
+        String sql = """
+        SELECT rating
+        FROM review
+        WHERE document_isbn = ?
+        """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, isbn);
+            ResultSet rs = stmt.executeQuery();
+
+            // Tính tổng số điểm và số lượng đánh giá
+            while (rs.next()) {
+                totalRating += rs.getInt("rating");
+                count++;
+            }
+
+            // Nếu có đánh giá thì tính điểm trung bình
+            if (count > 0) {
+                avgRating = (double) totalRating / count;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return avgRating;
     }
 
 }
