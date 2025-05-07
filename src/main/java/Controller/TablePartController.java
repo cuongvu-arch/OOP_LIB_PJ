@@ -1,25 +1,14 @@
 package Controller;
 
 import models.dao.ReviewDAO;
-import models.entities.User;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.stage.Stage;
-import utils.SceneController;
-import utils.SessionManager;
 import models.viewmodel.BookRatingView;
 import models.entities.Document;
 
-import java.io.IOException;
-
-import javafx.stage.Stage;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,7 +33,7 @@ public class TablePartController {
                     setGraphic(null);
                 } else {
                     int index = getIndex() + 1;
-                    String display = index + ". " + vm.titleProperty() + "\nISBN: " + vm.isbnProperty();
+                    String display = index + ". " + vm.titleProperty().get() + "\nISBN: " + vm.isbnProperty().get();
                     setText(display);
                     setGraphic(null);
                 }
@@ -55,13 +44,23 @@ public class TablePartController {
     }
 
     private void loadTopRatedBooks() {
+        // Lấy dữ liệu thực từ cơ sở dữ liệu
         ReviewDAO reviewDAO = new ReviewDAO();
         List<Document> topDocuments = reviewDAO.getTopRatedDocuments(10);
 
+        // Chuyển đổi các Document thành BookRatingView (ViewModel) để hiển thị trong TableView
         List<BookRatingView> viewModels = topDocuments.stream()
                 .map(BookRatingView::new)
                 .collect(Collectors.toList());
 
+        // Cập nhật dữ liệu vào TableView
         documentTableView.setItems(FXCollections.observableArrayList(viewModels));
+
+        ObservableList<BookRatingView> data = FXCollections.observableArrayList(
+                new BookRatingView(new Document("978-0132350884", "Clean Code")),
+                new BookRatingView(new Document("978-0134685991", "Effective Java")),
+                new BookRatingView(new Document("978-0201633610", "Design Patterns"))
+        );
+        documentTableView.setItems(data);
     }
 }
