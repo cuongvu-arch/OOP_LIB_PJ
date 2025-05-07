@@ -1,61 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane  xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="Controller.ProfileScreenController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ProfileScreenController">
    <center>
-      <AnchorPane BorderPane.alignment="CENTER_LEFT" style="-fx-padding: 20;">
+      <AnchorPane style="-fx-padding: 20;" BorderPane.alignment="CENTER_LEFT">
          <children>
-            <Label styleClass="subtitle" layoutX="20.0" layoutY="20.0" text="Trang chủ &gt;&gt; Cá nhân"/>
+            <Label layoutX="20.0" layoutY="20.0" styleClass="subtitle" text="Trang chủ &gt;&gt; Cá nhân" />
 
             <VBox layoutX="20.0" layoutY="60.0" spacing="20">
-               <Pane styleClass="card" prefWidth="250.0" prefHeight="400.0">
+               <Pane prefHeight="400.0" prefWidth="250.0" styleClass="card">
                   <children>
-                     <Label styleClass="title" layoutX="20.0" layoutY="20.0" text="Tài khoản của"/>
-                     <Label fx:id="nameLabel" styleClass="title" layoutX="20.0" layoutY="50.0" text="[Tên người dùng]"/>
+                     <Label layoutX="20.0" layoutY="20.0" styleClass="title" text="Tài khoản của" />
+                     <Label fx:id="nameLabel" layoutX="20.0" layoutY="50.0" styleClass="title" text="[Tên người dùng]" />
 
                      <VBox layoutX="20.0" layoutY="100.0" spacing="15">
-                        <Label text="Truyện đang mượn" style="-fx-text-fill: #6e377b; -fx-font-weight: bold; -fx-cursor: hand;"/>
-                        <Label text="Truyện đã trả" style="-fx-text-fill: #dd12d7; -fx-font-weight: bold; -fx-cursor: hand;"/>
-                        <Label text="Đổi mật khẩu" style="-fx-text-fill: #1fe029; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                        <Label style="-fx-text-fill: #1fe029; -fx-font-weight: bold; -fx-cursor: hand;" text="Thông tin chung" />
+                        <Label fx:id="Truyendangmuon" style="-fx-text-fill: #6e377b; -fx-font-weight: bold; -fx-cursor: hand;" text="Truyện đang mượn" />
+                        <Label fx:id="Truyendatra" style="-fx-text-fill: #dd12d7; -fx-font-weight: bold; -fx-cursor: hand;" text="Truyện đã trả" />
 
-                        <Button text="Thoát" onAction="#Exit" style="-fx-background-color: #1020d2; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        <Button onAction="#Exit" style="-fx-background-color: #1020d2; -fx-text-fill: white; -fx-font-weight: bold;" text="Thoát" />
                      </VBox>
                   </children>
                </Pane>
             </VBox>
 
-            <Pane styleClass="card" layoutX="300.0" layoutY="60.0" prefWidth="550.0" prefHeight="400.0">
+            <Pane layoutX="300.0" layoutY="60.0" prefHeight="400.0" prefWidth="550.0" styleClass="card">
                <children>
-                  <Label text="THÔNG TIN CHUNG" style="-fx-font-size: 20px; -fx-text-fill: -fx-primary-color; -fx-font-weight: bold;" layoutX="20.0" layoutY="20.0"/>
+                  <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 20px; -fx-text-fill: -fx-primary-color; -fx-font-weight: bold;" text="THÔNG TIN CHUNG" />
 
-                  <GridPane layoutX="20.0" layoutY="60.0" hgap="10" vgap="15">
+                  <GridPane hgap="10" layoutX="20.0" layoutY="60.0" vgap="15">
                      <columnConstraints>
-                        <ColumnConstraints prefWidth="100.0"/>
-                        <ColumnConstraints prefWidth="300.0"/>
+                        <ColumnConstraints prefWidth="100.0" />
+                        <ColumnConstraints prefWidth="300.0" />
                      </columnConstraints>
 
                      <rowConstraints>
-                        <RowConstraints prefHeight="30.0"/>
-                        <RowConstraints prefHeight="30.0"/>
-                        <RowConstraints prefHeight="30.0"/>
-                        <RowConstraints prefHeight="30.0"/>
+                        <RowConstraints prefHeight="30.0" />
+                        <RowConstraints prefHeight="30.0" />
+                        <RowConstraints prefHeight="30.0" />
+                        <RowConstraints prefHeight="30.0" />
                      </rowConstraints>
 
-                     <Label text="Họ và tên:" style="-fx-font-weight: bold;"/>
-                     <TextField fx:id="usernameField" GridPane.columnIndex="1"/>
+                     <Label style="-fx-font-weight: bold;" text="Họ và tên:" />
+                     <TextField fx:id="usernameField" GridPane.columnIndex="1" />
 
-                     <Label text="Email:" style="-fx-font-weight: bold;" GridPane.rowIndex="1"/>
-                     <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                     <Label style="-fx-font-weight: bold;" text="Email:" GridPane.rowIndex="1" />
+                     <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                     <Label text="Số điện thoại:" style="-fx-font-weight: bold;" GridPane.rowIndex="2"/>
-                     <TextField fx:id="phoneField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                     <Label style="-fx-font-weight: bold;" text="Số điện thoại:" GridPane.rowIndex="2" />
+                     <TextField fx:id="phoneField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                     <Label text="Vai trò:" style="-fx-font-weight: bold;" GridPane.rowIndex="3"/>
-                     <Label fx:id="roleLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                     <Label style="-fx-font-weight: bold;" text="Vai trò:" GridPane.rowIndex="3" />
+                     <Label fx:id="roleLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   </GridPane>
                </children>
             </Pane>
