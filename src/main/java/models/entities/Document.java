@@ -9,6 +9,8 @@ public class Document {
     private String publishedDate;
     private String description;
     private String thumbnailUrl;
+    private double avgRating;
+
 
     public Document(String isbn, String title, String[] authors, String publisher, String publishedDate, String description, String thumbnailUrl) {
         this.isbn = isbn;
@@ -26,6 +28,20 @@ public class Document {
         this.isbn = isbn;
         this.thumbnailUrl = thumbnailUrl;
     }
+
+    public Document(String isbn, String title) {
+        this.title = title;
+        this.isbn = isbn;
+    }
+
+    public double getAvgRating() {
+        return avgRating;
+    }
+
+    public void setAvgRating(double avgRating) {
+        this.avgRating = avgRating;
+    }
+
 
     public String getIsbn() {
         return isbn;
