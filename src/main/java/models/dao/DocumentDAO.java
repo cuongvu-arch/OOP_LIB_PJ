@@ -204,4 +204,45 @@ public class DocumentDAO {
         }
         return documents;
     }
+    public List<Document> getBooksPaginated(Connection conn, int page, int booksPerPage) throws SQLException {
+        List<Document> books = new ArrayList<>();
+        int offset = (page - 1) * booksPerPage;
+
+        String sql = "SELECT isbn, title, authors, publisher, publish_date, description, thumbnail_url " +
+                "FROM books LIMIT ? OFFSET ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, booksPerPage);
+            stmt.setInt(2, offset);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String authorsJson = rs.getString("authors");
+                String[] authors;
+                try {
+                    JSONArray authorsArray = new JSONArray(authorsJson);
+                    authors = new String[authorsArray.length()];
+                    for (int i = 0; i < authorsArray.length(); i++) {
+                        authors[i] = authorsArray.getString(i);
+                    }
+                } catch (Exception e) {
+                    authors = new String[0];
+                }
+
+                Document book = new Document(
+                        rs.getString("isbn"),
+                        rs.getString("title"),
+                        authors,
+                        rs.getString("publisher"),
+                        rs.getString("publish_date"),
+                        rs.getString("description"),
+                        rs.getString("thumbnail_url")
+                );
+                books.add(book);
+            }
+        }
+
+        return books;
+    }
 }
