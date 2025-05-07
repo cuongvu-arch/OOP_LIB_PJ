@@ -1,12 +1,22 @@
 package models.entities;
 
-public class BorrowRecord {
-    private int userId;
-    private String isbn;
+import java.sql.Date;
 
-    public BorrowRecord(int userId, String isbn) {
+public class BorrowRecord {
+    private final int userId;
+    private final String isbn;
+    private final Date borrowDate;
+    private final Date returnDate;  // Thêm thuộc tính returnDate
+
+    public BorrowRecord(int userId, String isbn, Date borrowDate, Date returnDate) {
         this.userId = userId;
         this.isbn = isbn;
+        this.borrowDate = borrowDate;
+        this.returnDate = returnDate;  // Khởi tạo returnDate
+    }
+
+    public BorrowRecord(int userId, String isbn) {
+        this(userId, isbn, null, null);
     }
 
     public int getUserId() {
@@ -15,5 +25,13 @@ public class BorrowRecord {
 
     public String getIsbn() {
         return isbn;
+    }
+
+    public Date getBorrowDate() {
+        return borrowDate;
+    }
+
+    public Date getReturnDate() {
+        return returnDate;
     }
 }
