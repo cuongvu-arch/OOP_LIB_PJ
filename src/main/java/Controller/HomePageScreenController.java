@@ -6,39 +6,16 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import models.dao.DocumentDAO;
-import models.dao.ReviewDAO;
 import models.data.DatabaseConnection;
-import models.entities.User;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+
 import javafx.scene.control.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.stage.Stage;
 import utils.BookImageLoader;
-import utils.SceneController;
-import utils.SessionManager;
-import models.viewmodel.BookRatingView;
 import models.entities.Document;
 
-import java.io.IOException;
-
-import javafx.stage.Stage;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.stream.Collectors;
-
-
-/**
-    @FXML private ChoiceBox<String> adminFunction;
-    @FXML private Label adminFunctionText;
-    @FXML private Button searchButton;
- */
 
 
 
@@ -89,7 +66,7 @@ public class HomePageScreenController {
                 booksGrid.add(bookBox, col, row);
 
                 col++;
-                if (col >= 3) { // 3 cột mỗi hàng
+                if (col >= 3) {
                     col = 0;
                     row++;
                 }
@@ -99,7 +76,7 @@ public class HomePageScreenController {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            // Xử lý lỗi
+
         }
     }
 
@@ -107,28 +84,26 @@ public class HomePageScreenController {
         VBox bookBox = new VBox(10);
         bookBox.setStyle("-fx-padding: 10; -fx-background-color: #f5f5f5; -fx-border-radius: 5;");
 
-        // Ảnh bìa sách
         ImageView coverView = new ImageView();
-        coverView.setFitWidth(180);
-        coverView.setFitHeight(220);
+        coverView.setFitWidth(150);
+        coverView.setFitHeight(200);
         coverView.setPreserveRatio(true);
 
         if (book.getThumbnailUrl() != null && !book.getThumbnailUrl().isEmpty()) {
             BookImageLoader.loadImage(book.getThumbnailUrl(), coverView);
         } else {
-            // Ảnh placeholder nếu không có URL
+
             coverView.setImage(new Image("/images/book_placeholder.png"));
         }
 
-        // Tiêu đề sách
+
         Text titleText = new Text(book.getTitle());
         titleText.setWrappingWidth(180);
         titleText.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
 
-        // Tác giả
         String authors = String.join(", ", book.getAuthors());
         Text authorText = new Text("Tác giả: " + authors);
-        authorText.setWrappingWidth(180);
+        authorText.setWrappingWidth(150);
         authorText.setStyle("-fx-font-size: 12;");
 
         bookBox.getChildren().addAll(coverView, titleText, authorText);

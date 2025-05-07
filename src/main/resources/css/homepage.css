@@ -1,0 +1,43 @@
+.book-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
+    -fx-padding: 10;
+}
+
+.book-cover {
+    -fx-fit-width: 150px;
+    -fx-fit-height: 200px;
+    -fx-preserve-ratio: true;
+}
+
+.book-title {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-wrap-text: true;
+    -fx-max-width: 150px;
+}
+
+.book-author {
+    -fx-font-size: 12px;
+    -fx-wrap-text: true;
+    -fx-max-width: 150px;
+}
+
+.page-button {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 5 15;
+}
+
+.page-button:hover {
+    -fx-background-color: #3a7bc8;
+}
+
+.page-button:disabled {
+    -fx-background-color: #cccccc;
+}
