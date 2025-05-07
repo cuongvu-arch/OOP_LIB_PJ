@@ -27,6 +27,12 @@ public class ProfileScreenController {
     private Label nameLabel;
 
     @FXML
+    private Label Truyendangmuon;
+
+    @FXML
+    private Label Truyendatra;
+
+    @FXML
     public void initialize() {
         Task<User> loadUserTask = new Task<>() {
             @Override
@@ -34,6 +40,16 @@ public class ProfileScreenController {
                 return SessionManager.getCurrentUser();
             }
         };
+
+        Truyendangmuon.setOnMouseClicked(event -> {
+            // Đường dẫn tới file FXML hiển thị sách đang mượn
+            SceneController.getInstance().switchCenterContent("/fxml/ProfileSceneBorrow1.fxml");
+        });
+
+        Truyendatra.setOnMouseClicked(event -> {
+            // Đường dẫn tới file FXML hiển thị sách đang mượn
+            SceneController.getInstance().switchCenterContent("/fxml/ProfileSceneBorrow2.fxml");
+        });
 
         // Sau khi load xong, cập nhật lên UI thread
         loadUserTask.setOnSucceeded(event -> {
@@ -65,6 +81,6 @@ public class ProfileScreenController {
     }
 
     public void Exit() {
-        SceneController.getInstance().switchToScene("/fxml/HomePageScene.fxml");
+        SceneController.getInstance().switchToScene("/fxml/BaseLayout.fxml");
     }
 }
