@@ -31,4 +31,6 @@ module java.oop_library_project {
     opens models.entities to javafx.fxml;
     exports models.data;
     opens models.data to javafx.fxml;
+    opens models.viewmodel to javafx.base;
+
 }
