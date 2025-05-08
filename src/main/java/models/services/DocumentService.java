@@ -5,6 +5,7 @@ import models.data.DatabaseConnection;
 import models.entities.Document;
 import models.entities.User;
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class DocumentService {
     private final DocumentDAO documentDAO;
@@ -31,19 +33,16 @@ public class DocumentService {
         if (isAdmin) {
             try {
                 fetchedDoc = GoogleBooksAPIService.fetchBookInfo(isbn);
-                System.out.println("Lấy từ API: " + (fetchedDoc != null ? fetchedDoc.getTitle() : "null"));
             } catch (Exception e) {
                 System.err.println("Lỗi Google Books API: " + e.getMessage());
             }
             if (fetchedDoc == null) {
                 fetchedDoc = documentDAO.getBookByIsbn(isbn);
-                System.out.println("Lấy từ DB: " + (fetchedDoc != null ? fetchedDoc.getTitle() : "null"));
             }
         } else {
             fetchedDoc = documentDAO.getBookByIsbn(isbn);
-            System.out.println("Lấy từ DB (người dùng): " + (fetchedDoc != null ? fetchedDoc.getTitle() : "null"));
         }
-
+        System.out.println("Tìm kiếm ISBN '" + isbn + "' -> Kết quả: " + (fetchedDoc != null ? fetchedDoc.getTitle() : "null"));
         return fetchedDoc;
     }
 
@@ -116,6 +115,8 @@ public class DocumentService {
         List<Document> results = new ArrayList<>();
         StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM books WHERE 1=1");
         List<Object> params = new ArrayList<>();
+        boolean performClientSideAuthorFilter = false;
+        String clientSideAuthorQuery = null;
 
         if (title != null && !title.trim().isEmpty()) {
             sqlBuilder.append(" AND LOWER(title) LIKE LOWER(?)");
@@ -123,8 +124,16 @@ public class DocumentService {
         }
 
         if (author != null && !author.trim().isEmpty()) {
-            sqlBuilder.append(" AND LOWER(authors) LIKE LOWER(?)");
-            params.add("%" + author.trim() + "%");
+            String trimmedAuthor = author.trim().toLowerCase();
+
+            if (trimmedAuthor.length() <= 3) {
+                performClientSideAuthorFilter = true;
+                clientSideAuthorQuery = trimmedAuthor;
+
+            } else {
+                sqlBuilder.append(" AND LOWER(authors) LIKE LOWER(?)");
+                params.add("%" + trimmedAuthor + "%");
+            }
         }
 
         if (publishDate != null && !publishDate.trim().isEmpty()) {
@@ -151,7 +160,7 @@ public class DocumentService {
                         for (int i = 0; i < jsonAuthors.length(); i++) {
                             authorsArray[i] = jsonAuthors.getString(i);
                         }
-                    } catch (Exception e) {
+                    } catch (JSONException e) {
                         authorsArray = new String[]{authorsJson};
                         System.err.println("Lỗi parse JSON cho authors: " + authorsJson + " - " + e.getMessage());
                     }
@@ -159,8 +168,7 @@ public class DocumentService {
                     authorsArray = new String[0];
                 }
 
-
-                results.add(new Document(
+                Document doc = new Document(
                         rs.getString("isbn"),
                         rs.getString("title"),
                         authorsArray,
@@ -168,7 +176,24 @@ public class DocumentService {
                         rs.getString("publish_date"),
                         rs.getString("description"),
                         rs.getString("thumbnail_url")
-                ));
+                );
+
+                if (performClientSideAuthorFilter) {
+                    boolean match = false;
+                    if (doc.getAuthors() != null) {
+                        for (String anAuthor : doc.getAuthors()) {
+                            if (anAuthor != null && anAuthor.toLowerCase().startsWith(clientSideAuthorQuery)) {
+                                match = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (match) {
+                        results.add(doc);
+                    }
+                } else {
+                    results.add(doc);
+                }
             }
         } catch (SQLException e) {
             System.err.println("Lỗi SQL khi tìm kiếm sách: " + e.getMessage());
