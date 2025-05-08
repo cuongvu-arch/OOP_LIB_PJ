@@ -16,7 +16,7 @@ public class BorrowRecord {
     }
 
     public BorrowRecord(int userId, String isbn) {
-        this(userId, isbn, null, null);
+        this(userId, isbn, new Date(System.currentTimeMillis()), null); // Mặc định ngày mượn là ngày hiện tại
     }
 
     public int getUserId() {
