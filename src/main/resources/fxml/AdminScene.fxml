@@ -6,31 +6,29 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="Controller.AdminSceneController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AdminSceneController">
     <center>
         <GridPane styleClass="vbox-spacing" BorderPane.alignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="200.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="200.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="200.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="200.0" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="50.0" prefHeight="100.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="50.0" prefHeight="100.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="50.0" prefHeight="100.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="50.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="50.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="50.0" prefHeight="100.0" vgrow="SOMETIMES" />
             </rowConstraints>
 
-            <Pane styleClass="card" prefHeight="200.0" prefWidth="300.0">
+            <Pane prefHeight="200.0" prefWidth="300.0" styleClass="card">
                 <children>
-                    <Label styleClass="title" layoutX="20.0" layoutY="20.0" onMouseClicked="#ToUser" text="Người dùng"/>
+                    <Label fx:id="toUserLabel"  layoutX="-1.0" layoutY="1.0" onMouseClicked="#ToUser" prefHeight="99.0" prefWidth="202.0" styleClass="title" text="Người dùng" textAlignment="CENTER" />
                 </children>
             </Pane>
 
-            <Pane styleClass="card" prefHeight="200.0" prefWidth="300.0" GridPane.columnIndex="1">
+            <Pane prefHeight="200.0" prefWidth="300.0" styleClass="card" GridPane.columnIndex="1">
                 <children>
-                    <Label styleClass="title" alignment="CENTER" layoutX="20.0" layoutY="20.0" onMouseClicked="#ToEdit" text="Thư viện"/>
+                    <Label fx:id="toLibraryLabel" alignment="CENTER" layoutX="-1.0" layoutY="1.0" onMouseClicked="#ToEdit" prefHeight="101.0" prefWidth="200.0" styleClass="title" text="Thư viện" textAlignment="CENTER" />
                 </children>
             </Pane>
         </GridPane>
