@@ -101,6 +101,6 @@ public class ProfileScreenBorrowController1 {
 
 
     public void Exit() {
-        SceneController.getInstance().switchToScene("/fxml/BaseLayout.fxml");
+        SceneController.getInstance().switchCenterContent("/fxml/HomePageScene.fxml");
     }
 }
