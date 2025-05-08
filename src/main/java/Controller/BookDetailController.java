@@ -60,10 +60,21 @@ public class BookDetailController {
             BorrowRecord borrowRecord = new BorrowRecord(currentUser.getId(), selectedDoc.getIsbn(), new java.sql.Date(new Date().getTime()), null);  // Ngày mượn là ngày hiện tại, chưa có ngày trả
 
             if (borrowRecordDAO.isBorrowed(conn, currentUser.getId(), selectedDoc.getIsbn())) {
-                System.out.println("Bạn đã mượn sách này rồi.");
+                // Tạo thông báo khi đã mượn sách rồi
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Thông báo");
+                alert.setHeaderText(null);
+                alert.setContentText("Bạn đã mượn sách này rồi.");
+                alert.showAndWait();
             } else {
                 borrowRecordDAO.add(conn, borrowRecord);  // Thêm thông tin vào cơ sở dữ liệu
-                System.out.println("Đã mượn sách: " + selectedDoc.getTitle());
+                // Tạo thông báo khi mượn sách thành công
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Thông báo");
+                alert.setHeaderText(null);
+                alert.setContentText("Đã mượn sách: " + selectedDoc.getTitle());
+                alert.showAndWait();
+
             }
         } catch (SQLException e) {
             System.err.println("Lỗi khi mượn sách: " + e.getMessage());
