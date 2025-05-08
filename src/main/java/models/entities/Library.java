@@ -2,6 +2,7 @@ package models.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Library {
     private static List<User> userList;
@@ -44,4 +45,5 @@ public class Library {
     public static void setReviewList(List<Review> reviews) {
         reviewList = reviews;
     }
+
 }

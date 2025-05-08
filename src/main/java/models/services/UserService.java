@@ -98,7 +98,7 @@ public class UserService {
         return null;
     }
 
-    public boolean editProfile (String currentUser, String newUserName, String email, String phoneNumber) {
+    public boolean editProfile (int currentUserId, String newUserName, String email, String phoneNumber) {
         if (!isValidSignupInput(newUserName, email, phoneNumber)) {
             return false;
         }
@@ -109,7 +109,7 @@ public class UserService {
 
             conn.setAutoCommit(false);
 
-            if (userDAO.updateUserProfile(conn, currentUser, newUserName, email, phoneNumber)) {
+            if (userDAO.updateUserProfile(conn, currentUserId, newUserName, email, phoneNumber)) {
                 conn.commit();
 
                 return true;

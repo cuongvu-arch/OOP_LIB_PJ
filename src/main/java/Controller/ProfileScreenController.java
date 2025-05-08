@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import models.dao.UserDAO;
+import models.entities.Library;
 import models.entities.User;
 import models.services.UserService;
 import utils.SceneController;
@@ -109,14 +110,19 @@ public class ProfileScreenController {
     }
 
     public void saveNewInfo() {
-        String currentUser = nameLabel.getText();
+        User currentUser = SessionManager.getCurrentUser();
+        int currentUserId = currentUser.getId();
         String newUserName = usernameField.getText();
         String email = emailField.getText();
         String phoneNumber = phoneField.getText();
         UserService userService = new UserService(new UserDAO());
-        if (userService.editProfile(currentUser, newUserName, email, phoneNumber)) {
-            showAlert("Thành Công","Chỉnh sửa thông tin thành công");
+        if (userService.editProfile(currentUserId, newUserName, email, phoneNumber)) {
+            currentUser.setUsername(newUserName);
+            currentUser.setEmail(email);
+            currentUser.setPhoneNumber(phoneNumber);
+            SessionManager.setCurrentUser(currentUser);
             initialize();
+            showAlert("Thành Công","Chỉnh sửa thông tin thành công");
         } else {
             showAlert("Lỗi", "Thông tin không hợp lệ");
         }

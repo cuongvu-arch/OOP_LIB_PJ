@@ -61,13 +61,13 @@ public class UserDAO {
         return null;
     }
 
-    public boolean updateUserProfile(Connection connection, String currentUser, String newUserName, String email, String phoneNumber) throws SQLException {
-        String sql = "UPDATE users SET username = ?, email = ?, phone_number = ?  WHERE username = ?;";
+    public boolean updateUserProfile(Connection connection, int currentUserId, String newUserName, String email, String phoneNumber) throws SQLException {
+        String sql = "UPDATE users SET username = ?, email = ?, phone_number = ?  WHERE Id = ?;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, newUserName);
             preparedStatement.setString(2,email);
             preparedStatement.setString(3, phoneNumber);
-            preparedStatement.setString(4, currentUser);
+            preparedStatement.setInt(4, currentUserId);
             return preparedStatement.executeUpdate() > 0;
         }
     }
