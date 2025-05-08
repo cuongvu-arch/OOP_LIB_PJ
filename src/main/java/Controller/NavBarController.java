@@ -44,6 +44,9 @@ public class NavBarController {
         SceneController.getInstance().switchCenterContent("/fxml/browseScreen.fxml.fxml");
     }
 
+    public void logOut() {SceneController.getInstance().switchToScene("/fxml/loginScreen.fxml");
+    SessionManager.clearSession();}
+
     private void updateUIByRole() {
         User currentUser = SessionManager.getCurrentUser();
         if (currentUser != null && !"admin".equalsIgnoreCase(currentUser.getRole())) {

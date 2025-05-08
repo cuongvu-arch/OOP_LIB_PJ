@@ -1,8 +1,10 @@
 package Controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import models.dao.BorrowRecordDAO;
@@ -34,6 +36,14 @@ public class BookDetailController {
     @FXML private Text languageText;
     @FXML private TextArea descriptionTextArea;
     @FXML private Button closeButton;
+    @FXML
+    private VBox commentsVBox;
+
+    @FXML
+    private TextArea newCommentTextArea;
+
+    @FXML
+    private ScrollPane commentsScrollPane;
 
     private Document currentBook;
 
@@ -126,5 +136,32 @@ public class BookDetailController {
     private void handleCloseButtonClick() {
         Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
+    }
+    @FXML
+    private void handleSubmitComment(ActionEvent event) {
+        String commentText = newCommentTextArea.getText().trim();
+        if (!commentText.isEmpty()) {
+            addCommentToUI("Tên người dùng", commentText); // Thay bằng tên thực tế
+            newCommentTextArea.clear();
+        }
+    }
+
+    private void addCommentToUI(String username, String comment) {
+        VBox commentBox = new VBox(5);
+        commentBox.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;");
+
+        Label userLabel = new Label(username);
+        userLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #333;");
+
+        Text commentText = new Text(comment);
+        commentText.setWrappingWidth(commentsScrollPane.getWidth() - 30);
+
+        commentBox.getChildren().addAll(userLabel, commentText);
+        commentsVBox.getChildren().add(0, commentBox); // Thêm lên đầu danh sách
+
+
+        Platform.runLater(() -> {
+            commentsScrollPane.setVvalue(0);
+        });
     }
 }
