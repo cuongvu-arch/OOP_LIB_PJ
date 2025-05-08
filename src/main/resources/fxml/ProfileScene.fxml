@@ -23,13 +23,14 @@
                      <Label layoutX="20.0" layoutY="20.0" styleClass="title" text="Tài khoản của" />
                      <Label fx:id="nameLabel" layoutX="20.0" layoutY="50.0" styleClass="title" text="[Tên người dùng]" />
 
-                     <VBox layoutX="20.0" layoutY="100.0" spacing="15">
+                     <VBox layoutX="20.0" layoutY="100.0" prefHeight="126.0" prefWidth="109.0" spacing="15">
                         <Label style="-fx-text-fill: #1fe029; -fx-font-weight: bold; -fx-cursor: hand;" text="Thông tin chung" />
                         <Label fx:id="Truyendangmuon" style="-fx-text-fill: #6e377b; -fx-font-weight: bold; -fx-cursor: hand;" text="Truyện đang mượn" />
                         <Label fx:id="Truyendatra" style="-fx-text-fill: #dd12d7; -fx-font-weight: bold; -fx-cursor: hand;" text="Truyện đã trả" />
 
                         <Button onAction="#Exit" style="-fx-background-color: #1020d2; -fx-text-fill: white; -fx-font-weight: bold;" text="Thoát" />
                      </VBox>
+                     <Label layoutX="20.0" layoutY="274.0" prefHeight="44.0" prefWidth="115.0" text="Chỉnh sửa thông tin " />
                   </children>
                </Pane>
             </VBox>

@@ -2,7 +2,6 @@ package app;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import models.dao.DocumentDAO;
 import models.dao.UserDAO;
 import models.data.DatabaseConnection;
 import models.entities.Library;
@@ -15,7 +14,6 @@ public class Main extends Application {
         try {
             Connection connection = DatabaseConnection.getConnection();
             UserDAO userDAO= new UserDAO();
-            DocumentDAO documentDAO = new DocumentDAO();
             Library.setUserList(userDAO.getAllUser(connection));
             SceneController.getInstance().setPrimaryStage(stage);
             SceneController.getInstance().switchToScene("/fxml/loginScreen.fxml");

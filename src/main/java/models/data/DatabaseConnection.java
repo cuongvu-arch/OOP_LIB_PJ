@@ -18,14 +18,4 @@ public class DatabaseConnection {
             return null;
         }
     }
-
-    public static void closeConnection(Connection connection) {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            System.err.println("Lỗi khi đóng kết nối: " + e.getMessage());
-        }
-    }
 }
