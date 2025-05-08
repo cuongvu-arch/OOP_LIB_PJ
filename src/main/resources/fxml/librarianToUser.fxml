@@ -5,7 +5,7 @@
 <?import javafx.scene.text.*?>
 
 <?import java.net.URL?>
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomePageScreenController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LibrarianToUserController">
    <stylesheets>
       <URL value="@../css/styles.css" />
    </stylesheets>

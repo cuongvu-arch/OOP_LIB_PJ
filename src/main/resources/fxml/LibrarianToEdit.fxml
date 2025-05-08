@@ -6,7 +6,7 @@
 
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ProfileScreenController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LibrarianToEditController">
    <stylesheets>
       <URL value="@../css/styles.css" />
    </stylesheets>
