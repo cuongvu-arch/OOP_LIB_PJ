@@ -31,28 +31,40 @@ public class LibrarianToUserController {
 
     @FXML
     public void initialize() {
+        // Thiết lập các cột cho TableView
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         borrowedColumn.setCellValueFactory(new PropertyValueFactory<>("borrowedBooks"));
         returnedColumn.setCellValueFactory(new PropertyValueFactory<>("returnedBooks"));
 
+        ObservableList<UserBorrowView> viewList = FXCollections.observableArrayList();
+
         try (Connection conn = DatabaseConnection.getConnection()) {
             List<User> userList = getAllUsers();
-            ObservableList<UserBorrowView> viewList = FXCollections.observableArrayList();
 
             for (User user : userList) {
+                // Lấy các bản ghi mượn của người dùng từ Database
                 List<BorrowRecord> records = new BorrowRecordDAO().getByUserId(conn, user.getId());
 
+                // Danh sách các sách đã mượn và đã trả
                 List<String> borrowed = new ArrayList<>();
                 List<String> returned = new ArrayList<>();
 
-                for (BorrowRecord record : records) {
-                    if (record.getReturnDate() == null) {
-                        borrowed.add(record.getIsbn());
-                    } else {
-                        returned.add(record.getIsbn());
+                // Kiểm tra tất cả các bản ghi mượn của người dùng
+                if (records.isEmpty()) {
+                    // Nếu không có bản ghi mượn, đặt giá trị là "0"
+                    borrowed.add("chưa có cuốn sách nào");
+                    returned.add("chưa có cuốn sách nào");
+                } else {
+                    for (BorrowRecord record : records) {
+                        if (record.getReturnDate() == null) {
+                            borrowed.add(record.getIsbn());
+                        } else {
+                            returned.add(record.getIsbn());
+                        }
                     }
                 }
 
+                // Thêm đối tượng UserBorrowView vào danh sách
                 viewList.add(new UserBorrowView(
                         user.getUsername(),
                         String.join(", ", borrowed),
@@ -60,6 +72,7 @@ public class LibrarianToUserController {
                 ));
             }
 
+            // Đặt dữ liệu vào TableView
             tableView.setItems(viewList);
         } catch (Exception e) {
             e.printStackTrace();
