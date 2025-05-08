@@ -5,12 +5,12 @@ public class User {
     /**
      * Khai báo thuộc tính cơ bản của user.
      */
-    private final int id;
-    private final String username;
-    private final String password;
-    private final String email;
-    private final String phoneNumber;
-    private final String role;
+    private int id;
+    private String username;
+    private String password;
+    private String email;
+    private String phoneNumber;
+    private String role;
 
 
     /**
@@ -25,6 +25,12 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.role = role;
 
+    }
+
+    public User(String username,String email, String phoneNumber) {
+        this.username = username;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
     /**

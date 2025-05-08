@@ -40,27 +40,6 @@ public class UserDAO {
         }
     }
 
-    public User findUserByUsername(Connection connection, String username) {
-        String sql = "SELECT id, username, password, email, phone_number, role FROM users WHERE username = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, username);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return new User(
-                        rs.getInt("id"),
-                        rs.getString("username"),
-                        rs.getString("password"), // giữ password để service kiểm tra
-                        rs.getString("email"),
-                        rs.getString("phone_number"),
-                        rs.getString("role")
-                );
-            }
-        } catch (SQLException e) {
-            System.err.println("Find user error: " + e.getMessage());
-        }
-        return null;
-    }
-
     public static List<User> getAllUser(Connection connection) {
         List<User> Result = new ArrayList<>();
         String sql = "SELECT * FROM users";
@@ -80,6 +59,17 @@ public class UserDAO {
             System.err.println("Find user error: " + e.getMessage());
         }
         return null;
+    }
+
+    public boolean updateUserProfile(Connection connection, String currentUser, String newUserName, String email, String phoneNumber) throws SQLException {
+        String sql = "UPDATE users SET username = ?, email = ?, phone_number = ?  WHERE username = ?;";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, newUserName);
+            preparedStatement.setString(2,email);
+            preparedStatement.setString(3, phoneNumber);
+            preparedStatement.setString(4, currentUser);
+            return preparedStatement.executeUpdate() > 0;
+        }
     }
 
 }

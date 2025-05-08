@@ -30,7 +30,7 @@
 
                         <Button onAction="#Exit" style="-fx-background-color: #1020d2; -fx-text-fill: white; -fx-font-weight: bold;" text="Thoát" />
                      </VBox>
-                     <Label layoutX="20.0" layoutY="274.0" prefHeight="44.0" prefWidth="115.0" text="Chỉnh sửa thông tin " />
+                     <Button fx:id="Editbutton" layoutX="20.0" layoutY="278.0" mnemonicParsing="false" onMouseClicked="#EditProfile" style="-fx-text-fill: white; -fx-background-color: brown; -fx-font-weight: bold;" text="Chỉnh sửa" />
                   </children>
                </Pane>
             </VBox>

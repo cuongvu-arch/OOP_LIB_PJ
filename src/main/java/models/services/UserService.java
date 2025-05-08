@@ -63,6 +63,12 @@ public class UserService {
                 phoneNumber != null && phoneNumber.matches("^[0-9]{10,15}$");
     }
 
+    public boolean isValidSignupInput(String username, String email, String phoneNumber) {
+        return username != null && username.trim().length() >= 4 &&
+                email != null && email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$") &&
+                phoneNumber != null && phoneNumber.matches("^[0-9]{10,15}$");
+    }
+
     private void rollbackQuietly(Connection conn) {
         try {
             if (conn != null) conn.rollback();
@@ -90,5 +96,33 @@ public class UserService {
             }
         }
         return null;
+    }
+
+    public boolean editProfile (String currentUser, String newUserName, String email, String phoneNumber) {
+        if (!isValidSignupInput(newUserName, email, phoneNumber)) {
+            return false;
+        }
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            if (conn == null) return false;
+
+            conn.setAutoCommit(false);
+
+            if (userDAO.updateUserProfile(conn, currentUser, newUserName, email, phoneNumber)) {
+                conn.commit();
+
+                return true;
+            } else {
+                conn.rollback();
+                return false;
+            }
+        } catch (SQLException e) {
+            rollbackQuietly(conn);
+            System.err.println("Edit Error!" + e.getMessage());
+            return false;
+        } finally {
+            closeQuietly(conn);
+        }
     }
 }
