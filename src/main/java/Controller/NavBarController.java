@@ -40,7 +40,7 @@ public class NavBarController {
     }
 
     public void searching() {
-        SceneController.getInstance().switchCenterContent("/fxml/searchingScreen.fxml");
+        SceneController.getInstance().switchCenterContent("/fxml/browseScreen.fxml.fxml");
     }
 
     private void updateUIByRole() {

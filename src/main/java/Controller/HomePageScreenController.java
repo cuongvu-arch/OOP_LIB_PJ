@@ -1,5 +1,6 @@
 package Controller;
 
+import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -55,9 +56,17 @@ public class HomePageScreenController {
     private void loadBooks(int page) {
         booksGrid.getChildren().clear();
 
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            List<Document> books = documentDAO.getBooksPaginated(conn, page, BOOKS_PER_PAGE);
+        Task<List<Document>> task = new Task<>() {
+            @Override
+            protected List<Document> call() throws Exception {
+                try (Connection conn = DatabaseConnection.getConnection()) {
+                    return documentDAO.getBooksPaginated(conn, page, BOOKS_PER_PAGE);
+                }
+            }
+        };
 
+        task.setOnSucceeded(e -> {
+            List<Document> books = task.getValue();
             int col = 0;
             int row = 0;
 
@@ -73,12 +82,18 @@ public class HomePageScreenController {
             }
 
             updatePaginationUI(books.size());
+        });
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        task.setOnFailed(e -> {
+            task.getException().printStackTrace();
+        });
 
-        }
+        // Chạy task trong background thread
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
+
 
     private VBox createBookBox(Document book) {
         VBox bookBox = new VBox(10);
