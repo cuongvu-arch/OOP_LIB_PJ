@@ -7,6 +7,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import models.dao.BorrowRecordDAO;
+import models.dao.UserDAO;  // Import UserDAO
 import models.data.DatabaseConnection;
 import models.entities.BorrowRecord;
 import models.entities.User;
@@ -39,7 +40,8 @@ public class LibrarianToUserController {
         ObservableList<UserBorrowView> viewList = FXCollections.observableArrayList();
 
         try (Connection conn = DatabaseConnection.getConnection()) {
-            List<User> userList = getAllUsers();
+            // Lấy tất cả người dùng từ cơ sở dữ liệu thông qua UserDAO
+            List<User> userList = UserDAO.getAllUser(conn);  // Gọi phương thức getAllUsers từ UserDAO
 
             for (User user : userList) {
                 // Lấy các bản ghi mượn của người dùng từ Database
@@ -67,8 +69,8 @@ public class LibrarianToUserController {
                 // Thêm đối tượng UserBorrowView vào danh sách
                 viewList.add(new UserBorrowView(
                         user.getUsername(),
-                        String.join(", ", borrowed),
-                        String.join(", ", returned)
+                        String.join("\n", borrowed),
+                        String.join("\n", returned)
                 ));
             }
 
@@ -79,11 +81,4 @@ public class LibrarianToUserController {
         }
     }
 
-    private List<User> getAllUsers() {
-        return List.of(
-                new User(1, "alice", "pass123", "alice@example.com", "0123456789", "user"),
-                new User(2, "bob", "bobpass", "bob@example.com", "0987654321", "user"),
-                new User(3, "charlie", "charliepw", "charlie@example.com", "0112233445", "admin")
-        );
-    }
 }

@@ -1,16 +1,27 @@
 package Controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import models.dao.BorrowRecordDAO;
+import models.entities.BorrowRecord;
 import models.entities.Document;
+import models.entities.User;
 import utils.BookImageLoader;
 import javafx.scene.image.Image;
+
+import javafx.event.ActionEvent;
 import java.net.URL;
+import models.data.DatabaseConnection;
+import utils.SessionManager;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Date;
+
+
 
 public class BookDetailController {
 
@@ -22,13 +33,44 @@ public class BookDetailController {
     @FXML private Text isbnText;
     @FXML private Text languageText;
     @FXML private TextArea descriptionTextArea;
-    @FXML private Button previewButton;
     @FXML private Button closeButton;
 
     private Document currentBook;
 
     public void initialize() {
     }
+
+    @FXML
+    private void handleBorrowButtonClick(ActionEvent event) {
+        Document selectedDoc = currentBook;  // Sử dụng sách đang xem chi tiết
+        if (selectedDoc == null) {
+            System.out.println("Chưa chọn sách nào.");
+            return;
+        }
+
+        User currentUser = SessionManager.getCurrentUser();  // Lấy người dùng hiện tại
+        if (currentUser == null) {
+            System.out.println("Bạn cần đăng nhập để mượn sách.");
+            return;
+        }
+
+        // Kết nối cơ sở dữ liệu và thêm thông tin mượn sách
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            BorrowRecordDAO borrowRecordDAO = new BorrowRecordDAO();
+            BorrowRecord borrowRecord = new BorrowRecord(currentUser.getId(), selectedDoc.getIsbn(), new java.sql.Date(new Date().getTime()), null);  // Ngày mượn là ngày hiện tại, chưa có ngày trả
+
+            if (borrowRecordDAO.isBorrowed(conn, currentUser.getId(), selectedDoc.getIsbn())) {
+                System.out.println("Bạn đã mượn sách này rồi.");
+            } else {
+                borrowRecordDAO.add(conn, borrowRecord);  // Thêm thông tin vào cơ sở dữ liệu
+                System.out.println("Đã mượn sách: " + selectedDoc.getTitle());
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi mượn sách: " + e.getMessage());
+        }
+    }
+
+
 
     public void setBookData(Document book) {
         this.currentBook = book;
@@ -66,13 +108,6 @@ public class BookDetailController {
             } catch (Exception e) {
                 System.err.println("Lỗi tải ảnh placeholder: " + e.getMessage());
             }
-        }
-    }
-
-    @FXML
-    private void handlePreviewButtonClick() {
-        if (currentBook != null) {
-            System.out.println("Nút xem trước được nhấn cho: " + currentBook.getTitle());
         }
     }
 
