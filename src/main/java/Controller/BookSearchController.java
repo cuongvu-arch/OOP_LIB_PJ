@@ -20,8 +20,7 @@ import utils.SessionManager;
 
 import java.io.IOException;
 import java.sql.SQLException;
-// Dòng import Controller.EditBookController; đã có ở trên, không cần thêm lại nếu đã tồn tại.
-// Nếu nó chưa có, bạn sẽ cần nó: import Controller.EditBookController;
+
 
 public class BookSearchController {
     @FXML private TextField isbnTextField;
