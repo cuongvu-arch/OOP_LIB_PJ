@@ -20,8 +20,6 @@ import utils.SessionManager;
 
 import java.io.IOException;
 import java.sql.SQLException;
-// Dòng import Controller.EditBookController; đã có ở trên, không cần thêm lại nếu đã tồn tại.
-// Nếu nó chưa có, bạn sẽ cần nó: import Controller.EditBookController;
 
 public class BookSearchController {
     @FXML private TextField isbnTextField;
@@ -36,7 +34,8 @@ public class BookSearchController {
     private DocumentService documentService;
     private User currentUser;
 
-    public void initialize() {
+    @FXML
+    private void initialize() {
         documentService = new DocumentService();
         this.currentUser = SessionManager.getCurrentUser();
         updateButtonVisibility();
@@ -47,12 +46,33 @@ public class BookSearchController {
         updateBookButton.setDisable(true);
         deleteBookButton.setDisable(true);
 
+        // Thay đổi sự kiện click để mở cửa sổ chi tiết
         bookImageView.setOnMouseClicked(event -> {
             if (currentDocument != null) {
-                resultTextArea.setText(currentDocument.toString());
-                resultTextArea.setVisible(true);
+                openBookDetailWindow(currentDocument);
             }
         });
+    }
+
+    private void openBookDetailWindow(Document book) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/BookDetailScreen.fxml"));
+            Parent root = loader.load();
+
+            BookDetailController controller = loader.getController();
+            controller.setBookData(book);
+
+            Stage detailStage = new Stage();
+            detailStage.setTitle("Chi tiết sách: " + (book.getTitle() != null ? book.getTitle() : "Không có tiêu đề"));
+            detailStage.setScene(new Scene(root));
+            detailStage.initModality(Modality.APPLICATION_MODAL);
+            detailStage.setResizable(false);
+            detailStage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể mở trang chi tiết sách: " + e.getMessage());
+        }
     }
 
     public void setUser(User user) {
@@ -144,7 +164,6 @@ public class BookSearchController {
         deleteBookButton.setDisable(!existsInDb);
     }
 
-
     @FXML
     private void handleAddBookButtonClick() {
         if (currentDocument == null || currentDocument.getIsbn() == null) {
@@ -210,7 +229,6 @@ public class BookSearchController {
             showAlert(Alert.AlertType.ERROR, "Lỗi tải giao diện", "Không thể mở trang chỉnh sửa sách: " + e.getMessage());
         }
     }
-
 
     @FXML
     private void handleDeleteBookButtonClick() {

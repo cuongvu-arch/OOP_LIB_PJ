@@ -3,7 +3,9 @@ package Controller;
 import models.entities.Document;
 import models.services.DocumentService;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.Alert;
@@ -11,17 +13,19 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import utils.BookImageLoader;
 
+import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
-import java.net.URL;
 
 public class BookBrowseController {
     @FXML private TextField titleField;
     @FXML private TextField authorField;
     @FXML private TextField publishDateField;
-    @FXML private TextArea resultTextArea;
     @FXML private Button searchButton;
     @FXML private FlowPane booksFlowPane;
 
@@ -31,7 +35,6 @@ public class BookBrowseController {
     @FXML
     private void initialize() {
         documentService = new DocumentService();
-        resultTextArea.setVisible(false);
         booksFlowPane.setVisible(false);
     }
 
@@ -89,31 +92,47 @@ public class BookBrowseController {
                 String placeholderPath = "/image/img.png";
                 URL resourceUrl = getClass().getResource(placeholderPath);
                 if (resourceUrl == null) {
-                    System.err.println("Lỗi: Không tìm thấy tệp ảnh placeholder tại '" + placeholderPath + "'. " +
-                            "Hãy đảm bảo tệp tồn tại trong thư mục 'resources/images'.");
+                    System.err.println("Lỗi: Không tìm thấy tệp ảnh placeholder tại '" + placeholderPath + "'.");
                 } else {
                     coverView.setImage(new Image(resourceUrl.toExternalForm()));
                 }
             } catch (Exception e) {
-                System.err.println("Lỗi khi tải ảnh placeholder '" + "/image/img.png" + "': " + e.getMessage());
+                System.err.println("Lỗi khi tải ảnh placeholder: " + e.getMessage());
                 e.printStackTrace();
             }
         }
 
         coverView.setOnMouseClicked(event -> {
             currentDocument = doc;
-            resultTextArea.setText(doc.toString());
-            resultTextArea.setVisible(true);
+            openBookDetailWindow(doc);
         });
 
         return coverView;
     }
 
-    private void resetUIState(boolean clearFields) {
-        resultTextArea.clear();
-        resultTextArea.setVisible(false);
-        currentDocument = null;
+    private void openBookDetailWindow(Document book) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/BookDetailScreen.fxml"));
+            Parent root = loader.load();
 
+            BookDetailController controller = loader.getController();
+            controller.setBookData(book);
+
+            Stage detailStage = new Stage();
+            detailStage.setTitle("Chi tiết sách: " + (book.getTitle() != null ? book.getTitle() : "Không có tiêu đề"));
+            detailStage.setScene(new Scene(root));
+            detailStage.initModality(Modality.APPLICATION_MODAL);
+            detailStage.setResizable(false);
+            detailStage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(AlertType.ERROR, "Lỗi", "Không thể mở trang chi tiết sách: " + e.getMessage());
+        }
+    }
+
+    private void resetUIState(boolean clearFields) {
+        currentDocument = null;
         if (clearFields) {
             titleField.clear();
             authorField.clear();
