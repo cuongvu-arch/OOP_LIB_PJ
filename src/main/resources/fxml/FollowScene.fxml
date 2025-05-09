@@ -1,62 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
+
 <?import javafx.scene.layout.VBox?>
-
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.FollowScreenController">
    <center>
-      <AnchorPane style="-fx-padding: 20;">
-         <children>
-            <Label styleClass="subtitle" layoutX="20.0" layoutY="20.0" text="Trang chủ &gt;&gt; Theo dõi"/>
+            <VBox spacing="10" style="-fx-padding: 20;">
+               <!-- Tiêu đề -->
+               <Label text="Trang chủ >> Sách đang mượn"
+                      styleClass="subtitle"/>
 
-            <FlowPane layoutX="20.0" layoutY="60.0" hgap="20" vgap="30" prefWidth="700.0">
-               <children>
-                  <!-- Book 1 -->
-                  <VBox styleClass="card" spacing="10" alignment="TOP_CENTER" prefWidth="150.0">
-                     <children>
-                        <ImageView fitHeight="180.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../image/img.png" />
-                           </image>
-                        </ImageView>
-                        <Label text="Truyện tranh 1" style="-fx-font-weight: bold; -fx-text-alignment: center;"/>
-                        <Label text="Trả sách" style="-fx-text-fill: -fx-accent-color; -fx-font-weight: bold; -fx-cursor: hand;"/>
-                     </children>
-                  </VBox>
-
-                  <!-- Book 2 -->
-                  <VBox styleClass="card" spacing="10" alignment="TOP_CENTER" prefWidth="150.0">
-                     <children>
-                        <ImageView fitHeight="180.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../image/img.png" />
-                           </image>
-                        </ImageView>
-                        <Label text="Truyện tranh 2" style="-fx-font-weight: bold; -fx-text-alignment: center;"/>
-                        <Label text="Trả sách" style="-fx-text-fill: -fx-accent-color; -fx-font-weight: bold; -fx-cursor: hand;"/>
-                     </children>
-                  </VBox>
-
-                  <!-- Book 3 -->
-                  <VBox styleClass="card" spacing="10" alignment="TOP_CENTER" prefWidth="150.0">
-                     <children>
-                        <ImageView fitHeight="180.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../image/img.png" />
-                           </image>
-                        </ImageView>
-                        <Label text="Truyện tranh 3" style="-fx-font-weight: bold; -fx-text-alignment: center;"/>
-                        <Label text="Trả sách" style="-fx-text-fill: -fx-accent-color; -fx-font-weight: bold; -fx-cursor: hand;"/>
-                     </children>
-                  </VBox>
-               </children>
-            </FlowPane>
-         </children>
-      </AnchorPane>
+               <!-- ScrollPane bao FlowPane -->
+               <ScrollPane fitToWidth="true" prefHeight="500">
+                  <FlowPane fx:id="borrowedBooksPane"
+                            hgap="20"
+                            vgap="20"
+                            prefWrapLength="580"
+                            style="-fx-padding: 10;" />
+               </ScrollPane>
+            </VBox>
    </center>
 </BorderPane>

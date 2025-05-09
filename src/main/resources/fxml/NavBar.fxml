@@ -18,7 +18,7 @@
     </Label>
     <Label onMouseClicked="#searching" prefHeight="20.0" prefWidth="152.0" styleClass="nav-item" text="Tìm kiếm nâng cao" />
     <Label onMouseClicked="#profile" styleClass="nav-item" text="Cá nhân" />
-    <Label onMouseClicked="#follow" styleClass="nav-item" text="Sách theo dõi" />
+    <Label onMouseClicked="#follow" styleClass="nav-item" text="Sách đang mượn" />
     <Label onMouseClicked="#history" styleClass="nav-item" text="Lịch sử" />
     <Label onMouseClicked="#handleSearchButtonClick" styleClass="nav-item" text="Tìm kiếm" />
    <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" onMouseClicked="#logOut" styleClass="nav-item" text="Đăng xuất" />
