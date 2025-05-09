@@ -1,5 +1,6 @@
 package Controller;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -46,6 +47,7 @@ public class ProfileScreenBorrowController2 {
 
     @FXML
     public void initialize() {
+        // Khởi tạo và load user
         Task<User> loadUserTask = new Task<>() {
             @Override
             protected User call() {
@@ -61,15 +63,15 @@ public class ProfileScreenBorrowController2 {
                 nameLabel2.setText(user.getUsername());
 
                 // Load sách đã trả đúng theo userId
-                loadReturnedBooks(user.getId());
+                loadReturnedBooks();
             }
         });
 
         // Bắt đầu chạy task ở thread phụ
         new Thread(loadUserTask).start();
 
-        // Cấu hình cột table
-        bookInfoColumn2.setCellValueFactory(new PropertyValueFactory<>("display"));
+        // Cấu hình cột table để hiển thị thông tin sách
+        bookInfoColumn2.setCellValueFactory(cellData -> cellData.getValue().displayProperty());
 
         // Xử lý chuyển màn hình khi click
         Truyendangmuon2.setOnMouseClicked(event -> {
@@ -81,18 +83,25 @@ public class ProfileScreenBorrowController2 {
         });
     }
 
-
-    private void loadReturnedBooks(int userId) {
+    private void loadReturnedBooks() {
         try (Connection conn = DatabaseConnection.getConnection()) {
-            List<Document> returnedBooks = borrowHistoryService.getReturnedBooks(conn, userId);
-            for (Document doc : returnedBooks) {
+            // Lấy user hiện tại
+            User user = SessionManager.getCurrentUser();
+            if (user == null) return;
+
+            int userId = user.getId();
+
+            // Lấy danh sách sách chưa trả từ dịch vụ
+            List<Document> borrowedBooks = borrowHistoryService.getReturnedBooks(conn, userId);
+
+            // Chuyển đổi thành các đối tượng BookBorrowedView để hiển thị
+            for (Document doc : borrowedBooks) {
                 borrowedBooksTable2.getItems().add(new BookBorrowedView(doc.getTitle(), doc.getIsbn()));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
 
     public void Exit() {
         SceneController.getInstance().switchCenterContent("/fxml/HomePageScene.fxml");
