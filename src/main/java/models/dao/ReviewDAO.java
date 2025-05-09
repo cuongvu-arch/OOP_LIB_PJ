@@ -193,7 +193,7 @@ public class ReviewDAO {
         return result;
     }
 
-    public double calculateAverageRating(String isbn) {
+    public static double calculateAverageRating(String isbn) {
         double avgRating = 0;
         int totalRating = 0;
         int count = 0;
