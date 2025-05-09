@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 import models.entities.User;
 import utils.SceneController;
 import utils.SessionManager;
-import Controller.BookSearchController;
 
 import java.io.IOException;
 

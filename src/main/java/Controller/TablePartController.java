@@ -55,12 +55,5 @@ public class TablePartController {
 
         // Cập nhật dữ liệu vào TableView
         documentTableView.setItems(FXCollections.observableArrayList(viewModels));
-
-        ObservableList<BookRatingView> data = FXCollections.observableArrayList(
-                new BookRatingView(new Document("978-0132350884", "Clean Code")),
-                new BookRatingView(new Document("978-0134685991", "Effective Java")),
-                new BookRatingView(new Document("978-0201633610", "Design Patterns"))
-        );
-        documentTableView.setItems(data);
     }
 }
