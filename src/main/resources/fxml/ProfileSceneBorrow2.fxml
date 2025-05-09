@@ -35,9 +35,9 @@
             <Pane layoutX="300.0" layoutY="60.0" prefHeight="400.0" prefWidth="550.0" styleClass="card">
                <children>
                   <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 20px; -fx-text-fill: -fx-primary-color; -fx-font-weight: bold;" text="TRUYỆN ĐÃ TRẢ" />
-                  <TableView fx:id="borrowedBooksTable2" layoutX="14.0" layoutY="60.0" prefHeight="325.0" prefWidth="353.0">
+                  <TableView fx:id="borrowedBooksTable2" layoutX="14.0" layoutY="60.0" prefHeight="325.0" prefWidth="522.0">
                      <columns>
-                        <TableColumn fx:id="bookInfoColumn2" prefWidth="351.6666564941406" text="HISTORY RETURNING BOOKS" />
+                        <TableColumn fx:id="bookInfoColumn2" prefWidth="520.6666870117188" text="HISTORY RETURNING BOOKS" />
                      </columns>
                   </TableView>
                </children>
