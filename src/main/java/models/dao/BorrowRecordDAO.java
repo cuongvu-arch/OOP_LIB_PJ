@@ -10,14 +10,16 @@ public class BorrowRecordDAO {
 
     public static List<BorrowRecord> getAll(Connection conn) throws SQLException {
         List<BorrowRecord> records = new ArrayList<>();
-        String sql = "SELECT user_id, isbn FROM borrow_records";
+        String sql = "SELECT user_id, isbn, borrow_date, return_date FROM borrow_records";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 int userId = rs.getInt("user_id");
                 String isbn = rs.getString("isbn");
-                records.add(new BorrowRecord(userId, isbn));
+                Date borrowDate = rs.getDate("borrow_date");
+                Date returnDate = rs.getDate("return_date");
+                records.add(new BorrowRecord(userId, isbn, borrowDate, returnDate));
             }
         }
 
@@ -25,10 +27,11 @@ public class BorrowRecordDAO {
     }
 
     public static void add(Connection conn, BorrowRecord record) throws SQLException {
-        String sql = "INSERT INTO borrow_records (user_id, isbn) VALUES (?, ?)";
+        String sql = "INSERT INTO borrow_records (user_id, isbn, borrow_date) VALUES (?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, record.getUserId());
             stmt.setString(2, record.getIsbn());
+            stmt.setDate(3, record.getBorrowDate());
             stmt.executeUpdate();
         }
     }
@@ -72,4 +75,14 @@ public class BorrowRecordDAO {
 
         return list;
     }
+
+    public void markAsReturned(Connection conn, int userId, String isbn) throws SQLException {
+        String update = "UPDATE borrow_records SET return_date = CURRENT_DATE WHERE user_id = ? AND isbn = ? AND return_date IS NULL";
+        try (PreparedStatement stmt = conn.prepareStatement(update)) {
+            stmt.setInt(1, userId);
+            stmt.setString(2, isbn);
+            stmt.executeUpdate();
+        }
+    }
+
 }

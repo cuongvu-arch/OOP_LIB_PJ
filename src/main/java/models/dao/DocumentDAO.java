@@ -22,7 +22,7 @@ public class DocumentDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             String authorsJsonString;
-            List<String> authorsList = List.of(book.getAuthors());
+            List<String> authorsList = book.getAuthors() != null ? List.of(book.getAuthors()) : List.of();
             if (authorsList != null && !authorsList.isEmpty()) {
                 JSONArray authorsJsonArray = new JSONArray(authorsList);
                 authorsJsonString = authorsJsonArray.toString();
