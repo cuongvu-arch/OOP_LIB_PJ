@@ -8,7 +8,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import models.dao.BorrowRecordDAO;
+import models.dao.ReviewDAO;
 import models.entities.BorrowRecord;
+import models.entities.Review;
 import models.entities.Document;
 import models.entities.User;
 import utils.BookImageLoader;
@@ -21,7 +23,9 @@ import utils.SessionManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 
 
@@ -34,20 +38,86 @@ public class BookDetailController {
     @FXML private Text publisherText;
     @FXML private Text isbnText;
     @FXML private Text languageText;
+    @FXML private Text avgRatingText;
     @FXML private TextArea descriptionTextArea;
     @FXML private Button closeButton;
-    @FXML
-    private VBox commentsVBox;
-
-    @FXML
-    private TextArea newCommentTextArea;
-
-    @FXML
-    private ScrollPane commentsScrollPane;
+    @FXML private VBox commentsVBox;
+    @FXML private TextArea newCommentTextArea;
+    @FXML private ScrollPane commentsScrollPane;
+    @FXML private ChoiceBox<Integer> ratingChoiceBox;
 
     private Document currentBook;
 
     public void initialize() {
+        ReviewDAO.loadReviewData();
+
+        // Khởi tạo các giá trị cho ChoiceBox
+        ratingChoiceBox.getItems().addAll(1, 2, 3, 4, 5);
+        ratingChoiceBox.setValue(5); // đặt giá trị mặc định nếu muốn
+    }
+
+    @FXML
+    private void handleSubmitComment(ActionEvent event) {
+        String commentText = newCommentTextArea.getText().trim();
+        if (!commentText.isEmpty() && currentBook != null) {
+            User currentUser = SessionManager.getCurrentUser();
+            if (currentUser == null) {
+                System.out.println("Người dùng chưa đăng nhập.");
+                return;
+            }
+
+            Review review = new Review(
+                    currentUser.getId(),
+                    currentBook.getIsbn(),
+                    0,  // Không có rating trong comment
+                    commentText,
+                    LocalDateTime.now()
+            );
+
+            ReviewDAO.addReview(review); // Lưu vào CSDL
+
+            addCommentToUI(currentUser.getUsername(), commentText); // Cập nhật giao diện
+            newCommentTextArea.clear();
+        }
+    }
+
+    @FXML
+    private void handleSubmitRating(ActionEvent event) {
+        Integer rating = ratingChoiceBox.getValue();
+        if (rating != null && currentBook != null) {
+            User currentUser = SessionManager.getCurrentUser();
+            if (currentUser == null) {
+                System.out.println("Người dùng chưa đăng nhập.");
+                return;
+            }
+
+            String commentText = "Đánh giá: " + rating.toString(); // Nếu cần, có thể thêm comment cho rating
+
+            Review review = new Review(
+                    currentUser.getId(),
+                    currentBook.getIsbn(),
+                    rating,  // Sử dụng rating nhập từ ChoiceBox
+                    commentText,
+                    LocalDateTime.now()
+            );
+
+            ReviewDAO.addReview(review); // Lưu vào CSDL
+
+            addCommentToUI(currentUser.getUsername(), "Đánh giá: " + rating); // Cập nhật giao diện với rating
+        }
+    }
+
+
+    private void saveReviewToDatabase(int rating, String comment) {
+        User currentUser = SessionManager.getCurrentUser();
+        if (currentUser == null) {
+            System.out.println("Bạn cần đăng nhập để đánh giá.");
+            return;
+        }
+
+        // Tạo đối tượng Review và lưu vào cơ sở dữ liệu
+        Review review = new Review(currentUser.getId(), currentBook.getIsbn(), rating, comment, LocalDateTime.now());
+        ReviewDAO.addReview(review);  // Lưu review vào cơ sở dữ liệu
     }
 
     @FXML
@@ -91,8 +161,6 @@ public class BookDetailController {
         }
     }
 
-
-
     public void setBookData(Document book) {
         this.currentBook = book;
         if (book == null) {
@@ -130,20 +198,46 @@ public class BookDetailController {
                 System.err.println("Lỗi tải ảnh placeholder: " + e.getMessage());
             }
         }
+        loadReviewsForCurrentBook();
+        updateAvgRating();
+    }
+
+    private void updateAvgRating() {
+        if (currentBook == null) return;  // Nếu không có sách hiện tại
+
+        String isbn = currentBook.getIsbn();  // Lấy ISBN của sách hiện tại
+        double avgRating = ReviewDAO.calculateAverageRating(isbn);  // Tính giá trị trung bình
+
+        // Cập nhật giá trị trung bình vào ô avgRatingText
+        if (avgRating > 0) {
+            avgRatingText.setText(String.format("%.1f", avgRating));  // Hiển thị trung bình với 1 chữ số thập phân
+        } else {
+            avgRatingText.setText("Chưa có đánh giá");  // Nếu chưa có đánh giá
+        }
+    }
+
+    private void loadReviewsForCurrentBook() {
+        commentsVBox.getChildren().clear();
+
+        if (currentBook == null) return;
+
+        List<Review> allReviews = ReviewDAO.getAllReviewsFromMemory();
+        for (Review review : allReviews) {
+            if (review.getDocumentIsbn().equals(currentBook.getIsbn())) {
+                String username = "Người dùng #" + review.getUserId();
+                if (review.getRating() > 0) {
+                    addRatingToUI(username, review.getRating());
+                }
+                if (review.getComment() != null && !review.getComment().isBlank()) {
+                    addCommentToUI(username, review.getComment());
+                }            }
+        }
     }
 
     @FXML
     private void handleCloseButtonClick() {
         Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
-    }
-    @FXML
-    private void handleSubmitComment(ActionEvent event) {
-        String commentText = newCommentTextArea.getText().trim();
-        if (!commentText.isEmpty()) {
-            addCommentToUI("Tên người dùng", commentText); // Thay bằng tên thực tế
-            newCommentTextArea.clear();
-        }
     }
 
     private void addCommentToUI(String username, String comment) {
@@ -163,5 +257,19 @@ public class BookDetailController {
         Platform.runLater(() -> {
             commentsScrollPane.setVvalue(0);
         });
+    }
+
+    private void addRatingToUI(String username, Integer rating) {
+        VBox ratingBox = new VBox(5);
+        ratingBox.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;");
+
+        Label userLabel = new Label(username);
+        userLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #333;");
+
+        Text ratingText = new Text("Đánh giá: " + rating);
+        ratingText.setWrappingWidth(commentsScrollPane.getWidth() - 30);
+
+        ratingBox.getChildren().addAll(userLabel, ratingText);
+        commentsVBox.getChildren().add(0, ratingBox); // Thêm lên đầu danh sách
     }
 }
