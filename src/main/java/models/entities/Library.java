@@ -10,6 +10,10 @@ public class Library {
     private static List<BorrowRecord> borrowRecords = new ArrayList<>();
     private static List<Review> reviewList = new ArrayList<>();
 
+    public static void addToUserList(User user) {
+        userList.add(user);
+    }
+
     public static List<User> getUserList() {
         return userList;
     }

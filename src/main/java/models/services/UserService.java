@@ -89,14 +89,20 @@ public class UserService {
     }
 
     public User login(String username, String password) {
-        List<User> userList = Library.getUserList();
-        for (User user : userList) {
-            if (Objects.equals(user.getUsername(), username) && BCrypt.checkpw(password, user.getPassword())) {
-                return user;
-            }
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            if (conn == null) return null;
+
+            return userDAO.getUserByUsernameAndPassword(conn, username, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            closeQuietly(conn);
         }
-        return null;
     }
+
 
     public boolean editProfile (int currentUserId, String newUserName, String email, String phoneNumber) {
         if (!isValidSignupInput(newUserName, email, phoneNumber)) {

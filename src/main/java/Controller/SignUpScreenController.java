@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import models.dao.UserDAO;
+import models.entities.Library;
 import models.services.UserService;
 import utils.SceneController;
 

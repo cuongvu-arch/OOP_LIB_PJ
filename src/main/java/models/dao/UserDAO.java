@@ -29,6 +29,26 @@ public class UserDAO {
         }
     }
 
+    public User getUserByUsernameAndPassword(Connection conn, String username, String password) throws SQLException {
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String hashedPassword = rs.getString("password");
+                if (BCrypt.checkpw(password, hashedPassword)) {
+                    return new User(
+                            rs.getString("username"),
+                            hashedPassword,
+                            rs.getString("email"),
+                            rs.getString("phone_number")
+                    );
+                }
+            }
+            return null;
+        }
+    }
+
     public boolean isUserExists(Connection connection, String username, String email) throws SQLException {
         String sql = "SELECT 1 FROM users WHERE LOWER(TRIM(username)) = LOWER(TRIM(?)) OR LOWER(TRIM(email)) = LOWER(TRIM(?))";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
