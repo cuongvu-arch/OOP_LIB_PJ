@@ -1,5 +1,7 @@
 package models.entities;
 
+import java.sql.Date;
+
 public class BorrowedBookInfo {
     private Document document;
     private BorrowRecord borrowRecord;
@@ -15,5 +17,9 @@ public class BorrowedBookInfo {
 
     public BorrowRecord getBorrowRecord() {
         return borrowRecord;
+    }
+
+    public Date getBorrowDate() {
+        return borrowRecord.getBorrowDate();
     }
 }

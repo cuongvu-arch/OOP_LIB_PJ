@@ -10,7 +10,7 @@ import models.dao.BorrowRecordDAO;
 import models.data.DatabaseConnection;
 import models.entities.BorrowedBookInfo;
 import models.entities.User;
-import models.services.BorrowHistoryService;
+import models.services.BorrowRecordService;
 import models.viewmodel.BookBorrowedView;
 import utils.SceneController;
 import utils.SessionManager;
@@ -36,10 +36,10 @@ public class ProfileScreenBorrowController2 {
     @FXML
     private Label nameLabel2;
 
-    private final BorrowHistoryService borrowHistoryService;
+    private final BorrowRecordService borrowRecordService;
 
     public ProfileScreenBorrowController2() {
-        this.borrowHistoryService = new BorrowHistoryService(new BorrowRecordDAO());
+        this.borrowRecordService = new BorrowRecordService();
     }
 
     @FXML
@@ -80,7 +80,7 @@ public class ProfileScreenBorrowController2 {
             @Override
             protected List<BorrowedBookInfo> call() throws SQLException {
                 try (Connection conn = DatabaseConnection.getConnection()) {
-                    return borrowHistoryService.getReturnedBookInfo(conn, userId);
+                    return borrowRecordService.getReturnedBookInfo(conn, userId);
                 }
             }
         };

@@ -10,7 +10,7 @@ import models.dao.BorrowRecordDAO;
 import models.data.DatabaseConnection;
 import models.entities.BorrowedBookInfo;
 import models.entities.User;
-import models.services.BorrowHistoryService;
+import models.services.BorrowRecordService;
 import models.viewmodel.BookBorrowedView;
 import utils.SceneController;
 import utils.SessionManager;
@@ -36,11 +36,11 @@ public class ProfileScreenBorrowController1 {
     @FXML
     private Label nameLabel1;
 
-    private final BorrowHistoryService borrowHistoryService;
+    private final BorrowRecordService borrowRecordService;
 
     public ProfileScreenBorrowController1() {
         // Chỉ cần BorrowRecordDAO, không cần DocumentDAO vì đã tích hợp trong DAO
-        this.borrowHistoryService = new BorrowHistoryService(new BorrowRecordDAO());
+        this.borrowRecordService = new BorrowRecordService();
     }
 
     @FXML
@@ -85,7 +85,7 @@ public class ProfileScreenBorrowController1 {
                 try (Connection conn = DatabaseConnection.getConnection()) {
                     User user = SessionManager.getCurrentUser();
                     if (user == null) return List.of();
-                    return borrowHistoryService.getUnreturnedBookInfo(conn, user.getId());
+                    return borrowRecordService.getUnreturnedBookInfo(conn, user.getId());
                 }
             }
         };

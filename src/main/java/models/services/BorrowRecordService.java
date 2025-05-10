@@ -1,19 +1,20 @@
 package models.services;
 
 import models.dao.BorrowRecordDAO;
+import models.data.DatabaseConnection;
 import models.entities.BorrowedBookInfo;
-import models.entities.Document;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class BorrowHistoryService {
-    private final BorrowRecordDAO borrowRecordDAO;
+public class BorrowRecordService {
+    private final BorrowRecordDAO borrowRecordDAO = new BorrowRecordDAO();
 
-    public BorrowHistoryService(BorrowRecordDAO borrowRecordDAO) {
-        this.borrowRecordDAO = borrowRecordDAO;
+
+    public BorrowRecordService() {
     }
 
     public List<BorrowedBookInfo> getUnreturnedBookInfo(Connection conn, int userId) throws SQLException {
@@ -38,4 +39,14 @@ public class BorrowHistoryService {
         return result;
     }
 
+    public List<BorrowedBookInfo> getBorrowedBooksByUserId(int userId) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            if (conn != null) {
+                return borrowRecordDAO.getBorrowedBooksWithInfoByUserId(conn, userId);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error loading borrow history: " + e.getMessage());
+        }
+        return Collections.emptyList();
+    }
 }
