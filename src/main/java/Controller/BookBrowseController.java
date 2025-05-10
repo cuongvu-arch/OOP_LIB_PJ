@@ -1,5 +1,6 @@
 package Controller;
 
+import javafx.concurrent.Task;
 import models.entities.Document;
 import models.services.DocumentService;
 import javafx.fxml.FXML;
@@ -52,32 +53,50 @@ public class BookBrowseController {
         resetUIState(false);
         booksFlowPane.getChildren().clear();
         searchButton.setDisable(true);
+        booksFlowPane.setVisible(false);
 
-        try {
-            List<Document> searchResults = documentService.searchBooks(title, author, publishDate);
+        // Tạo task để thực hiện tìm kiếm trong nền
+        Task<List<Document>> searchTask = new Task<>() {
+            @Override
+            protected List<Document> call() throws Exception {
+                return documentService.searchBooks(title, author, publishDate);
+            }
+        };
+
+        // Khi task hoàn thành thành công
+        searchTask.setOnSucceeded(event -> {
+            List<Document> searchResults = searchTask.getValue();
 
             if (searchResults == null || searchResults.isEmpty()) {
                 showAlert(AlertType.INFORMATION, "Không tìm thấy", "Không tìm thấy sách phù hợp với tiêu chí tìm kiếm.");
-                booksFlowPane.setVisible(false);
-                return;
+            } else {
+                booksFlowPane.setVisible(true);
+                for (Document doc : searchResults) {
+                    ImageView bookCover = createBookCover(doc);
+                    booksFlowPane.getChildren().add(bookCover);
+                }
             }
 
-            booksFlowPane.setVisible(true);
-            for (Document doc : searchResults) {
-                ImageView bookCover = createBookCover(doc);
-                booksFlowPane.getChildren().add(bookCover);
-            }
-
-        } catch (SQLException e) {
-            showAlert(AlertType.ERROR, "Lỗi cơ sở dữ liệu", "Không thể truy vấn cơ sở dữ liệu: " + e.getMessage());
-            e.printStackTrace();
-        } catch (Exception e) {
-            showAlert(AlertType.ERROR, "Lỗi hệ thống", "Đã xảy ra lỗi không mong muốn: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
             searchButton.setDisable(false);
-        }
+        });
+
+        // Khi task bị lỗi
+        searchTask.setOnFailed(event -> {
+            Throwable error = searchTask.getException();
+            if (error instanceof SQLException) {
+                showAlert(AlertType.ERROR, "Lỗi cơ sở dữ liệu", "Không thể truy vấn cơ sở dữ liệu: " + error.getMessage());
+            } else {
+                showAlert(AlertType.ERROR, "Lỗi hệ thống", "Đã xảy ra lỗi không mong muốn: " + error.getMessage());
+            }
+            error.printStackTrace();
+            searchButton.setDisable(false);
+        });
+
+        Thread searchThread = new Thread(searchTask);
+        searchThread.setDaemon(true);
+        searchThread.start();
     }
+
 
     private ImageView createBookCover(Document doc) {
         ImageView coverView = new ImageView();

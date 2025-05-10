@@ -1,8 +1,7 @@
 package models.services;
 
 import models.dao.BorrowRecordDAO;
-import models.dao.DocumentDAO;
-import models.entities.BorrowRecord;
+import models.entities.BorrowedBookInfo;
 import models.entities.Document;
 
 import java.sql.Connection;
@@ -11,47 +10,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BorrowHistoryService {
-    private final DocumentDAO documentDAO;
     private final BorrowRecordDAO borrowRecordDAO;
 
-    public BorrowHistoryService(DocumentDAO documentDAO, BorrowRecordDAO borrowRecordDAO) {
-        this.documentDAO = documentDAO;
+    public BorrowHistoryService(BorrowRecordDAO borrowRecordDAO) {
         this.borrowRecordDAO = borrowRecordDAO;
     }
 
-    public List<Document> getReturnedBooks(Connection conn, int userId) throws SQLException {
-        List<BorrowRecord> records = borrowRecordDAO.getByUserId(conn, userId);
-        List<Document> returnedDocuments = new ArrayList<>();
-
-        for (BorrowRecord record : records) {
-            // Kiểm tra xem có ngày trả hay không
-            if (record.getReturnDate() != null) {
-                Document doc = documentDAO.getBookByIsbn(record.getIsbn());
-                if (doc != null) {
-                    returnedDocuments.add(doc);
-                }
+    public List<BorrowedBookInfo> getUnreturnedBookInfo(Connection conn, int userId) throws SQLException {
+        List<BorrowedBookInfo> all = borrowRecordDAO.getBorrowedBooksWithInfoByUserId(conn, userId);
+        List<BorrowedBookInfo> result = new ArrayList<>();
+        for (BorrowedBookInfo info : all) {
+            if (info.getBorrowRecord().getReturnDate() == null) {
+                result.add(info);
             }
         }
-
-        return returnedDocuments;
+        return result;
     }
 
-    // Lấy các sách chưa trả
-    public List<Document> getUnreturnedBooks(Connection conn, int userId) throws SQLException {
-        List<BorrowRecord> records = borrowRecordDAO.getByUserId(conn, userId);
-        List<Document> unreturnedDocuments = new ArrayList<>();
-
-        for (BorrowRecord record : records) {
-            // Kiểm tra xem chưa có ngày trả
-            if (record.getReturnDate() == null) {
-                Document doc = documentDAO.getBookByIsbn(record.getIsbn());
-                if (doc != null) {
-                    unreturnedDocuments.add(doc);
-                }
+    public List<BorrowedBookInfo> getReturnedBookInfo(Connection conn, int userId) throws SQLException {
+        List<BorrowedBookInfo> all = borrowRecordDAO.getBorrowedBooksWithInfoByUserId(conn, userId);
+        List<BorrowedBookInfo> result = new ArrayList<>();
+        for (BorrowedBookInfo info : all) {
+            if (info.getBorrowRecord().getReturnDate() != null) {
+                result.add(info);
             }
         }
-
-        return unreturnedDocuments;
+        return result;
     }
+
 }
-

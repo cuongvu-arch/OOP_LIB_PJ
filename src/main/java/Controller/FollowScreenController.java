@@ -8,6 +8,7 @@ import models.dao.BorrowRecordDAO;
 import models.dao.DocumentDAO;
 import models.data.DatabaseConnection;
 import models.entities.BorrowRecord;
+import models.entities.BorrowedBookInfo;
 import models.entities.Document;
 import models.entities.User;
 import utils.SessionManager;
@@ -35,21 +36,21 @@ public class FollowScreenController {
             return;
         }
 
-        Task<List<BorrowRecord>> loadTask = new Task<>() {
+        Task<List<BorrowedBookInfo>> loadTask = new Task<>() {
             @Override
-            protected List<BorrowRecord> call() throws Exception {
+            protected List<BorrowedBookInfo> call() throws Exception {
                 try (Connection conn = DatabaseConnection.getConnection()) {
                     BorrowRecordDAO borrowRecordDAO = new BorrowRecordDAO();
-                    return borrowRecordDAO.getByUserId(conn, currentUser.getId());
+                    return borrowRecordDAO.getBorrowedBooksWithInfoByUserId(conn, currentUser.getId());
                 }
             }
         };
 
         loadTask.setOnSucceeded(workerStateEvent -> {
-            List<BorrowRecord> records = loadTask.getValue();
-            for (BorrowRecord record : records) {
-                if (record.getReturnDate() == null) {
-                    addBorrowedBook(record);  // chạy trên JavaFX thread
+            List<BorrowedBookInfo> infos = loadTask.getValue();
+            for (BorrowedBookInfo info : infos) {
+                if (info.getBorrowRecord().getReturnDate() == null) {
+                    addBorrowedBook(info);
                 }
             }
         });
@@ -64,57 +65,30 @@ public class FollowScreenController {
         thread.start();
     }
 
-    private void addBorrowedBook(BorrowRecord record) {
-        Task<Void> task = new Task<>() {
-            private Document document;
+    private void addBorrowedBook(BorrowedBookInfo info) {
+        Document document = info.getDocument();
+        BorrowRecord record = info.getBorrowRecord();
 
-            @Override
-            protected Void call() throws Exception {
-                document = getDocumentByIsbn(record.getIsbn());
-                return null;
-            }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/BookCard.fxml"));
+            VBox bookCard = loader.load();
 
-            @Override
-            protected void succeeded() {
-                if (document != null) {
-                    try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/BookCard.fxml"));
-                        VBox bookCard = loader.load();
+            BookCardController controller = loader.getController();
+            controller.setBookInfo(document.getTitle(), document.getThumbnailUrl(), () -> {
+                try (Connection conn = DatabaseConnection.getConnection()) {
+                    BorrowRecordDAO dao = new BorrowRecordDAO();
+                    dao.markAsReturned(conn, record.getUserId(), record.getIsbn());
 
-                        BookCardController controller = loader.getController();
-                        controller.setBookInfo(document.getTitle(), document.getThumbnailUrl(), () -> {
-                            try (Connection conn = DatabaseConnection.getConnection()) {
-                                BorrowRecordDAO dao = new BorrowRecordDAO();
-                                dao.markAsReturned(conn, record.getUserId(), record.getIsbn());
-
-                                borrowedBooksPane.getChildren().remove(bookCard);
-                                System.out.println("Đã trả sách: " + document.getTitle());
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                        });
-
-                        borrowedBooksPane.getChildren().add(bookCard);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    borrowedBooksPane.getChildren().remove(bookCard);
+                    System.out.println("Đã trả sách: " + document.getTitle());
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-            }
+            });
 
-            @Override
-            protected void failed() {
-                System.err.println("Không thể lấy thông tin sách cho ISBN: " + record.getIsbn());
-                getException().printStackTrace();
-            }
-        };
-
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        thread.start();
-    }
-
-    private Document getDocumentByIsbn(String isbn) throws SQLException {
-        DocumentDAO documentDAO = new DocumentDAO();
-        return documentDAO.getBookByIsbn(isbn);
+            borrowedBooksPane.getChildren().add(bookCard);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

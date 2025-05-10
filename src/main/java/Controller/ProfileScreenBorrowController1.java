@@ -7,9 +7,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import models.dao.BorrowRecordDAO;
-import models.dao.DocumentDAO;
 import models.data.DatabaseConnection;
-import models.entities.Document;
+import models.entities.BorrowedBookInfo;
 import models.entities.User;
 import models.services.BorrowHistoryService;
 import models.viewmodel.BookBorrowedView;
@@ -40,12 +39,28 @@ public class ProfileScreenBorrowController1 {
     private final BorrowHistoryService borrowHistoryService;
 
     public ProfileScreenBorrowController1() {
-        // Khởi tạo dịch vụ với DAO đã được inject hoặc bạn có thể tạo mới
-        this.borrowHistoryService = new BorrowHistoryService(new DocumentDAO(), new BorrowRecordDAO());
+        // Chỉ cần BorrowRecordDAO, không cần DocumentDAO vì đã tích hợp trong DAO
+        this.borrowHistoryService = new BorrowHistoryService(new BorrowRecordDAO());
     }
 
     @FXML
     public void initialize() {
+        // Cài đặt hiển thị tên sách
+        bookInfoColumn.setCellValueFactory(new PropertyValueFactory<>("display"));
+
+        // Xử lý chuyển scene
+        Truyendatra1.setOnMouseClicked(event ->
+                SceneController.getInstance().switchCenterContent("/fxml/ProfileSceneBorrow2.fxml")
+        );
+
+        Thongtinchung1.setOnMouseClicked(event ->
+                SceneController.getInstance().switchCenterContent("/fxml/ProfileScene.fxml")
+        );
+
+        // Load dữ liệu sách đang mượn
+        loadBorrowedBooks();
+
+        // Load tên người dùng
         Task<User> loadUserTask = new Task<>() {
             @Override
             protected User call() {
@@ -53,24 +68,9 @@ public class ProfileScreenBorrowController1 {
             }
         };
 
-        // Cấu hình cột trong TableView
-        bookInfoColumn.setCellValueFactory(new PropertyValueFactory<>("display"));
-
-        Truyendatra1.setOnMouseClicked(event -> {
-            SceneController.getInstance().switchCenterContent("/fxml/ProfileSceneBorrow2.fxml");
-        });
-
-        Thongtinchung1.setOnMouseClicked(event -> {
-            SceneController.getInstance().switchCenterContent("/fxml/ProfileScene.fxml");
-        });
-
-        // Load sách đang mượn
-        loadBorrowedBooks();
-
-        // Hiển thị tên người dùng khi load xong
         loadUserTask.setOnSucceeded(event -> {
             User user = loadUserTask.getValue();
-            if (user != null && nameLabel1 != null) {
+            if (user != null) {
                 nameLabel1.setText(user.getUsername());
             }
         });
@@ -78,27 +78,34 @@ public class ProfileScreenBorrowController1 {
         new Thread(loadUserTask).start();
     }
 
-
     private void loadBorrowedBooks() {
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            // Lấy user hiện tại
-            User user = SessionManager.getCurrentUser();
-            if (user == null) return;
-
-            int userId = user.getId();
-
-            // Lấy danh sách sách chưa trả từ dịch vụ
-            List<Document> borrowedBooks = borrowHistoryService.getUnreturnedBooks(conn, userId);
-
-            // Chuyển đổi thành các đối tượng BookBorrowedView để hiển thị
-            for (Document doc : borrowedBooks) {
-                borrowedBooksTable.getItems().add(new BookBorrowedView(doc.getTitle(), doc.getIsbn()));
+        Task<List<BorrowedBookInfo>> task = new Task<>() {
+            @Override
+            protected List<BorrowedBookInfo> call() throws SQLException {
+                try (Connection conn = DatabaseConnection.getConnection()) {
+                    User user = SessionManager.getCurrentUser();
+                    if (user == null) return List.of();
+                    return borrowHistoryService.getUnreturnedBookInfo(conn, user.getId());
+                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+        };
 
+        task.setOnSucceeded(event -> {
+            borrowedBooksTable.getItems().clear();
+            for (BorrowedBookInfo info : task.getValue()) {
+                String title = info.getDocument().getTitle();
+                String isbn = info.getDocument().getIsbn();
+                borrowedBooksTable.getItems().add(new BookBorrowedView(title, isbn));
+            }
+        });
+
+        task.setOnFailed(event -> {
+            System.err.println("Lỗi khi tải danh sách sách chưa trả:");
+            task.getException().printStackTrace();
+        });
+
+        new Thread(task).start();
+    }
 
     public void Exit() {
         SceneController.getInstance().switchCenterContent("/fxml/HomePageScene.fxml");
