@@ -10,6 +10,7 @@ public class Document {
     private String description;
     private String thumbnailUrl;
     private double avgRating;
+    private int quantity;
 
 
     public Document(String isbn, String title, String[] authors, String publisher, String publishedDate, String description, String thumbnailUrl) {
@@ -88,5 +89,13 @@ public class Document {
         sb.append("Ngày xuất bản: ").append(publishedDate != null ? publishedDate : "N/A").append("\n");
         sb.append("Mô tả: ").append(description != null ? description : "N/A").append("\n");
         return sb.toString();
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import models.dao.BorrowRecordDAO;
+import models.dao.DocumentDAO;
 import models.dao.ReviewDAO;
 import models.entities.BorrowRecord;
 import models.entities.Review;
@@ -45,6 +46,7 @@ public class BookDetailController {
     @FXML private TextArea newCommentTextArea;
     @FXML private ScrollPane commentsScrollPane;
     @FXML private ChoiceBox<Integer> ratingChoiceBox;
+    @FXML private Button borrowButton;
 
     private Document currentBook;
 
@@ -122,7 +124,9 @@ public class BookDetailController {
 
     @FXML
     private void handleBorrowButtonClick(ActionEvent event) {
-        Document selectedDoc = currentBook;  // Sử dụng sách đang xem chi tiết
+        Document selectedDoc = currentBook;
+
+        // Sử dụng sách đang xem chi tiết
         if (selectedDoc == null) {
             System.out.println("Chưa chọn sách nào.");
             return;
@@ -200,6 +204,10 @@ public class BookDetailController {
         }
         loadReviewsForCurrentBook();
         updateAvgRating();
+
+        if(book.getQuantity() == 0) {
+            borrowButton.setDisable(true);
+        }
     }
 
     private void updateAvgRating() {

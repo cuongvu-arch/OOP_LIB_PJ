@@ -2,6 +2,7 @@ package models.dao;
 
 import models.data.DatabaseConnection;
 import models.entities.Document;
+import models.entities.DocumentWithBorrowInfo;
 import org.json.JSONArray; // <-- Thêm import này
 
 import java.sql.*;
@@ -244,5 +245,41 @@ public class DocumentDAO {
         }
 
         return books;
+    }
+
+    public static List<DocumentWithBorrowInfo> getAllDocumentsWithBorrowInfo(Connection conn) throws SQLException {
+        List<DocumentWithBorrowInfo> list = new ArrayList<>();
+
+        String sql = """
+            SELECT d.isbn, d.title, d.thumbnail_url, d.total_quantity,
+                   COUNT(br.isbn) AS currently_borrowed,
+                   (d.total_quantity - COUNT(br.isbn)) AS available_quantity
+            FROM books d
+            LEFT JOIN borrow_records br
+                ON d.isbn = br.isbn AND br.return_date IS NULL
+            GROUP BY d.isbn, d.title, d.thumbnail_url, d.total_quantity
+            ORDER BY d.title
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String isbn = rs.getString("isbn");
+                String title = rs.getString("title");
+                String thumbnailUrl = rs.getString("thumbnail_url");
+                int totalQuantity = rs.getInt("total_quantity");
+                int currentlyBorrowed = rs.getInt("currently_borrowed");
+                int availableQuantity = rs.getInt("available_quantity");
+
+                DocumentWithBorrowInfo doc = new DocumentWithBorrowInfo(
+                        title, isbn, thumbnailUrl, totalQuantity, currentlyBorrowed, availableQuantity
+                );
+
+                list.add(doc);
+            }
+        }
+
+        return list;
     }
 }

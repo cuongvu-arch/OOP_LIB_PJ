@@ -3,93 +3,42 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LibrarianToEditController">
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controller.LibrarianToEditController">
    <stylesheets>
       <URL value="@../css/styles.css" />
    </stylesheets>
+
    <center>
       <AnchorPane style="-fx-padding: 20;">
          <children>
-            <Label styleClass="subtitle" layoutX="20.0" layoutY="20.0" text="Trang chủ &gt;&gt; Thủ thư &gt;&gt; Chỉnh sửa"/>
+            <VBox spacing="20.0" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+               <Label styleClass="subtitle" text="Trang chủ >> Thủ thư >> Quản lý sách"/>
 
-            <TabPane layoutX="20.0" layoutY="60.0" prefWidth="760.0" prefHeight="500.0" styleClass="card">
-               <tabs>
-                  <Tab text="Thêm sách">
-                     <content>
-                        <VBox spacing="15" style="-fx-padding: 20;">
-                           <Label text="Thêm sách mới" styleClass="title"/>
+               <Label text="Quản lý kho sách" styleClass="title"/>
 
-                           <HBox spacing="10" alignment="CENTER_LEFT">
-                              <Label text="Nhập ISBN:" styleClass="subtitle"/>
-                              <TextField fx:id="addIsbnField" prefWidth="200.0"/>
-                              <Button text="NHẬP" styleClass="button"/>
-                           </HBox>
+               <TableView fx:id="bookTable" prefHeight="400.0">
+                  <columns>
+                     <TableColumn fx:id="isbnColumn" text="ISBN" prefWidth="120"/>
+                     <TableColumn fx:id="titleColumn" text="Tiêu đề" prefWidth="250"/>
+                     <TableColumn fx:id="quantityColumn" text="Tổng SL" prefWidth="80"/>
+                     <TableColumn fx:id="borrowedColumn" text="Đang mượn" prefWidth="80"/>
+                     <TableColumn fx:id="availableColumn" text="Còn lại" prefWidth="80"/>
+                  </columns>
+               </TableView>
 
-                           <Label text="Thông tin sách:" styleClass="subtitle"/>
-                           <TextArea fx:id="addBookInfoArea" prefHeight="200.0" prefWidth="700.0"/>
-
-                           <Button text="THÊM" styleClass="button" style="-fx-background-color: #4CAF50;" alignment="CENTER_RIGHT">
-                              <VBox.margin>
-                                 <Insets right="20.0"/>
-                              </VBox.margin>
-                           </Button>
-                        </VBox>
-                     </content>
-                  </Tab>
-
-                  <Tab text="Xóa sách">
-                     <content>
-                        <VBox spacing="15" style="-fx-padding: 20;">
-                           <Label text="Xóa sách" styleClass="title"/>
-
-                           <HBox spacing="10" alignment="CENTER_LEFT">
-                              <Label text="Nhập ISBN:" styleClass="subtitle"/>
-                              <TextField fx:id="deleteIsbnField" prefWidth="200.0"/>
-                              <Button text="NHẬP" styleClass="button"/>
-                           </HBox>
-
-                           <Label text="Thông tin sách sẽ bị xóa:" styleClass="subtitle"/>
-                           <TextArea fx:id="deleteBookInfoArea" prefHeight="200.0" prefWidth="700.0"/>
-
-                           <Button text="XÓA" styleClass="button-danger" alignment="CENTER_RIGHT">
-                              <VBox.margin>
-                                 <Insets right="20.0"/>
-                              </VBox.margin>
-                           </Button>
-                        </VBox>
-                     </content>
-                  </Tab>
-
-                  <Tab text="Sửa sách">
-                     <content>
-                        <VBox spacing="15" style="-fx-padding: 20;">
-                           <Label text="Sửa thông tin sách" styleClass="title"/>
-
-                           <HBox spacing="10" alignment="CENTER_LEFT">
-                              <Label text="Nhập ISBN:" styleClass="subtitle"/>
-                              <TextField fx:id="editIsbnField" prefWidth="200.0"/>
-                              <Button text="NHẬP" styleClass="button"/>
-                           </HBox>
-
-                           <Label text="Thông tin sách hiện tại:" styleClass="subtitle"/>
-                           <TextArea fx:id="currentBookInfoArea" prefHeight="100.0" prefWidth="700.0"/>
-
-                           <Label text="Thông tin sách mới:" styleClass="subtitle"/>
-                           <TextArea fx:id="newBookInfoArea" prefHeight="100.0" prefWidth="700.0"/>
-
-                           <Button text="CẬP NHẬT" styleClass="button" style="-fx-background-color: #FF9800;" alignment="CENTER_RIGHT">
-                              <VBox.margin>
-                                 <Insets right="20.0"/>
-                              </VBox.margin>
-                           </Button>
-                        </VBox>
-                     </content>
-                  </Tab>
-               </tabs>
-            </TabPane>
+               <HBox spacing="10" alignment="CENTER_LEFT">
+                  <Label text="Nhập ISBN:"/>
+                  <TextField fx:id="adjustIsbnField" prefWidth="150"/>
+                  <Label text="Thêm/Bớt SL:"/>
+                  <TextField fx:id="adjustQuantityField" prefWidth="80"/>
+                  <Button fx:id="adjustButton" text="Cập nhật số lượng" styleClass="button"/>
+               </HBox>
+            </VBox>
          </children>
       </AnchorPane>
    </center>
