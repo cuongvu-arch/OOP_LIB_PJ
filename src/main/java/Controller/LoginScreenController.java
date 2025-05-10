@@ -25,7 +25,7 @@ public class LoginScreenController {
         this.userService = new UserService(new UserDAO());
     }
 
-    public void login () {
+    public void login() {
         String usn = username.getText();
         String pass = password.getText();
 
@@ -47,15 +47,15 @@ public class LoginScreenController {
         }
     }
 
-    public void signUp () {
+    public void signUp() {
         SceneController.getInstance().switchToScene("/fxml/SignUpScene.fxml");
     }
 
-        public void showAlert(String title, String message) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle(title);
-            alert.setHeaderText(null);
-            alert.setContentText(message);
-            alert.showAndWait();
-        }
+    public void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
+}

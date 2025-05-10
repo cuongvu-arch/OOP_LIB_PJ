@@ -5,7 +5,7 @@ public class DocumentWithBorrowInfo extends Document {
     private int currentlyBorrowed;
     private int availableQuantity;
 
-    public DocumentWithBorrowInfo(String isbn, String title, String thumbnailUrl, int totalQuantity, int currentlyBorrowed,int availableQuantity) {
+    public DocumentWithBorrowInfo(String isbn, String title, String thumbnailUrl, int totalQuantity, int currentlyBorrowed, int availableQuantity) {
         super(isbn, title, thumbnailUrl);
         this.totalQuantity = totalQuantity;
         this.currentlyBorrowed = currentlyBorrowed;

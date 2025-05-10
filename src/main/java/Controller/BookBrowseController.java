@@ -24,11 +24,16 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class BookBrowseController {
-    @FXML private TextField titleField;
-    @FXML private TextField authorField;
-    @FXML private TextField publishDateField;
-    @FXML private Button searchButton;
-    @FXML private FlowPane booksFlowPane;
+    @FXML
+    private TextField titleField;
+    @FXML
+    private TextField authorField;
+    @FXML
+    private TextField publishDateField;
+    @FXML
+    private Button searchButton;
+    @FXML
+    private FlowPane booksFlowPane;
 
     private DocumentService documentService;
     private Document currentDocument;

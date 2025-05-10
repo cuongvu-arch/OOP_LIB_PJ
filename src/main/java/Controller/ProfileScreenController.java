@@ -96,7 +96,7 @@ public class ProfileScreenController {
 
     public void EditProfile() {
         isEditing = !isEditing;
-        if(isEditing) {
+        if (isEditing) {
             usernameField.setDisable(false);
             emailField.setDisable(false);
             phoneField.setDisable(false);
@@ -122,7 +122,7 @@ public class ProfileScreenController {
             currentUser.setPhoneNumber(phoneNumber);
             SessionManager.setCurrentUser(currentUser);
             initialize();
-            showAlert("Thành Công","Chỉnh sửa thông tin thành công");
+            showAlert("Thành Công", "Chỉnh sửa thông tin thành công");
         } else {
             showAlert("Lỗi", "Thông tin không hợp lệ");
         }

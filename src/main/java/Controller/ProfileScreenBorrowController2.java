@@ -21,22 +21,17 @@ import java.util.List;
 
 public class ProfileScreenBorrowController2 {
 
+    private final BorrowRecordService borrowRecordService;
     @FXML
     private TableView<BookBorrowedView> borrowedBooksTable2;
-
     @FXML
     private TableColumn<BookBorrowedView, String> bookInfoColumn2;
-
     @FXML
     private Label Truyendangmuon2;
-
     @FXML
     private Label Thongtinchung2;
-
     @FXML
     private Label nameLabel2;
-
-    private final BorrowRecordService borrowRecordService;
 
     public ProfileScreenBorrowController2() {
         this.borrowRecordService = new BorrowRecordService();

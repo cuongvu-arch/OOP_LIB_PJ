@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class BorrowRecordService {
-    private final BorrowRecordDAO borrowRecordDAO = new BorrowRecordDAO();
     private static final int MAX_BORROW_DAYS = 30;
+    private final BorrowRecordDAO borrowRecordDAO = new BorrowRecordDAO();
 
     public BorrowRecordService() {
     }

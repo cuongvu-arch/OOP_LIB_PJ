@@ -12,15 +12,17 @@ import utils.SceneController;
 public class SignUpScreenController {
 
     private final UserService userService;
-
+    @FXML
+    private TextField userName;
+    @FXML
+    private TextField password;
+    @FXML
+    private TextField email;
+    @FXML
+    private TextField phoneNumber;
     public SignUpScreenController() {
         this.userService = new UserService(new UserDAO());
     }
-
-    @FXML private TextField userName;
-    @FXML private TextField password;
-    @FXML private TextField email;
-    @FXML private TextField phoneNumber;
 
     public void signUpFinal() {
         String usn = userName.getText();

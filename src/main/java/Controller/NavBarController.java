@@ -20,6 +20,7 @@ public class NavBarController {
     public void initialize() {
         updateUIByRole();
     }
+
     public void home() {
         SceneController.getInstance().switchCenterContent("/fxml/HomePageScene.fxml");
     }
@@ -27,6 +28,7 @@ public class NavBarController {
     public void ToAdminScene() {
         SceneController.getInstance().switchCenterContent("/fxml/AdminScene.fxml");
     }
+
     public void follow() {
         SceneController.getInstance().switchCenterContent("/fxml/FollowScene.fxml");
     }
@@ -43,8 +45,10 @@ public class NavBarController {
         SceneController.getInstance().switchCenterContent("/fxml/browseScreen.fxml.fxml");
     }
 
-    public void logOut() {SceneController.getInstance().switchToScene("/fxml/loginScreen.fxml");
-    SessionManager.clearSession();}
+    public void logOut() {
+        SceneController.getInstance().switchToScene("/fxml/loginScreen.fxml");
+        SessionManager.clearSession();
+    }
 
     private void updateUIByRole() {
         User currentUser = SessionManager.getCurrentUser();

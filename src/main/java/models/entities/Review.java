@@ -18,18 +18,43 @@ public class Review {
     }
 
     // Getters và Setters
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
+    public int getUserId() {
+        return userId;
+    }
 
-    public String getDocumentIsbn() { return documentIsbn; }
-    public void setDocumentIsbn(String documentIsbn) { this.documentIsbn = documentIsbn; }
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
-    public int getRating() { return rating; }
-    public void setRating(int rating) { this.rating = rating; }
+    public String getDocumentIsbn() {
+        return documentIsbn;
+    }
 
-    public String getComment() { return comment; }
-    public void setComment(String comment) { this.comment = comment; }
+    public void setDocumentIsbn(String documentIsbn) {
+        this.documentIsbn = documentIsbn;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }

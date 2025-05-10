@@ -157,52 +157,16 @@ public class ReviewDAO {
         }
     }
 
-    public List<Document> getTopRatedDocuments(int topN) {
-        List<Document> result = new ArrayList<>();
-
-        String sql = """
-        SELECT d.isbn, d.title, AVG(r.rating) AS avg_rating
-        FROM books d
-        JOIN review r ON d.isbn = r.document_isbn
-        GROUP BY d.isbn, d.title
-        HAVING AVG(r.rating) > 0
-        ORDER BY avg_rating DESC
-        LIMIT ?
-        """;
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, topN);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                String isbn = rs.getString("isbn");
-                String title = rs.getString("title");
-                double avgRating = rs.getDouble("avg_rating");
-
-                Document doc = new Document(isbn, title);
-                doc.setAvgRating(avgRating);
-                result.add(doc);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
     public static double calculateAverageRating(String isbn) {
         double avgRating = 0;
         int totalRating = 0;
         int count = 0;
 
         String sql = """
-        SELECT rating
-        FROM review
-        WHERE document_isbn = ?
-        """;
+                SELECT rating
+                FROM review
+                WHERE document_isbn = ?
+                """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -226,6 +190,42 @@ public class ReviewDAO {
         }
 
         return avgRating;
+    }
+
+    public List<Document> getTopRatedDocuments(int topN) {
+        List<Document> result = new ArrayList<>();
+
+        String sql = """
+                SELECT d.isbn, d.title, AVG(r.rating) AS avg_rating
+                FROM books d
+                JOIN review r ON d.isbn = r.document_isbn
+                GROUP BY d.isbn, d.title
+                HAVING AVG(r.rating) > 0
+                ORDER BY avg_rating DESC
+                LIMIT ?
+                """;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, topN);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String isbn = rs.getString("isbn");
+                String title = rs.getString("title");
+                double avgRating = rs.getDouble("avg_rating");
+
+                Document doc = new Document(isbn, title);
+                doc.setAvgRating(avgRating);
+                result.add(doc);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
 }

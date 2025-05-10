@@ -3,11 +3,11 @@ package models.entities;
 import java.sql.Date;
 
 public class BorrowRecord {
-    private int id;
     private final int userId;
     private final String isbn;
     private final Date borrowDate;
     private final Date returnDate;// Thêm thuộc tính returnDate
+    private int id;
     private String status;
 
     public BorrowRecord(int userId, String isbn, Date borrowDate, Date returnDate, String status) {
@@ -39,12 +39,12 @@ public class BorrowRecord {
         return returnDate;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getStatus() {
         return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public int getId() {

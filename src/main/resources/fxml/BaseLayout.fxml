@@ -3,20 +3,20 @@
 <?import java.net.URL?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1">
     <stylesheets>
-        <URL value="@../css/styles.css" />
+        <URL value="@../css/styles.css"/>
     </stylesheets>
 
     <top>
-        <fx:include source="NavBar.fxml" />
+        <fx:include source="NavBar.fxml"/>
     </top>
 
     <right>
-        <fx:include source="TablePart.fxml" />
+        <fx:include source="TablePart.fxml"/>
     </right>
 
     <center>
-        <fx:include source="HomePageScene.fxml" />
+        <fx:include source="HomePageScene.fxml"/>
     </center>
 </BorderPane>

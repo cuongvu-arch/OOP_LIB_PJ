@@ -5,22 +5,26 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="70.0" spacing="20" style="-fx-background-color: #2c3e50; -fx-padding: 0 20;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.NavBarController">
+<HBox xmlns:fx="http://javafx.com/fxml/1" alignment="CENTER_LEFT" maxWidth="Infinity" prefHeight="70.0"
+      spacing="20" style="-fx-background-color: #2c3e50; -fx-padding: 0 20;"
+      xmlns="http://javafx.com/javafx/23.0.1" fx:controller="Controller.NavBarController">
 
     <stylesheets>
-        <URL value="@../css/styles.css" />
+        <URL value="@../css/styles.css"/>
     </stylesheets>
 
     <Label onMouseClicked="#home" styleClass="nav-brand" text="ThienDiaSach">
         <font>
-            <Font name="Calibri Light" size="20.0" />
+            <Font name="Calibri Light" size="20.0"/>
         </font>
     </Label>
-    <Label onMouseClicked="#searching" prefHeight="20.0" prefWidth="152.0" styleClass="nav-item" text="Tìm kiếm nâng cao" />
-    <Label onMouseClicked="#profile" styleClass="nav-item" text="Cá nhân" />
-    <Label onMouseClicked="#follow" styleClass="nav-item" text="Sách đang mượn" />
-    <Label onMouseClicked="#history" styleClass="nav-item" text="Lịch sử" />
-    <Label onMouseClicked="#handleSearchButtonClick" styleClass="nav-item" text="Tìm kiếm" />
-   <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" onMouseClicked="#logOut" styleClass="nav-item" text="Đăng xuất" />
-    <Label fx:id="adminFunctionText" onMouseClicked="#ToAdminScene" styleClass="nav-item" text="Thủ thư" />
+    <Label onMouseClicked="#searching" prefHeight="20.0" prefWidth="152.0" styleClass="nav-item"
+           text="Tìm kiếm nâng cao"/>
+    <Label onMouseClicked="#profile" styleClass="nav-item" text="Cá nhân"/>
+    <Label onMouseClicked="#follow" styleClass="nav-item" text="Sách đang mượn"/>
+    <Label onMouseClicked="#history" styleClass="nav-item" text="Lịch sử"/>
+    <Label onMouseClicked="#handleSearchButtonClick" styleClass="nav-item" text="Tìm kiếm"/>
+    <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" onMouseClicked="#logOut" styleClass="nav-item"
+           text="Đăng xuất"/>
+    <Label fx:id="adminFunctionText" onMouseClicked="#ToAdminScene" styleClass="nav-item" text="Thủ thư"/>
 </HBox>

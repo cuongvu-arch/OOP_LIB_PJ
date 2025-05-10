@@ -29,13 +29,16 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class HomePageScreenController {
-    @FXML private GridPane booksGrid;
-    @FXML private Button prevButton;
-    @FXML private Button nextButton;
-    @FXML private Label pageLabel;
-
-    private int currentPage = 1;
     private static final int BOOKS_PER_PAGE = 6;
+    @FXML
+    private GridPane booksGrid;
+    @FXML
+    private Button prevButton;
+    @FXML
+    private Button nextButton;
+    @FXML
+    private Label pageLabel;
+    private int currentPage = 1;
     private DocumentDAO documentDAO = new DocumentDAO();
 
     @FXML

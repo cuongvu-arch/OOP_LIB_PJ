@@ -22,13 +22,20 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class BookSearchController {
-    @FXML private TextField isbnTextField;
-    @FXML private TextArea resultTextArea;
-    @FXML private Button searchButton;
-    @FXML private Button addBookButton;
-    @FXML private Button updateBookButton;
-    @FXML private Button deleteBookButton;
-    @FXML private ImageView bookImageView;
+    @FXML
+    private TextField isbnTextField;
+    @FXML
+    private TextArea resultTextArea;
+    @FXML
+    private Button searchButton;
+    @FXML
+    private Button addBookButton;
+    @FXML
+    private Button updateBookButton;
+    @FXML
+    private Button deleteBookButton;
+    @FXML
+    private ImageView bookImageView;
 
     private Document currentDocument;
     private DocumentService documentService;

@@ -1,0 +1,11 @@
+@startuml
+class Controller.AdminSceneController {
+- Label toUserLabel
+- Label toLibraryLabel
+- void initialize()
++ void ToUser()
++ void ToEdit()
+}
+
+
+@enduml

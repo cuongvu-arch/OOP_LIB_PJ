@@ -21,22 +21,17 @@ import java.util.List;
 
 public class ProfileScreenBorrowController1 {
 
+    private final BorrowRecordService borrowRecordService;
     @FXML
     private TableView<BookBorrowedView> borrowedBooksTable;
-
     @FXML
     private TableColumn<BookBorrowedView, String> bookInfoColumn;
-
     @FXML
     private Label Truyendatra1;
-
     @FXML
     private Label Thongtinchung1;
-
     @FXML
     private Label nameLabel1;
-
-    private final BorrowRecordService borrowRecordService;
 
     public ProfileScreenBorrowController1() {
         // Chỉ cần BorrowRecordDAO, không cần DocumentDAO vì đã tích hợp trong DAO

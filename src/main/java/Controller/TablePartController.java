@@ -13,8 +13,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TablePartController {
-    @FXML private TableView<BookRatingView> documentTableView; // TableView để hiển thị danh sách tài liệu
-    @FXML private TableColumn<BookRatingView, BookRatingView> documentInfoColumn;
+    @FXML
+    private TableView<BookRatingView> documentTableView; // TableView để hiển thị danh sách tài liệu
+    @FXML
+    private TableColumn<BookRatingView, BookRatingView> documentInfoColumn;
 
     public void initialize() {
         setupDocumentTable();

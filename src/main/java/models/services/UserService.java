@@ -8,6 +8,7 @@ import models.entities.Library;
 import models.entities.User;
 import org.mindrot.jbcrypt.BCrypt;
 import utils.SessionManager;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -104,7 +105,7 @@ public class UserService {
     }
 
 
-    public boolean editProfile (int currentUserId, String newUserName, String email, String phoneNumber) {
+    public boolean editProfile(int currentUserId, String newUserName, String email, String phoneNumber) {
         if (!isValidSignupInput(newUserName, email, phoneNumber)) {
             return false;
         }

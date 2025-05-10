@@ -20,32 +20,24 @@ import java.util.List;
 
 public class LibrarianToEditController {
 
+    private final ObservableList<DocumentWithBorrowInfo> books = FXCollections.observableArrayList();
     public javafx.scene.control.Button adjustButton;
     @FXML
     private TableView<DocumentWithBorrowInfo> bookTable;
-
     @FXML
     private TableColumn<DocumentWithBorrowInfo, String> isbnColumn;
-
     @FXML
     private TableColumn<DocumentWithBorrowInfo, String> titleColumn;
-
     @FXML
     private TableColumn<DocumentWithBorrowInfo, Integer> quantityColumn;
-
     @FXML
     private TableColumn<DocumentWithBorrowInfo, Integer> borrowedColumn;
-
     @FXML
     private TableColumn<DocumentWithBorrowInfo, Integer> availableColumn;
-
     @FXML
     private javafx.scene.control.TextField adjustIsbnField;
-
     @FXML
     private javafx.scene.control.TextField adjustQuantityField;
-
-    private final ObservableList<DocumentWithBorrowInfo> books = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
@@ -86,7 +78,7 @@ public class LibrarianToEditController {
         try {
             int quantityChange = Integer.parseInt(quantityText);
             if (quantityChange == 0) {
-                showAlert( "Thông báo", "Số lượng thay đổi phải khác 0.");
+                showAlert("Thông báo", "Số lượng thay đổi phải khác 0.");
                 return;
             }
 

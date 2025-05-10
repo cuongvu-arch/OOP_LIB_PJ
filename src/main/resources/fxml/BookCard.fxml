@@ -4,14 +4,15 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="bookCard" spacing="10" prefWidth="140" alignment="CENTER"
+<VBox xmlns:fx="http://javafx.com/fxml" fx:id="bookCard" spacing="10" prefWidth="140"
+      alignment="CENTER"
       xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
       fx:controller="Controller.BookCardController"
       style="-fx-padding: 10; -fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7; -fx-border-radius: 5;">
 
     <ImageView fx:id="imageView" fitHeight="180" fitWidth="120" preserveRatio="true"/>
-    <Label fx:id="titleLabel" maxWidth="120" maxHeight="40" wrapText="true" textOverrun="ellipsis" style="-fx-font-weight: bold;"/>
+    <Label fx:id="titleLabel" maxWidth="120" maxHeight="40" wrapText="true" textOverrun="ellipsis"
+           style="-fx-font-weight: bold;"/>
     <Label fx:id="returnLabel" text="Trả sách"
            style="-fx-text-fill: blue; -fx-cursor: hand; -fx-font-weight: bold;"/>
 </VBox>

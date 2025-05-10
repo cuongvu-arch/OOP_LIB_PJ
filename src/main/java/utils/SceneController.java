@@ -105,8 +105,6 @@ public class SceneController {
     }
 
 
-
-
     private void showErrorAlert(String title, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);

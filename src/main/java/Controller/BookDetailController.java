@@ -18,7 +18,9 @@ import utils.BookImageLoader;
 import javafx.scene.image.Image;
 
 import javafx.event.ActionEvent;
+
 import java.net.URL;
+
 import models.data.DatabaseConnection;
 import utils.SessionManager;
 
@@ -29,24 +31,38 @@ import java.util.Date;
 import java.util.List;
 
 
-
 public class BookDetailController {
 
-    @FXML private ImageView bookCoverImageView;
-    @FXML private Text bookTitleText;
-    @FXML private Text bookAuthorsText;
-    @FXML private Text publishDateText;
-    @FXML private Text publisherText;
-    @FXML private Text isbnText;
-    @FXML private Text languageText;
-    @FXML private Text avgRatingText;
-    @FXML private TextArea descriptionTextArea;
-    @FXML private Button closeButton;
-    @FXML private VBox commentsVBox;
-    @FXML private TextArea newCommentTextArea;
-    @FXML private ScrollPane commentsScrollPane;
-    @FXML private ChoiceBox<Integer> ratingChoiceBox;
-    @FXML private Button borrowButton;
+    @FXML
+    private ImageView bookCoverImageView;
+    @FXML
+    private Text bookTitleText;
+    @FXML
+    private Text bookAuthorsText;
+    @FXML
+    private Text publishDateText;
+    @FXML
+    private Text publisherText;
+    @FXML
+    private Text isbnText;
+    @FXML
+    private Text languageText;
+    @FXML
+    private Text avgRatingText;
+    @FXML
+    private TextArea descriptionTextArea;
+    @FXML
+    private Button closeButton;
+    @FXML
+    private VBox commentsVBox;
+    @FXML
+    private TextArea newCommentTextArea;
+    @FXML
+    private ScrollPane commentsScrollPane;
+    @FXML
+    private ChoiceBox<Integer> ratingChoiceBox;
+    @FXML
+    private Button borrowButton;
 
     private Document currentBook;
 
@@ -205,7 +221,7 @@ public class BookDetailController {
         loadReviewsForCurrentBook();
         updateAvgRating();
 
-        if(book.getQuantity() == 0) {
+        if (book.getQuantity() == 0) {
             borrowButton.setDisable(true);
         }
     }
@@ -238,7 +254,8 @@ public class BookDetailController {
                 }
                 if (review.getComment() != null && !review.getComment().isBlank()) {
                     addCommentToUI(username, review.getComment());
-                }            }
+                }
+            }
         }
     }
 

@@ -18,6 +18,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class HistoryScreenController {
+    private final BorrowRecordService borrowService = new BorrowRecordService();
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     @FXML
     private TableView<BorrowedBookInfo> historyTable;
     @FXML
@@ -30,9 +32,6 @@ public class HistoryScreenController {
     private TableColumn<BorrowedBookInfo, String> statusColumn;
     @FXML
     private TableColumn<BorrowedBookInfo, String> remainingDaysColumn;
-
-    private final BorrowRecordService borrowService = new BorrowRecordService();
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     @FXML
     public void initialize() {

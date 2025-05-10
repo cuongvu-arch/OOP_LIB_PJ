@@ -8,6 +8,7 @@ import org.json.JSONArray; // <-- Thêm import này
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 public class DocumentDAO {
 
     public static int getQuantityByIsbn(Connection conn, String isbn) throws SQLException {
@@ -30,6 +31,76 @@ public class DocumentDAO {
             stmt.setString(2, isbn);
             stmt.executeUpdate();
         }
+    }
+
+    public static List<Document> getAllDocs(Connection conn) throws SQLException {
+        List<Document> documents = new ArrayList<>();
+        String sql = "SELECT isbn, title, authors, publisher, publish_date, description, thumbnail_url FROM books";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String authorsJson = rs.getString("authors");
+                String[] authors;
+                try {
+                    JSONArray authorsArray = new JSONArray(authorsJson);
+                    authors = new String[authorsArray.length()];
+                    for (int i = 0; i < authorsArray.length(); i++) {
+                        authors[i] = authorsArray.getString(i);
+                    }
+                } catch (Exception e) {
+                    authors = new String[0]; // Nếu JSON không hợp lệ
+                }
+
+                Document document = new Document(
+                        rs.getString("isbn"),
+                        rs.getString("title"),
+                        authors,
+                        rs.getString("publisher"),
+                        rs.getString("publish_date"),
+                        rs.getString("description"),
+                        rs.getString("thumbnail_url")
+                );
+                documents.add(document);
+            }
+        }
+        return documents;
+    }
+
+    public static List<DocumentWithBorrowInfo> getAllDocumentsWithBorrowInfo(Connection conn) throws SQLException {
+        List<DocumentWithBorrowInfo> list = new ArrayList<>();
+
+        String sql = """
+                    SELECT d.isbn, d.title, d.thumbnail_url, d.total_quantity,
+                           COUNT(br.isbn) AS currently_borrowed,
+                           (d.total_quantity - COUNT(br.isbn)) AS available_quantity
+                    FROM books d
+                    LEFT JOIN borrow_records br
+                        ON d.isbn = br.isbn AND br.return_date IS NULL
+                    GROUP BY d.isbn, d.title, d.thumbnail_url, d.total_quantity
+                    ORDER BY d.title
+                """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String isbn = rs.getString("isbn");
+                String title = rs.getString("title");
+                String thumbnailUrl = rs.getString("thumbnail_url");
+                int totalQuantity = rs.getInt("total_quantity");
+                int currentlyBorrowed = rs.getInt("currently_borrowed");
+                int availableQuantity = rs.getInt("available_quantity");
+
+                DocumentWithBorrowInfo doc = new DocumentWithBorrowInfo(
+                        title, isbn, thumbnailUrl, totalQuantity, currentlyBorrowed, availableQuantity
+                );
+
+                list.add(doc);
+            }
+        }
+
+        return list;
     }
 
     public boolean addBook(Document book) {
@@ -78,7 +149,6 @@ public class DocumentDAO {
             return false;
         }
     }
-
 
     public boolean updateBook(Document book) {
         if (book == null || book.getIsbn() == null || book.getIsbn().trim().isEmpty()) {
@@ -194,39 +264,6 @@ public class DocumentDAO {
         }
     }
 
-    public static List<Document> getAllDocs(Connection conn) throws SQLException {
-        List<Document> documents = new ArrayList<>();
-        String sql = "SELECT isbn, title, authors, publisher, publish_date, description, thumbnail_url FROM books";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                String authorsJson = rs.getString("authors");
-                String[] authors;
-                try {
-                    JSONArray authorsArray = new JSONArray(authorsJson);
-                    authors = new String[authorsArray.length()];
-                    for (int i = 0; i < authorsArray.length(); i++) {
-                        authors[i] = authorsArray.getString(i);
-                    }
-                } catch (Exception e) {
-                    authors = new String[0]; // Nếu JSON không hợp lệ
-                }
-
-                Document document = new Document(
-                        rs.getString("isbn"),
-                        rs.getString("title"),
-                        authors,
-                        rs.getString("publisher"),
-                        rs.getString("publish_date"),
-                        rs.getString("description"),
-                        rs.getString("thumbnail_url")
-                );
-                documents.add(document);
-            }
-        }
-        return documents;
-    }
     public List<Document> getBooksPaginated(Connection conn, int page, int booksPerPage) throws SQLException {
         List<Document> books = new ArrayList<>();
         int offset = (page - 1) * booksPerPage;
@@ -267,41 +304,5 @@ public class DocumentDAO {
         }
 
         return books;
-    }
-
-    public static List<DocumentWithBorrowInfo> getAllDocumentsWithBorrowInfo(Connection conn) throws SQLException {
-        List<DocumentWithBorrowInfo> list = new ArrayList<>();
-
-        String sql = """
-            SELECT d.isbn, d.title, d.thumbnail_url, d.total_quantity,
-                   COUNT(br.isbn) AS currently_borrowed,
-                   (d.total_quantity - COUNT(br.isbn)) AS available_quantity
-            FROM books d
-            LEFT JOIN borrow_records br
-                ON d.isbn = br.isbn AND br.return_date IS NULL
-            GROUP BY d.isbn, d.title, d.thumbnail_url, d.total_quantity
-            ORDER BY d.title
-        """;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                String isbn = rs.getString("isbn");
-                String title = rs.getString("title");
-                String thumbnailUrl = rs.getString("thumbnail_url");
-                int totalQuantity = rs.getInt("total_quantity");
-                int currentlyBorrowed = rs.getInt("currently_borrowed");
-                int availableQuantity = rs.getInt("available_quantity");
-
-                DocumentWithBorrowInfo doc = new DocumentWithBorrowInfo(
-                        title, isbn, thumbnailUrl, totalQuantity, currentlyBorrowed, availableQuantity
-                );
-
-                list.add(doc);
-            }
-        }
-
-        return list;
     }
 }

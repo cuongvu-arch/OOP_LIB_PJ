@@ -7,21 +7,22 @@
 <?import javafx.scene.layout.FlowPane?>
 
 <?import javafx.scene.layout.VBox?>
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.FollowScreenController">
-   <center>
-            <VBox spacing="10" style="-fx-padding: 20;">
-               <!-- Tiêu đề -->
-               <Label text="Trang chủ >> Sách đang mượn"
-                      styleClass="subtitle"/>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1"
+            fx:controller="Controller.FollowScreenController">
+    <center>
+        <VBox spacing="10" style="-fx-padding: 20;">
+            <!-- Tiêu đề -->
+            <Label text="Trang chủ >> Sách đang mượn"
+                   styleClass="subtitle"/>
 
-               <!-- ScrollPane bao FlowPane -->
-               <ScrollPane fitToWidth="true" prefHeight="500">
-                  <FlowPane fx:id="borrowedBooksPane"
-                            hgap="20"
-                            vgap="20"
-                            prefWrapLength="580"
-                            style="-fx-padding: 10;" />
-               </ScrollPane>
-            </VBox>
-   </center>
+            <!-- ScrollPane bao FlowPane -->
+            <ScrollPane fitToWidth="true" prefHeight="500">
+                <FlowPane fx:id="borrowedBooksPane"
+                          hgap="20"
+                          vgap="20"
+                          prefWrapLength="580"
+                          style="-fx-padding: 10;"/>
+            </ScrollPane>
+        </VBox>
+    </center>
 </BorderPane>

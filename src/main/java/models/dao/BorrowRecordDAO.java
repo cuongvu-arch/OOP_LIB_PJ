@@ -63,12 +63,12 @@ public class BorrowRecordDAO {
     public List<BorrowedBookInfo> getBorrowedBooksWithInfoByUserId(Connection conn, int userId) throws SQLException {
         List<BorrowedBookInfo> list = new ArrayList<>();
         String sql = """
-        SELECT br.isbn, br.borrow_date, br.return_date, br.status,
-               d.title, d.thumbnail_url
-        FROM borrow_records br
-        JOIN books d ON br.isbn = d.isbn
-        WHERE br.user_id = ?
-    """;
+                    SELECT br.isbn, br.borrow_date, br.return_date, br.status,
+                           d.title, d.thumbnail_url
+                    FROM borrow_records br
+                    JOIN books d ON br.isbn = d.isbn
+                    WHERE br.user_id = ?
+                """;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, userId);
@@ -93,7 +93,6 @@ public class BorrowRecordDAO {
     }
 
 
-
     public void markAsReturned(Connection conn, int userId, String isbn) throws SQLException {
         String update = "UPDATE borrow_records SET return_date = CURRENT_DATE WHERE user_id = ? AND isbn = ? AND return_date IS NULL";
         try (PreparedStatement stmt = conn.prepareStatement(update)) {
@@ -108,17 +107,17 @@ public class BorrowRecordDAO {
         String query = "SELECT * FROM borrow_record";  // Truy vấn tất cả bản ghi mượn
 
         try (
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+                PreparedStatement stmt = conn.prepareStatement(query)) {
             try (ResultSet rs = stmt.executeQuery()) {
 
                 // Lấy kết quả trả về và tạo đối tượng BorrowRecord
                 while (rs.next()) {
                     BorrowRecord record = new BorrowRecord(
-                    rs.getInt("id"),
-                    rs.getString("isbn"),
-                    rs.getDate("borrow_date"),
-                    rs.getDate("return_date"),
-                    rs.getString("status"));
+                            rs.getInt("id"),
+                            rs.getString("isbn"),
+                            rs.getDate("borrow_date"),
+                            rs.getDate("return_date"),
+                            rs.getString("status"));
                     borrowRecords.add(record);
                 }
             }

@@ -1,0 +1,18 @@
+@startuml
+class app.Main {
++ {static} void main(String[])
++ void start(Stage)
+}
+
+class Controller.AdminSceneController {
+- Label toUserLabel
+- Label toLibraryLabel
+- void initialize()
++ void ToUser()
++ void ToEdit()
+}
+
+
+
+javafx.application.Application <|-- app.Main
+@enduml

@@ -22,6 +22,18 @@ public class DocumentService {
         this.documentDAO = new DocumentDAO();
     }
 
+    public static boolean adjustBookQuantity(String isbn, int changeAmount) throws SQLException {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            // Lấy số lượng hiện tại
+            int currentQty = DocumentDAO.getQuantityByIsbn(conn, isbn);
+            if (currentQty + changeAmount < 0) {
+                throw new IllegalArgumentException("Số lượng sau khi cập nhật không được âm.");
+            }
+            DocumentDAO.updateBookQuantity(conn, isbn, changeAmount);
+            return true;
+        }
+    }
+
     public Document searchBook(String isbn, User currentUser) throws SQLException, Exception {
         if (isbn == null || isbn.trim().isEmpty()) {
             return null;
@@ -200,17 +212,5 @@ public class DocumentService {
             throw e;
         }
         return results;
-    }
-
-    public static boolean adjustBookQuantity(String isbn, int changeAmount) throws SQLException {
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            // Lấy số lượng hiện tại
-            int currentQty = DocumentDAO.getQuantityByIsbn(conn, isbn);
-            if (currentQty + changeAmount < 0) {
-                throw new IllegalArgumentException("Số lượng sau khi cập nhật không được âm.");
-            }
-            DocumentDAO.updateBookQuantity(conn, isbn, changeAmount);
-            return true;
-        }
     }
 }

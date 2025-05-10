@@ -9,23 +9,32 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ProfileScreenBorrowController1">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1"
+            fx:controller="Controller.ProfileScreenBorrowController1">
     <center>
         <AnchorPane style="-fx-padding: 20;" BorderPane.alignment="CENTER_LEFT">
             <children>
-                <Label layoutX="20.0" layoutY="20.0" styleClass="subtitle" text="Trang chủ &gt;&gt; Cá nhân" />
+                <Label layoutX="20.0" layoutY="20.0" styleClass="subtitle" text="Trang chủ &gt;&gt; Cá nhân"/>
                 <VBox layoutX="20.0" layoutY="60.0" spacing="20">
                     <children>
                         <Pane prefHeight="400.0" prefWidth="250.0" styleClass="card">
                             <children>
-                                <Label layoutX="20.0" layoutY="20.0" styleClass="title" text="Tài khoản của" />
-                                <Label fx:id="nameLabel1" layoutX="20.0" layoutY="50.0" styleClass="title" text="[Tên người dùng]" />
+                                <Label layoutX="20.0" layoutY="20.0" styleClass="title" text="Tài khoản của"/>
+                                <Label fx:id="nameLabel1" layoutX="20.0" layoutY="50.0" styleClass="title"
+                                       text="[Tên người dùng]"/>
                                 <VBox layoutX="20.0" layoutY="100.0" spacing="15">
                                     <children>
-                                        <Label fx:id="Thongtinchung1" style="-fx-text-fill: #1fe029; -fx-font-weight: bold; -fx-cursor: hand;" text="Thông tin chung" />
-                                        <Label style="-fx-text-fill: #6e377b; -fx-font-weight: bold; -fx-cursor: hand;" text="Truyện đang mượn" />
-                                        <Label fx:id="Truyendatra1" style="-fx-text-fill: #dd12d7; -fx-font-weight: bold; -fx-cursor: hand;" text="Truyện đã trả" />
-                                        <Button onAction="#Exit" style="-fx-background-color: #1020d2; -fx-text-fill: white; -fx-font-weight: bold;" text="Thoát" />
+                                        <Label fx:id="Thongtinchung1"
+                                               style="-fx-text-fill: #1fe029; -fx-font-weight: bold; -fx-cursor: hand;"
+                                               text="Thông tin chung"/>
+                                        <Label style="-fx-text-fill: #6e377b; -fx-font-weight: bold; -fx-cursor: hand;"
+                                               text="Truyện đang mượn"/>
+                                        <Label fx:id="Truyendatra1"
+                                               style="-fx-text-fill: #dd12d7; -fx-font-weight: bold; -fx-cursor: hand;"
+                                               text="Truyện đã trả"/>
+                                        <Button onAction="#Exit"
+                                                style="-fx-background-color: #1020d2; -fx-text-fill: white; -fx-font-weight: bold;"
+                                                text="Thoát"/>
                                     </children>
                                 </VBox>
                             </children>
@@ -34,10 +43,14 @@
                 </VBox>
                 <Pane layoutX="300.0" layoutY="60.0" prefHeight="400.0" prefWidth="550.0" styleClass="card">
                     <children>
-                        <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 20px; -fx-text-fill: -fx-primary-color; -fx-font-weight: bold;" text="TRUYỆN ĐANG MƯỢN" />
-                        <TableView fx:id="borrowedBooksTable" layoutX="14.0" layoutY="60.0" prefHeight="325.0" prefWidth="526.0">
+                        <Label layoutX="20.0" layoutY="20.0"
+                               style="-fx-font-size: 20px; -fx-text-fill: -fx-primary-color; -fx-font-weight: bold;"
+                               text="TRUYỆN ĐANG MƯỢN"/>
+                        <TableView fx:id="borrowedBooksTable" layoutX="14.0" layoutY="60.0" prefHeight="325.0"
+                                   prefWidth="526.0">
                             <columns>
-                                <TableColumn fx:id="bookInfoColumn" prefWidth="524.6666870117188" text="HISTORY FOLLOWING BOOKS" />
+                                <TableColumn fx:id="bookInfoColumn" prefWidth="524.6666870117188"
+                                             text="HISTORY FOLLOWING BOOKS"/>
                             </columns>
                         </TableView>
                     </children>

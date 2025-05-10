@@ -15,6 +15,11 @@ public class BookRatingView {
         this.isbn = new SimpleStringProperty(book.getIsbn());
     }
 
-    public StringProperty titleProperty() { return title; }
-    public StringProperty isbnProperty() { return isbn; }
+    public StringProperty titleProperty() {
+        return title;
+    }
+
+    public StringProperty isbnProperty() {
+        return isbn;
+    }
 }

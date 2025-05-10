@@ -11,7 +11,7 @@ import org.json.JSONArray;
 
 import models.entities.Document;
 
-public class GoogleBooksAPIService{
+public class GoogleBooksAPIService {
     private static final String GOOGLE_BOOKS_API = "https://www.googleapis.com/books/v1/volumes?q=isbn:%s";
 
     private static final HttpClient httpClient = HttpClient.newBuilder()

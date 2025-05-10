@@ -6,14 +6,19 @@ import models.dao.UserDAO;
 import models.data.DatabaseConnection;
 import models.entities.Library;
 import utils.SceneController;
+
 import java.sql.Connection;
 
 public class Main extends Application {
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
-    public void start(Stage stage) throws Exception     {
+    public void start(Stage stage) throws Exception {
         try {
             Connection connection = DatabaseConnection.getConnection();
-            UserDAO userDAO= new UserDAO();
+            UserDAO userDAO = new UserDAO();
             Library.setUserList(userDAO.getAllUser(connection));
             SceneController.getInstance().setPrimaryStage(stage);
             SceneController.getInstance().switchToScene("/fxml/loginScreen.fxml");
@@ -23,9 +28,6 @@ public class Main extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    public static void main (String[] args) {
-        launch(args);
     }
 
 }

@@ -6,24 +6,26 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HistoryScreenController">
-   <center>
-      <VBox alignment="TOP_CENTER" spacing="20" style="-fx-padding: 30;">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1"
+            fx:controller="Controller.HistoryScreenController">
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="20" style="-fx-padding: 30;">
 
-         <VBox maxWidth="800" spacing="15" style="-fx-background-color: #f4f4f4; -fx-background-radius: 8; -fx-padding: 20;" styleClass="card">
-            <Label style="-fx-font-size: 14px; -fx-text-fill: #666;" text="Trang chủ &gt;&gt; Lịch sử" />
-            <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Lịch sử mượn sách và trả sách" />
+            <VBox maxWidth="800" spacing="15"
+                  style="-fx-background-color: #f4f4f4; -fx-background-radius: 8; -fx-padding: 20;" styleClass="card">
+                <Label style="-fx-font-size: 14px; -fx-text-fill: #666;" text="Trang chủ &gt;&gt; Lịch sử"/>
+                <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Lịch sử mượn sách và trả sách"/>
 
-            <TableView fx:id="historyTable" prefHeight="400" prefWidth="760">
-               <columns>
-                  <TableColumn fx:id="bookNameColumn" prefWidth="189.59997367858887" text="Tên sách" />
-                  <TableColumn fx:id="borrowDateColumn" prefWidth="160.0" text="Ngày mượn" />
-                  <TableColumn fx:id="returnDateColumn" prefWidth="139.20004272460938" text="Ngày trả" />
-                  <TableColumn fx:id="statusColumn" prefWidth="133.59988403320312" text="Trạng thái" />
-                  <TableColumn fx:id="remainingDaysColumn" prefWidth="136.0" text="Số ngày còn lại " />
-               </columns>
-            </TableView>
-         </VBox>
-      </VBox>
-   </center>
+                <TableView fx:id="historyTable" prefHeight="400" prefWidth="760">
+                    <columns>
+                        <TableColumn fx:id="bookNameColumn" prefWidth="189.59997367858887" text="Tên sách"/>
+                        <TableColumn fx:id="borrowDateColumn" prefWidth="160.0" text="Ngày mượn"/>
+                        <TableColumn fx:id="returnDateColumn" prefWidth="139.20004272460938" text="Ngày trả"/>
+                        <TableColumn fx:id="statusColumn" prefWidth="133.59988403320312" text="Trạng thái"/>
+                        <TableColumn fx:id="remainingDaysColumn" prefWidth="136.0" text="Số ngày còn lại "/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </VBox>
+    </center>
 </BorderPane>

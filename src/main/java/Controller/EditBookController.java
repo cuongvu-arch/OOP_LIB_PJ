@@ -19,16 +19,26 @@ import java.sql.SQLException;
 
 public class EditBookController {
 
-    @FXML private ImageView bookCoverImageView;
-    @FXML private TextField isbnTextField;
-    @FXML private TextField titleTextField;
-    @FXML private TextField authorsTextField;
-    @FXML private TextField publisherTextField;
-    @FXML private TextField publishDateTextField;
-    @FXML private TextField thumbnailUrlTextField;
-    @FXML private TextArea descriptionTextArea;
-    @FXML private Button saveButton;
-    @FXML private Button cancelButton;
+    @FXML
+    private ImageView bookCoverImageView;
+    @FXML
+    private TextField isbnTextField;
+    @FXML
+    private TextField titleTextField;
+    @FXML
+    private TextField authorsTextField;
+    @FXML
+    private TextField publisherTextField;
+    @FXML
+    private TextField publishDateTextField;
+    @FXML
+    private TextField thumbnailUrlTextField;
+    @FXML
+    private TextArea descriptionTextArea;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button cancelButton;
 
     private Document currentBook; // Sách đang được chỉnh sửa
     private DocumentService documentService;
