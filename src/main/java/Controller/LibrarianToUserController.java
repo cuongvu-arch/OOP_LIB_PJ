@@ -2,19 +2,21 @@ package Controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import models.dao.BorrowRecordDAO;
-import models.dao.UserDAO;  // Import UserDAO
+import models.dao.UserDAO;
 import models.data.DatabaseConnection;
 import models.entities.BorrowRecord;
 import models.entities.User;
 import models.viewmodel.UserBorrowView;
 
 import java.sql.Connection;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LibrarianToUserController {
 
@@ -37,48 +39,59 @@ public class LibrarianToUserController {
         borrowedColumn.setCellValueFactory(new PropertyValueFactory<>("borrowedBooks"));
         returnedColumn.setCellValueFactory(new PropertyValueFactory<>("returnedBooks"));
 
-        ObservableList<UserBorrowView> viewList = FXCollections.observableArrayList();
+        loadUserBorrowData();
+    }
 
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            // Lấy tất cả người dùng từ cơ sở dữ liệu thông qua UserDAO
-            List<User> userList = UserDAO.getAllUser(conn);  // Gọi phương thức getAllUsers từ UserDAO
+    private void loadUserBorrowData() {
+        Task<ObservableList<UserBorrowView>> task = new Task<>() {
+            @Override
+            protected ObservableList<UserBorrowView> call() throws Exception {
+                ObservableList<UserBorrowView> viewList = FXCollections.observableArrayList();
 
-            for (User user : userList) {
-                // Lấy các bản ghi mượn của người dùng từ Database
-                List<BorrowRecord> records = new BorrowRecordDAO().getByUserId(conn, user.getId());
+                try (Connection conn = DatabaseConnection.getConnection()) {
+                    List<User> userList = UserDAO.getAllUser(conn);
+                    BorrowRecordDAO borrowRecordDAO = new BorrowRecordDAO();
 
-                // Danh sách các sách đã mượn và đã trả
-                List<String> borrowed = new ArrayList<>();
-                List<String> returned = new ArrayList<>();
+                    for (User user : userList) {
+                        List<BorrowRecord> records = borrowRecordDAO.getByUserId(conn, user.getId());
 
-                // Kiểm tra tất cả các bản ghi mượn của người dùng
-                if (records.isEmpty()) {
-                    // Nếu không có bản ghi mượn, đặt giá trị là "0"
-                    borrowed.add("chưa có cuốn sách nào");
-                    returned.add("chưa có cuốn sách nào");
-                } else {
-                    for (BorrowRecord record : records) {
-                        if (record.getReturnDate() == null) {
-                            borrowed.add(record.getIsbn());
+                        List<String> borrowed = new ArrayList<>();
+                        List<String> returned = new ArrayList<>();
+
+                        if (records.isEmpty()) {
+                            borrowed.add("chưa có cuốn sách nào");
+                            returned.add("chưa có cuốn sách nào");
                         } else {
-                            returned.add(record.getIsbn());
+                            for (BorrowRecord record : records) {
+                                if (record.getReturnDate() == null) {
+                                    borrowed.add(record.getIsbn());
+                                } else {
+                                    returned.add(record.getIsbn());
+                                }
+                            }
                         }
+
+                        viewList.add(new UserBorrowView(
+                                user.getUsername(),
+                                String.join("\n", borrowed),
+                                String.join("\n", returned)
+                        ));
                     }
                 }
 
-                // Thêm đối tượng UserBorrowView vào danh sách
-                viewList.add(new UserBorrowView(
-                        user.getUsername(),
-                        String.join("\n", borrowed),
-                        String.join("\n", returned)
-                ));
+                return viewList;
             }
+        };
 
-            // Đặt dữ liệu vào TableView
-            tableView.setItems(viewList);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        task.setOnSucceeded(event -> tableView.setItems(task.getValue()));
+
+        task.setOnFailed(event -> {
+            System.err.println("Lỗi khi tải dữ liệu người dùng và mượn sách:");
+            task.getException().printStackTrace();
+        });
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
-
 }
