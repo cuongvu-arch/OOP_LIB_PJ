@@ -38,10 +38,12 @@ public class UserDAO {
                 String hashedPassword = rs.getString("password");
                 if (BCrypt.checkpw(password, hashedPassword)) {
                     return new User(
+                            rs.getInt("Id"),
                             rs.getString("username"),
                             hashedPassword,
                             rs.getString("email"),
-                            rs.getString("phone_number")
+                            rs.getString("phone_number"),
+                            rs.getString("role")
                     );
                 }
             }
