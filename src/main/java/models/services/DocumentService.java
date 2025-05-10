@@ -201,4 +201,16 @@ public class DocumentService {
         }
         return results;
     }
+
+    public static boolean adjustBookQuantity(String isbn, int changeAmount) throws SQLException {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            // Lấy số lượng hiện tại
+            int currentQty = DocumentDAO.getQuantityByIsbn(conn, isbn);
+            if (currentQty + changeAmount < 0) {
+                throw new IllegalArgumentException("Số lượng sau khi cập nhật không được âm.");
+            }
+            DocumentDAO.updateBookQuantity(conn, isbn, changeAmount);
+            return true;
+        }
+    }
 }

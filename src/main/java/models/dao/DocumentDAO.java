@@ -10,6 +10,28 @@ import java.util.ArrayList;
 import java.util.List;
 public class DocumentDAO {
 
+    public static int getQuantityByIsbn(Connection conn, String isbn) throws SQLException {
+        String sql = "SELECT total_quantity FROM books WHERE isbn = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, isbn);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total_quantity");
+            } else {
+                throw new SQLException("Không tìm thấy sách với ISBN: " + isbn);
+            }
+        }
+    }
+
+    public static void updateBookQuantity(Connection conn, String isbn, int quantityChange) throws SQLException {
+        String sql = "UPDATE books SET total_quantity = total_quantity + ? WHERE isbn = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, quantityChange);
+            stmt.setString(2, isbn);
+            stmt.executeUpdate();
+        }
+    }
+
     public boolean addBook(Document book) {
         if (book == null || book.getIsbn() == null || book.getIsbn().trim().isEmpty()) {
             System.err.println("Lỗi khi thêm sách: Dữ liệu sách không hợp lệ (thiếu ISBN).");

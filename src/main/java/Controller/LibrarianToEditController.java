@@ -3,19 +3,24 @@ package Controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import models.dao.DocumentDAO;
 import models.data.DatabaseConnection;
 import models.entities.DocumentWithBorrowInfo;
+import models.services.DocumentService;
 
+import java.awt.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
 public class LibrarianToEditController {
 
+    public javafx.scene.control.Button adjustButton;
     @FXML
     private TableView<DocumentWithBorrowInfo> bookTable;
 
@@ -33,6 +38,12 @@ public class LibrarianToEditController {
 
     @FXML
     private TableColumn<DocumentWithBorrowInfo, Integer> availableColumn;
+
+    @FXML
+    private javafx.scene.control.TextField adjustIsbnField;
+
+    @FXML
+    private javafx.scene.control.TextField adjustQuantityField;
 
     private final ObservableList<DocumentWithBorrowInfo> books = FXCollections.observableArrayList();
 
@@ -60,5 +71,44 @@ public class LibrarianToEditController {
         } catch (SQLException e) {
             e.printStackTrace(); // Bạn có thể hiển thị thông báo lỗi ở đây, hoặc cảnh báo người dùng
         }
+    }
+
+    @FXML
+    private void handleAdjustQuantity() {
+        String isbn = adjustIsbnField.getText().trim();
+        String quantityText = adjustQuantityField.getText().trim();
+
+        if (isbn.isEmpty() || quantityText.isEmpty()) {
+            showAlert("Thông báo", "Bạn cần nhập ISBN và số lượng thay đổi.");
+            return;
+        }
+
+        try {
+            int quantityChange = Integer.parseInt(quantityText);
+            if (quantityChange == 0) {
+                showAlert( "Thông báo", "Số lượng thay đổi phải khác 0.");
+                return;
+            }
+
+            DocumentService.adjustBookQuantity(isbn, quantityChange);
+            showAlert("Thành công", "Cập nhật số lượng sách thành công.");
+            loadBooksFromDatabase();
+
+        } catch (NumberFormatException e) {
+            showAlert("Lỗi", "Số lượng phải là số nguyên.");
+        } catch (IllegalArgumentException e) {
+            showAlert("Cảnh báo", e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert("Lỗi", "Lỗi khi cập nhật sách.");
+        }
+    }
+
+    public void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
