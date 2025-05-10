@@ -1,5 +1,6 @@
 package models.dao;
 
+import models.data.DatabaseConnection;
 import models.entities.BorrowRecord;
 import models.entities.BorrowedBookInfo;
 import models.entities.Document;
@@ -21,7 +22,8 @@ public class BorrowRecordDAO {
                 String isbn = rs.getString("isbn");
                 Date borrowDate = rs.getDate("borrow_date");
                 Date returnDate = rs.getDate("return_date");
-                records.add(new BorrowRecord(userId, isbn, borrowDate, returnDate));
+                String status = rs.getString("status");
+                records.add(new BorrowRecord(userId, isbn, borrowDate, returnDate, status));
             }
         }
 
@@ -61,7 +63,7 @@ public class BorrowRecordDAO {
     public List<BorrowedBookInfo> getBorrowedBooksWithInfoByUserId(Connection conn, int userId) throws SQLException {
         List<BorrowedBookInfo> list = new ArrayList<>();
         String sql = """
-        SELECT br.isbn, br.borrow_date, br.return_date,
+        SELECT br.isbn, br.borrow_date, br.return_date, br.status,
                d.title, d.thumbnail_url
         FROM borrow_records br
         JOIN books d ON br.isbn = d.isbn
@@ -77,8 +79,9 @@ public class BorrowRecordDAO {
                     Date returnDate = rs.getDate("return_date");
                     String title = rs.getString("title");
                     String thumbnailUrl = rs.getString("thumbnail_url");
+                    String status = rs.getString("status");
 
-                    BorrowRecord record = new BorrowRecord(userId, isbn, borrowDate, returnDate);
+                    BorrowRecord record = new BorrowRecord(userId, isbn, borrowDate, returnDate, status);
                     Document document = new Document(title, isbn, thumbnailUrl);
 
                     list.add(new BorrowedBookInfo(document, record));
@@ -100,4 +103,39 @@ public class BorrowRecordDAO {
         }
     }
 
+    public List<BorrowRecord> getAllBorrowRecords(Connection conn) throws SQLException {
+        List<BorrowRecord> borrowRecords = new ArrayList<>();
+        String query = "SELECT * FROM borrow_record";  // Truy vấn tất cả bản ghi mượn
+
+        try (
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+
+                // Lấy kết quả trả về và tạo đối tượng BorrowRecord
+                while (rs.next()) {
+                    BorrowRecord record = new BorrowRecord(
+                    rs.getInt("id"),
+                    rs.getString("isbn"),
+                    rs.getDate("borrow_date"),
+                    rs.getDate("return_date"),
+                    rs.getString("status"));
+                    borrowRecords.add(record);
+                }
+            }
+        }
+
+        return borrowRecords;
+    }
+
+
+    public void updateBorrowRecord(Connection conn, BorrowRecord record) throws SQLException {
+        // Cập nhật bản ghi mượn trong cơ sở dữ liệu với trạng thái mới
+        String updateQuery = "UPDATE borrow_records SET status = ? WHERE borrow_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
+            stmt.setString(1, record.getStatus());
+            stmt.setInt(2, record.getId());
+            stmt.executeUpdate();
+        }
+    }
 }

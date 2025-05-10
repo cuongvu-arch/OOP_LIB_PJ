@@ -141,7 +141,7 @@ public class BookDetailController {
         // Kết nối cơ sở dữ liệu và thêm thông tin mượn sách
         try (Connection conn = DatabaseConnection.getConnection()) {
             BorrowRecordDAO borrowRecordDAO = new BorrowRecordDAO();
-            BorrowRecord borrowRecord = new BorrowRecord(currentUser.getId(), selectedDoc.getIsbn(), new java.sql.Date(new Date().getTime()), null);  // Ngày mượn là ngày hiện tại, chưa có ngày trả
+            BorrowRecord borrowRecord = new BorrowRecord(currentUser.getId(), selectedDoc.getIsbn(), new java.sql.Date(new Date().getTime()), null, "Đang mượn");  // Ngày mượn là ngày hiện tại, chưa có ngày trả
 
             if (borrowRecordDAO.isBorrowed(conn, currentUser.getId(), selectedDoc.getIsbn())) {
                 // Tạo thông báo khi đã mượn sách rồi

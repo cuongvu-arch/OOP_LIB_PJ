@@ -10,7 +10,7 @@ import java.sql.Connection;
 
 public class Main extends Application {
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) throws Exception     {
         try {
             Connection connection = DatabaseConnection.getConnection();
             UserDAO userDAO= new UserDAO();
