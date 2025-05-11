@@ -61,6 +61,9 @@ public class User {
     public User() {
     }
 
+    public User(int i, String oldUser, String mail, String number, String user) {
+    }
+
     /**
      * Returns the user ID.
      *

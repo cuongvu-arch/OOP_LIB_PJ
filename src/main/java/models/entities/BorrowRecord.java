@@ -47,6 +47,9 @@ public class BorrowRecord {
     public BorrowRecord() {
     }
 
+    public BorrowRecord(int id, String isbn001, Object o, Object o1) {
+    }
+
     /**
      * @return the ID of the user who borrowed the document
      */
@@ -96,5 +99,9 @@ public class BorrowRecord {
      */
     public int getId() {
         return this.id;
+    }
+
+    public void setReturnDate(Object o) {
+
     }
 }
