@@ -3,6 +3,10 @@ package Controller;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -14,18 +18,22 @@ import models.entities.BorrowRecord;
 import models.entities.Review;
 import models.entities.Document;
 import models.entities.User;
+import models.services.DocumentService;
 import utils.AlertUtils;
 import utils.BookImageLoader;
 import javafx.scene.image.Image;
 
 import javafx.event.ActionEvent;
 
+import java.awt.*;
+import java.io.File;
 import java.net.URL;
 
 import models.data.DatabaseConnection;
 import utils.SessionManager;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -33,7 +41,12 @@ import java.util.List;
 
 
 public class BookDetailController {
-
+    @FXML
+    private Button regenerateQRButton;
+    @FXML
+    private Button submitRatingButton;
+    @FXML
+    private ImageView qrCodeImageView;
     @FXML
     private ImageView bookCoverImageView;
     @FXML
@@ -66,13 +79,23 @@ public class BookDetailController {
     private Button borrowButton;
 
     private Document currentBook;
+    private DocumentService documentService;
 
     public void initialize() {
         ReviewDAO.loadReviewData();
-
-        // Khởi tạo các giá trị cho ChoiceBox
         ratingChoiceBox.getItems().addAll(1, 2, 3, 4, 5);
-        ratingChoiceBox.setValue(5); // đặt giá trị mặc định nếu muốn
+        ratingChoiceBox.setValue(5);
+        try {
+            documentService = new DocumentService();
+        } catch (Exception e) {
+            System.err.println("Error initializing DocumentService: " + e.getMessage());
+        }
+        User currentUser = SessionManager.getCurrentUser();
+        regenerateQRButton.setDisable(currentUser == null || !"admin".equalsIgnoreCase(currentUser.getRole()));
+        if(SessionManager.getCurrentUser().getRole() != "admin") {
+            regenerateQRButton.setVisible(false);
+        }
+        qrCodeImageView.setVisible(true); // Đảm bảo ImageView luôn hiển thị
     }
 
     @FXML
@@ -181,20 +204,31 @@ public class BookDetailController {
             return;
         }
 
-        bookTitleText.setText(book.getTitle() != null ? book.getTitle() : "N/A");
+        User currentUser = SessionManager.getCurrentUser();
+        // Kiểm tra và tạo mã QR nếu cần (chỉ cho admin)
+        if ((book.getQrCodePath() == null || book.getQrCodePath().isEmpty()) && currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole())) {
+            try {
+                String newQrCodePath = documentService.regenerateQRCode(book, currentUser);
+                book.setQrCodePath(newQrCodePath);
+                System.out.println("Generated new QR code for ISBN: " + book.getIsbn() + " at: " + newQrCodePath);
+            } catch (Exception e) {
+                System.err.println("Error generating QR code for ISBN: " + book.getIsbn() + ": " + e.getMessage());
+            }
+        }
 
+        bookTitleText.setText(book.getTitle() != null ? book.getTitle() : "N/A");
         if (book.getAuthors() != null && book.getAuthors().length > 0) {
             bookAuthorsText.setText("bởi " + String.join(", ", book.getAuthors()));
         } else {
             bookAuthorsText.setText("bởi Tác giả không xác định");
         }
-
         publishDateText.setText(book.getPublishedDate() != null ? book.getPublishedDate() : "N/A");
         publisherText.setText(book.getPublisher() != null ? book.getPublisher() : "N/A");
         isbnText.setText(book.getIsbn() != null ? book.getIsbn() : "N/A");
         descriptionTextArea.setText(book.getDescription() != null && !book.getDescription().isEmpty() ? book.getDescription() : "Không có mô tả.");
         languageText.setText("Tiếng Anh");
 
+        // Load book cover image
         if (book.getThumbnailUrl() != null && !book.getThumbnailUrl().isEmpty()) {
             BookImageLoader.loadImage(book.getThumbnailUrl(), bookCoverImageView);
         } else {
@@ -210,6 +244,10 @@ public class BookDetailController {
                 System.err.println("Lỗi tải ảnh placeholder: " + e.getMessage());
             }
         }
+
+        // Load QR code image
+        loadQRCodeImage();
+
         loadReviewsForCurrentBook();
         updateAvgRating();
 
@@ -288,5 +326,68 @@ public class BookDetailController {
 
         ratingBox.getChildren().addAll(userLabel, ratingText);
         commentsVBox.getChildren().add(0, ratingBox); // Thêm lên đầu danh sách
+    }
+
+    @FXML
+    private void handleRegenerateQRButtonClick() {
+        if (currentBook == null) {
+            AlertUtils.showAlert("Lỗi", "Không có sách để tạo lại mã QR", Alert.AlertType.ERROR);
+            return;
+        }
+
+        User currentUser = SessionManager.getCurrentUser();
+        if (currentUser == null || !"admin".equalsIgnoreCase(currentUser.getRole())) {
+            AlertUtils.showAlert("Lỗi", "Chỉ admin mới có thể tạo lại mã QR", Alert.AlertType.ERROR);
+            return;
+        }
+
+        if (documentService == null) {
+            AlertUtils.showAlert("Lỗi", "Không thể khởi tạo dịch vụ QR code. Vui lòng thử lại.", Alert.AlertType.ERROR);
+            System.err.println("DocumentService is null");
+            return;
+        }
+
+        try {
+            String newQrCodePath = documentService.regenerateQRCode(currentBook, currentUser);
+            currentBook.setQrCodePath(newQrCodePath);
+            loadQRCodeImage();
+            AlertUtils.showAlert("Thành công", "Đã tạo lại mã QR cho sách: " + currentBook.getTitle(), Alert.AlertType.INFORMATION);
+        } catch (Exception e) {
+            System.err.println("Lỗi tạo lại mã QR: " + e.getMessage());
+            AlertUtils.showAlert("Lỗi", "Không thể tạo lại mã QR: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    private void loadQRCodeImage() {
+        if (currentBook != null && currentBook.getQrCodePath() != null && !currentBook.getQrCodePath().isEmpty()) {
+            try {
+                File qrFile = new File(currentBook.getQrCodePath());
+                System.out.println("Checking QR code file: " + qrFile.getAbsolutePath() + ", exists: " + qrFile.exists());
+                if (qrFile.exists()) {
+                    qrCodeImageView.setImage(new Image(qrFile.toURI().toString()));
+                } else {
+                    System.err.println("QR code file not found: " + currentBook.getQrCodePath());
+                    qrCodeImageView.setImage(null);
+                }
+            } catch (Exception e) {
+                System.err.println("Lỗi tải QR code: " + e.getMessage());
+                qrCodeImageView.setImage(null);
+            }
+        } else {
+            System.err.println("QR code path is null or empty for ISBN: " + (currentBook != null ? currentBook.getIsbn() : "null"));
+            qrCodeImageView.setImage(null);
+        }
+    }
+
+    private void updateQrCodePathInDatabase(String isbn, String qrCodePath) {
+        String sql = "UPDATE books SET qr_code_path = ? WHERE isbn = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, qrCodePath);
+            stmt.setString(2, isbn);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error updating qr_code_path for ISBN: " + isbn + ": " + e.getMessage());
+        }
     }
 }

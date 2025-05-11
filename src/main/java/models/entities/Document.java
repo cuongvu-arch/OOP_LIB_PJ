@@ -4,15 +4,49 @@ public class Document {
 
     private String isbn;
     private String title;
+
+
+
     private String[] authors;
     private String publisher;
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public void setPublishedDate(String publishedDate) {
+        this.publishedDate = publishedDate;
+    }
+
     private String publishedDate;
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     private String description;
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
     private String thumbnailUrl;
     private double avgRating;
     private int quantity;
+    private String qrCodePath;
+    private String googleBooksUrl;
 
 
+    public Document(String isbn, String title, String[] authors, String publisher, String publishedDate, String description, String thumbnailUrl, String qrCodePath) {
+        this.isbn = isbn;
+        this.title = title;
+        this.authors = authors;
+        this.publisher = publisher;
+        this.publishedDate = publishedDate;
+        this.description = description;
+        this.thumbnailUrl = thumbnailUrl;
+        this.qrCodePath = qrCodePath;
+    }
     public Document(String isbn, String title, String[] authors, String publisher, String publishedDate, String description, String thumbnailUrl) {
         this.isbn = isbn;
         this.title = title;
@@ -21,6 +55,20 @@ public class Document {
         this.publishedDate = publishedDate;
         this.description = description;
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public Document(String isbn, String title, String[] authors, String publisher, String publishedDate,
+                    String description, String thumbnailUrl, String qrCodePath, String googleBooksUrl) {
+        this.isbn = isbn;
+        this.title = title;
+        this.authors = authors;
+        this.publisher = publisher;
+        this.publishedDate = publishedDate;
+        this.description = description;
+        this.thumbnailUrl = thumbnailUrl;
+        this.qrCodePath = qrCodePath;
+        this.googleBooksUrl = googleBooksUrl;
+        this.quantity = 1; // Giá trị mặc định
     }
 
     // Getter & Setter
@@ -72,6 +120,30 @@ public class Document {
         return thumbnailUrl;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getQrCodePath() {
+        return qrCodePath;
+    }
+
+    public void setQrCodePath(String qrCodePath) {
+        this.qrCodePath = qrCodePath;
+    }
+
+    public String getGoogleBooksUrl() {
+        return googleBooksUrl;
+    }
+
+    public void setGoogleBooksUrl(String googleBooksUrl) {
+        this.googleBooksUrl = googleBooksUrl;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -91,11 +163,15 @@ public class Document {
         return sb.toString();
     }
 
-    public int getQuantity() {
-        return quantity;
+    public void setTitle(String s) {
+        this.title = s;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setAuthors(String[] authors) {
+        this.authors = authors;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 }

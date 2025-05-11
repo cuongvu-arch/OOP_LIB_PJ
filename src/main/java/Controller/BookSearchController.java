@@ -1,5 +1,6 @@
 package Controller;
 
+import com.google.zxing.WriterException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -189,6 +190,10 @@ public class BookSearchController {
         } catch (SQLException e) {
             AlertUtils.showAlert("Lỗi cơ sở dữ liệu", "Lỗi khi thêm sách: " + e.getMessage(), AlertType.ERROR);
             e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (WriterException e) {
+            throw new RuntimeException(e);
         }
     }
 

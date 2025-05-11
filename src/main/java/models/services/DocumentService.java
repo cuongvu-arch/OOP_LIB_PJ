@@ -1,19 +1,23 @@
 package models.services;
 
+import com.google.zxing.WriterException;
 import models.dao.DocumentDAO;
 import models.data.DatabaseConnection;
 import models.entities.Document;
 import models.entities.User;
 import org.json.JSONArray;
 import org.json.JSONException;
+import utils.QRCodeGenerator;
+import utils.QRCodeReader;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class DocumentService {
     private final DocumentDAO documentDAO;
@@ -24,7 +28,6 @@ public class DocumentService {
 
     public static boolean adjustBookQuantity(String isbn, int changeAmount) throws SQLException {
         try (Connection conn = DatabaseConnection.getConnection()) {
-            // Lấy số lượng hiện tại
             int currentQty = DocumentDAO.getQuantityByIsbn(conn, isbn);
             if (currentQty + changeAmount < 0) {
                 throw new IllegalArgumentException("Số lượng sau khi cập nhật không được âm.");
@@ -42,18 +45,40 @@ public class DocumentService {
         boolean isAdmin = currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole());
         Document fetchedDoc = null;
 
-        if (isAdmin) {
+        // Luôn lấy từ cơ sở dữ liệu trước
+        fetchedDoc = documentDAO.getBookByIsbn(isbn);
+
+        // Nếu là admin và sách không tồn tại trong DB, thử Google Books API
+        if (isAdmin && fetchedDoc == null) {
             try {
                 fetchedDoc = GoogleBooksAPIService.fetchBookInfo(isbn);
+                if (fetchedDoc != null) {
+                    // Thiết lập Google Books URL nếu cần
+                    if (fetchedDoc.getGoogleBooksUrl() == null) {
+                        fetchedDoc.setGoogleBooksUrl("https://books.google.com/books?isbn=" + isbn);
+                    }
+                }
             } catch (Exception e) {
                 System.err.println("Lỗi Google Books API: " + e.getMessage());
             }
-            if (fetchedDoc == null) {
-                fetchedDoc = documentDAO.getBookByIsbn(isbn);
+        } else if (fetchedDoc != null && isAdmin) {
+            // Nếu sách tồn tại trong DB và là admin, cập nhật thông tin từ Google Books API
+            try {
+                Document apiDoc = GoogleBooksAPIService.fetchBookInfo(isbn);
+                if (apiDoc != null) {
+                    fetchedDoc.setTitle(apiDoc.getTitle() != null ? apiDoc.getTitle() : fetchedDoc.getTitle());
+                    fetchedDoc.setAuthors(apiDoc.getAuthors() != null ? apiDoc.getAuthors() : fetchedDoc.getAuthors());
+                    fetchedDoc.setPublisher(apiDoc.getPublisher() != null ? apiDoc.getPublisher() : fetchedDoc.getPublisher());
+                    fetchedDoc.setPublishedDate(apiDoc.getPublishedDate() != null ? apiDoc.getPublishedDate() : fetchedDoc.getPublishedDate());
+                    fetchedDoc.setDescription(apiDoc.getDescription() != null ? apiDoc.getDescription() : fetchedDoc.getDescription());
+                    fetchedDoc.setThumbnailUrl(apiDoc.getThumbnailUrl() != null ? apiDoc.getThumbnailUrl() : fetchedDoc.getThumbnailUrl());
+                    fetchedDoc.setGoogleBooksUrl(apiDoc.getGoogleBooksUrl() != null ? apiDoc.getGoogleBooksUrl() : "https://books.google.com/books?isbn=" + isbn);
+                }
+            } catch (Exception e) {
+                System.err.println("Lỗi Google Books API: " + e.getMessage());
             }
-        } else {
-            fetchedDoc = documentDAO.getBookByIsbn(isbn);
         }
+
         System.out.println("Tìm kiếm ISBN '" + isbn + "' -> Kết quả: " + (fetchedDoc != null ? fetchedDoc.getTitle() : "null"));
         return fetchedDoc;
     }
@@ -62,7 +87,7 @@ public class DocumentService {
         return documentDAO.bookExists(isbn);
     }
 
-    public boolean addBook(Document document, User currentUser) throws SQLException {
+    public boolean addBook(Document document, User currentUser) throws SQLException, WriterException, IOException {
         if (currentUser == null || !"admin".equalsIgnoreCase(currentUser.getRole())) {
             System.err.println("Thêm sách thất bại: người dùng không có quyền admin.");
             return false;
@@ -75,6 +100,21 @@ public class DocumentService {
             System.err.println("Thêm sách thất bại: ISBN đã tồn tại.");
             return false;
         }
+
+        // Generate and save QR code
+        try {
+            String googleBooksUrl = document.getGoogleBooksUrl() != null
+                    ? document.getGoogleBooksUrl()
+                    : "https://www.google.com/books/isbn/" + document.getIsbn();
+            BufferedImage qrCodeImage = QRCodeGenerator.generateQRCodeImage(googleBooksUrl, 250, 250);
+            String qrCodeFilePath = "qr_codes/qr_code_" + document.getIsbn() + ".png";
+            QRCodeGenerator.saveQRCode(qrCodeImage, qrCodeFilePath);
+            document.setQrCodePath(qrCodeFilePath);
+        } catch (WriterException | IOException e) {
+            System.err.println("Lỗi tạo mã QR: " + e.getMessage());
+            throw e; // Propagate the error
+        }
+
         Document standardizedDoc = standardizeDocument(document);
         return documentDAO.addBook(standardizedDoc);
     }
@@ -120,7 +160,7 @@ public class DocumentService {
             publishDate = null;
         }
         return new Document(doc.getIsbn(), doc.getTitle(), doc.getAuthors(), doc.getPublisher(),
-                publishDate, doc.getDescription(), doc.getThumbnailUrl());
+                publishDate, doc.getDescription(), doc.getThumbnailUrl(), doc.getQrCodePath(), doc.getGoogleBooksUrl());
     }
 
     public List<Document> searchBooks(String title, String author, String publishDate) throws SQLException {
@@ -137,11 +177,9 @@ public class DocumentService {
 
         if (author != null && !author.trim().isEmpty()) {
             String trimmedAuthor = author.trim().toLowerCase();
-
             if (trimmedAuthor.length() <= 3) {
                 performClientSideAuthorFilter = true;
                 clientSideAuthorQuery = trimmedAuthor;
-
             } else {
                 sqlBuilder.append(" AND LOWER(authors) LIKE LOWER(?)");
                 params.add("%" + trimmedAuthor + "%");
@@ -187,7 +225,8 @@ public class DocumentService {
                         rs.getString("publisher"),
                         rs.getString("publish_date"),
                         rs.getString("description"),
-                        rs.getString("thumbnail_url")
+                        rs.getString("thumbnail_url"),
+                        rs.getString("qr_code_path")
                 );
 
                 if (performClientSideAuthorFilter) {
@@ -212,5 +251,47 @@ public class DocumentService {
             throw e;
         }
         return results;
+    }
+    public String regenerateQRCode(Document document, User currentUser) throws Exception {
+        if (currentUser == null || !"admin".equalsIgnoreCase(currentUser.getRole())) {
+            throw new SecurityException("Chỉ admin mới có thể tạo lại mã QR.");
+        }
+        if (document == null || document.getIsbn() == null) {
+            throw new IllegalArgumentException("Thông tin sách không hợp lệ.");
+        }
+        if (!documentDAO.bookExists(document.getIsbn())) {
+            throw new IllegalArgumentException("Sách không tồn tại trong cơ sở dữ liệu.");
+        }
+
+        String googleBooksUrl = document.getGoogleBooksUrl();
+        if (googleBooksUrl == null || googleBooksUrl.isEmpty()) {
+            Document apiDoc = GoogleBooksAPIService.fetchBookInfo(document.getIsbn());
+            googleBooksUrl = apiDoc != null && apiDoc.getGoogleBooksUrl() != null
+                    ? apiDoc.getGoogleBooksUrl()
+                    : "https://books.google.com/books?isbn=" + document.getIsbn();
+        }
+        BufferedImage qrCodeImage = QRCodeGenerator.generateQRCodeImage(googleBooksUrl, 250, 250);
+        String qrCodeFilePath = "qr_codes/qr_code_" + document.getIsbn() + ".png";
+        QRCodeGenerator.saveQRCode(qrCodeImage, qrCodeFilePath);
+
+        String qrContent = QRCodeReader.readQRCode(qrCodeFilePath);
+        if (!qrContent.equals(googleBooksUrl)) {
+            throw new IOException("QR code verification failed: content does not match URL.");
+        }
+
+        String sql = "UPDATE books SET qr_code_path = ?, google_books_url = ? WHERE isbn = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, qrCodeFilePath);
+            stmt.setString(2, googleBooksUrl);
+            stmt.setString(3, document.getIsbn());
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Không thể cập nhật qr_code_path và google_books_url cho ISBN: " + document.getIsbn());
+            }
+        }
+
+        document.setGoogleBooksUrl(googleBooksUrl);
+        return qrCodeFilePath;
     }
 }

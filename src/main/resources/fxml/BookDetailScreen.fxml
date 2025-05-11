@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Text?>
 
 <VBox prefHeight="802.0" prefWidth="1529.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.BookDetailController">
-   <children>
+    <children>
         <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="802.0" prefWidth="861.0">
             <content>
                 <VBox alignment="TOP_CENTER" prefHeight="862.0" prefWidth="838.0" spacing="20.0" style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 1px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);" stylesheets="@../css/styles.css">
@@ -30,6 +30,9 @@
                                 <VBox alignment="TOP_CENTER" spacing="10.0">
                                     <children>
                                         <ImageView fx:id="bookCoverImageView" fitHeight="300.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 3);" />
+                                        <ImageView fx:id="qrCodeImageView" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 3);" />
+                                        <Label style="-fx-font-weight: bold; -fx-text-fill: #444;" text="Quét để xem trên Google Books" />
+                                        <Button fx:id="regenerateQRButton" mnemonicParsing="false" onAction="#handleRegenerateQRButtonClick" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="Tạo lại QR Code" />
                                         <Button fx:id="borrowButton" mnemonicParsing="false" onAction="#handleBorrowButtonClick" style="-fx-background-color: #4DB6AC; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="BORROW" />
                                     </children>
                                 </VBox>
@@ -84,16 +87,14 @@
                                 </VBox>
                             </children>
                         </HBox>
-
-                                    <Separator prefWidth="200.0" />
+                        <Separator prefWidth="200.0" />
                         <VBox minHeight="110.0" spacing="8.0">
                             <children>
                                 <Label style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #333;" text="Mô tả sách:" />
                                 <TextArea fx:id="descriptionTextArea" editable="false" prefHeight="76.0" prefWidth="778.0" style="-fx-background-color: #f9f9f9; -fx-border-color: #ddd; -fx-border-radius: 3;" wrapText="true" />
                             </children>
                         </VBox>
-
-                                    <Separator prefWidth="200.0" />
+                        <Separator prefWidth="200.0" />
                         <VBox fx:id="commentsSectionContainer" minHeight="200.0" prefHeight="146.0" prefWidth="778.0" spacing="8.0">
                             <children>
                                 <Label style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #333;" text="Bình luận của độc giả:" />
@@ -103,20 +104,16 @@
                                         </VBox>
                                     </content>
                                 </ScrollPane>
-
-                                            <!-- PHẦN NHẬP BÌNH LUẬN MỚI -->
                                 <HBox alignment="CENTER_LEFT" prefHeight="84.0" prefWidth="778.0" spacing="10.0" style="-fx-padding: 10 0 0 0;">
                                     <TextArea fx:id="newCommentTextArea" minHeight="20.0" prefHeight="0.0" prefWidth="400.0" promptText="Nhập bình luận của bạn..." wrapText="true" />
                                     <Button fx:id="submitCommentButton" mnemonicParsing="false" onAction="#handleSubmitComment" style="-fx-background-color: #4DB6AC; -fx-text-fill: white; -fx-font-weight: bold;" text="Gửi" />
-
-                                            </HBox>
+                                </HBox>
                             </children>
                             <VBox.margin>
                                 <Insets top="10.0" />
                             </VBox.margin>
                         </VBox>
-
-                                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                        <HBox alignment="CENTER_LEFT" spacing="10.0">
                             <VBox.margin>
                                 <Insets top="10.0" />
                             </VBox.margin>
@@ -126,5 +123,5 @@
                 </VBox>
             </content>
         </ScrollPane>
-   </children>
+    </children>
 </VBox>

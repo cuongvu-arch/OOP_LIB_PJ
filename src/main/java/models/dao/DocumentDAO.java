@@ -59,7 +59,8 @@ public class DocumentDAO {
                         rs.getString("publisher"),
                         rs.getString("publish_date"),
                         rs.getString("description"),
-                        rs.getString("thumbnail_url")
+                        rs.getString("thumbnail_url"),
+                        rs.getString("qr_code_path")
                 );
                 documents.add(document);
             }
@@ -109,8 +110,8 @@ public class DocumentDAO {
             return false;
         }
 
-        String sql = "INSERT INTO books (isbn, title, authors, publisher, publish_date, description, thumbnail_url) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO books (isbn, title, authors, publisher, publish_date, description, thumbnail_url, qr_code_path) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -130,7 +131,8 @@ public class DocumentDAO {
             stmt.setString(4, book.getPublisher());
             stmt.setString(5, book.getPublishedDate());
             stmt.setString(6, book.getDescription());
-            stmt.setString(7, book.getThumbnailUrl()); // Thêm thumbnail_url
+            stmt.setString(7, book.getThumbnailUrl());
+            stmt.setString(8, book.getQrCodePath());// Thêm thumbnail_url
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -228,29 +230,24 @@ public class DocumentDAO {
     }
 
     public Document getBookByIsbn(String isbn) throws SQLException {
-        String sql = "SELECT isbn, title, authors, publisher, publish_date, description, thumbnail_url " +
-                "FROM books WHERE isbn = ?";
-
+        String sql = "SELECT isbn, title, authors, publisher, publish_date, description, thumbnail_url, qr_code_path, google_books_url, total_quantity FROM books WHERE isbn = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setString(1, isbn);
             ResultSet rs = stmt.executeQuery();
-
             if (rs.next()) {
                 String authorsJson = rs.getString("authors");
                 String[] authors;
-                try {
-                    JSONArray authorsArray = new JSONArray(authorsJson);
-                    authors = new String[authorsArray.length()];
-                    for (int i = 0; i < authorsArray.length(); i++) {
-                        authors[i] = authorsArray.getString(i);
+                if (authorsJson != null && !authorsJson.isEmpty()) {
+                    JSONArray jsonAuthors = new JSONArray(authorsJson);
+                    authors = new String[jsonAuthors.length()];
+                    for (int i = 0; i < jsonAuthors.length(); i++) {
+                        authors[i] = jsonAuthors.getString(i);
                     }
-                } catch (Exception e) {
-                    authors = new String[0]; // Nếu JSON không hợp lệ
+                } else {
+                    authors = new String[0];
                 }
-
-                return new Document(
+                Document doc = new Document(
                         rs.getString("isbn"),
                         rs.getString("title"),
                         authors,
@@ -259,8 +256,21 @@ public class DocumentDAO {
                         rs.getString("description"),
                         rs.getString("thumbnail_url")
                 );
+                String qrCodePath = rs.getString("qr_code_path");
+                if (qrCodePath == null || qrCodePath.isEmpty()) {
+                    System.err.println("Warning: qr_code_path is null or empty for ISBN: " + isbn);
+                }
+                doc.setQrCodePath(qrCodePath);
+                doc.setGoogleBooksUrl(rs.getString("google_books_url"));
+                doc.setQuantity(rs.getInt("total_quantity"));
+                return doc;
+            } else {
+                System.err.println("No book found for ISBN: " + isbn);
+                return null;
             }
-            return null;
+        } catch (SQLException e) {
+            System.err.println("SQL error fetching book for ISBN: " + isbn + ": " + e.getMessage());
+            throw e;
         }
     }
 
@@ -268,7 +278,7 @@ public class DocumentDAO {
         List<Document> books = new ArrayList<>();
         int offset = (page - 1) * booksPerPage;
 
-        String sql = "SELECT isbn, title, authors, publisher, publish_date, description, thumbnail_url " +
+        String sql = "SELECT isbn, title, authors, publisher, publish_date, description, thumbnail_url, qr_code_path " +
                 "FROM books LIMIT ? OFFSET ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -290,6 +300,8 @@ public class DocumentDAO {
                     authors = new String[0];
                 }
 
+                String qrCodePath = rs.getString("qr_code_path");
+
                 Document book = new Document(
                         rs.getString("isbn"),
                         rs.getString("title"),
@@ -297,10 +309,14 @@ public class DocumentDAO {
                         rs.getString("publisher"),
                         rs.getString("publish_date"),
                         rs.getString("description"),
-                        rs.getString("thumbnail_url")
+                        rs.getString("thumbnail_url"),
+                        qrCodePath
                 );
                 books.add(book);
             }
+        } catch (SQLException e) {
+            System.err.println("SQL error in getBooksPaginated: " + e.getMessage());
+            throw e;
         }
 
         return books;

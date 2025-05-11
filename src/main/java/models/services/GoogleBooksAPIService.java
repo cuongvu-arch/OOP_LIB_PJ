@@ -54,15 +54,25 @@ public class GoogleBooksAPIService {
             return null;
         }
 
-        return jsonResponse.getJSONArray("items").getJSONObject(0).getJSONObject("volumeInfo");
+        return jsonResponse.getJSONArray("items").getJSONObject(0);
     }
 
-    private static Document parseToDocument(String isbn, JSONObject bookData) {
+    private static Document parseToDocument(String isbn, JSONObject bookItem) {
+        JSONObject bookData = bookItem.getJSONObject("volumeInfo");
         String title = "";
         String[] authors = new String[0];
         String publisher = "Không rõ";
         String publishedDate = "Không rõ";
         String description = "Không có mô tả";
+        String thumbnailUrl = null;
+        // Sử dụng canonicalVolumeLink hoặc id cho googleBooksUrl
+        String googleBooksUrl = bookItem.optString("canonicalVolumeLink", null);
+        if (googleBooksUrl == null && bookItem.has("id")) {
+            googleBooksUrl = "https://books.google.com/books?id=" + bookItem.getString("id");
+        }
+        if (googleBooksUrl == null) {
+            googleBooksUrl = "https://books.google.com/books?isbn=" + isbn;
+        }
 
         // Tiêu đề
         if (bookData.has("title")) {
@@ -73,7 +83,6 @@ public class GoogleBooksAPIService {
         if (bookData.has("authors")) {
             JSONArray authorsArray = bookData.getJSONArray("authors");
             authors = new String[authorsArray.length()];
-
             for (int i = 0; i < authorsArray.length(); i++) {
                 authors[i] = authorsArray.optString(i, "Không rõ");
             }
@@ -90,7 +99,6 @@ public class GoogleBooksAPIService {
         }
 
         // Mô tả
-        String thumbnailUrl = null;
         if (bookData.has("description")) {
             Object descObj = bookData.get("description");
             if (descObj instanceof String) {
@@ -98,18 +106,20 @@ public class GoogleBooksAPIService {
             } else if (descObj instanceof JSONObject) {
                 description = ((JSONObject) descObj).optString("text", "Không có mô tả");
             }
-
-            thumbnailUrl = null;
-            if (bookData.has("imageLinks")) {
-                JSONObject imageLinks = bookData.getJSONObject("imageLinks");
-                thumbnailUrl = imageLinks.optString("thumbnail", null);
-                if (thumbnailUrl != null) {
-                    thumbnailUrl = thumbnailUrl.replace("http://", "https://");
-                }
-            }
-
         }
 
-        return new Document(isbn, title, authors, publisher, publishedDate, description, thumbnailUrl);
+        // Thumbnail
+        if (bookData.has("imageLinks")) {
+            JSONObject imageLinks = bookData.getJSONObject("imageLinks");
+            thumbnailUrl = imageLinks.optString("thumbnail", null);
+            if (thumbnailUrl != null) {
+                thumbnailUrl = thumbnailUrl.replace("http://", "https://");
+            }
+        }
+
+        // Sử dụng constructor 7 tham số và setter cho googleBooksUrl
+        Document doc = new Document(isbn, title, authors, publisher, publishedDate, description, thumbnailUrl);
+        doc.setGoogleBooksUrl(googleBooksUrl);
+        return doc;
     }
 }

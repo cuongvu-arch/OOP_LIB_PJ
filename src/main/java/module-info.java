@@ -16,6 +16,8 @@ module java.oop_library_project {
     requires java.net.http;
     requires org.json;
     requires java.desktop;
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
 
     opens app to javafx.fxml;
     exports app;
