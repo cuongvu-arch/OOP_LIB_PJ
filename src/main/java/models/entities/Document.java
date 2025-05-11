@@ -1,17 +1,177 @@
 package models.entities;
 
+/**
+ * Represents a document or book entity in the library system.
+ * Contains metadata such as title, author(s), ISBN, publisher, and more.
+ */
 public class Document {
 
     private String isbn;
     private String title;
-
-
-
     private String[] authors;
     private String publisher;
+    private String publishedDate;
+    private String description;
+    private String thumbnailUrl;
+    private double avgRating;
+    private int quantity;
+    private String qrCodePath;
+    private String googleBooksUrl;
 
+    /**
+     * Default constructor.
+     */
     public Document() {
+    }
 
+    /**
+     * Constructor for book search and display.
+     *
+     * @param title        The book title.
+     * @param isbn         The ISBN.
+     * @param thumbnailUrl The thumbnail image URL.
+     */
+    public Document(String title, String isbn, String thumbnailUrl) {
+        this.title = title;
+        this.isbn = isbn;
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
+    /**
+     * Basic constructor with title and ISBN.
+     *
+     * @param isbn  The ISBN of the document.
+     * @param title The title of the document.
+     */
+    public Document(String isbn, String title) {
+        this.title = title;
+        this.isbn = isbn;
+    }
+
+    /**
+     * Full constructor with most book metadata.
+     */
+    public Document(String isbn, String title, String[] authors, String publisher,
+                    String publishedDate, String description, String thumbnailUrl, String qrCodePath) {
+        this.isbn = isbn;
+        this.title = title;
+        this.authors = authors;
+        this.publisher = publisher;
+        this.publishedDate = publishedDate;
+        this.description = description;
+        this.thumbnailUrl = thumbnailUrl;
+        this.qrCodePath = qrCodePath;
+    }
+
+    /**
+     * Full constructor with additional Google Books URL and default quantity = 1.
+     */
+    public Document(String isbn, String title, String[] authors, String publisher,
+                    String publishedDate, String description, String thumbnailUrl,
+                    String qrCodePath, String googleBooksUrl) {
+        this.isbn = isbn;
+        this.title = title;
+        this.authors = authors;
+        this.publisher = publisher;
+        this.publishedDate = publishedDate;
+        this.description = description;
+        this.thumbnailUrl = thumbnailUrl;
+        this.qrCodePath = qrCodePath;
+        this.googleBooksUrl = googleBooksUrl;
+        this.quantity = 1;
+    }
+
+    // === Getters ===
+
+    /**
+     * @return ISBN of the document.
+     */
+    public String getIsbn() {
+        return isbn;
+    }
+
+    /**
+     * @return Title of the document.
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @return Array of authors.
+     */
+    public String[] getAuthors() {
+        return authors;
+    }
+
+    /**
+     * @return Publisher of the document.
+     */
+    public String getPublisher() {
+        return publisher;
+    }
+
+    /**
+     * @return Published date (as String).
+     */
+    public String getPublishedDate() {
+        return publishedDate;
+    }
+
+    /**
+     * @return Description or summary of the document.
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @return URL to thumbnail image.
+     */
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    /**
+     * @return Average rating of the document.
+     */
+    public double getAvgRating() {
+        return avgRating;
+    }
+
+    /**
+     * @return Quantity available in library.
+     */
+    public int getQuantity() {
+        return quantity;
+    }
+
+    /**
+     * @return Path to QR code image.
+     */
+    public String getQrCodePath() {
+        return qrCodePath;
+    }
+
+    /**
+     * @return Google Books URL, if available.
+     */
+    public String getGoogleBooksUrl() {
+        return googleBooksUrl;
+    }
+
+    // === Setters ===
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthors(String[] authors) {
+        this.authors = authors;
     }
 
     public void setPublisher(String publisher) {
@@ -22,142 +182,39 @@ public class Document {
         this.publishedDate = publishedDate;
     }
 
-    private String publishedDate;
-
     public void setDescription(String description) {
         this.description = description;
     }
 
-    private String description;
-
     public void setThumbnailUrl(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
-    }
-
-    private String thumbnailUrl;
-    private double avgRating;
-    private int quantity;
-    private String qrCodePath;
-    private String googleBooksUrl;
-
-
-    public Document(String isbn, String title, String[] authors, String publisher, String publishedDate, String description, String thumbnailUrl, String qrCodePath) {
-        this.isbn = isbn;
-        this.title = title;
-        this.authors = authors;
-        this.publisher = publisher;
-        this.publishedDate = publishedDate;
-        this.description = description;
-        this.thumbnailUrl = thumbnailUrl;
-        this.qrCodePath = qrCodePath;
-    }
-    public Document(String isbn, String title, String[] authors, String publisher, String publishedDate, String description, String thumbnailUrl) {
-        this.isbn = isbn;
-        this.title = title;
-        this.authors = authors;
-        this.publisher = publisher;
-        this.publishedDate = publishedDate;
-        this.description = description;
-        this.thumbnailUrl = thumbnailUrl;
-    }
-
-    public Document(String isbn, String title, String[] authors, String publisher, String publishedDate,
-                    String description, String thumbnailUrl, String qrCodePath, String googleBooksUrl) {
-        this.isbn = isbn;
-        this.title = title;
-        this.authors = authors;
-        this.publisher = publisher;
-        this.publishedDate = publishedDate;
-        this.description = description;
-        this.thumbnailUrl = thumbnailUrl;
-        this.qrCodePath = qrCodePath;
-        this.googleBooksUrl = googleBooksUrl;
-        this.quantity = 1; // Giá trị mặc định
-    }
-
-    // Getter & Setter
-    public Document(String title, String isbn, String thumbnailUrl) {
-        this.title = title;
-        this.isbn = isbn;
-        this.thumbnailUrl = thumbnailUrl;
-    }
-
-    public Document(String isbn, String title) {
-        this.title = title;
-        this.isbn = isbn;
-    }
-
-    public Document(String number, String javaBook, String[] strings, String publisherX, String date, String greatJavaBook, String s, double v, int i) {
-    }
-
-    public double getAvgRating() {
-        return avgRating;
     }
 
     public void setAvgRating(double avgRating) {
         this.avgRating = avgRating;
     }
 
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String[] getAuthors() {
-        return authors;
-    }
-
-    public String getPublisher() {
-        return publisher;
-    }
-
-    public String getPublishedDate() {
-        return publishedDate;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getThumbnailUrl() {
-        return thumbnailUrl;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public String getQrCodePath() {
-        return qrCodePath;
     }
 
     public void setQrCodePath(String qrCodePath) {
         this.qrCodePath = qrCodePath;
     }
 
-    public String getGoogleBooksUrl() {
-        return googleBooksUrl;
-    }
-
     public void setGoogleBooksUrl(String googleBooksUrl) {
         this.googleBooksUrl = googleBooksUrl;
     }
 
+    /**
+     * Returns a string representation of the document for display purposes.
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("ISBN: ").append(isbn).append("\n");
         sb.append("Tiêu đề: ").append(title).append("\n");
         sb.append("Tác giả: ");
-
         if (authors != null && authors.length > 0) {
             sb.append(String.join(", ", authors));
         } else {
@@ -168,17 +225,5 @@ public class Document {
         sb.append("Ngày xuất bản: ").append(publishedDate != null ? publishedDate : "N/A").append("\n");
         sb.append("Mô tả: ").append(description != null ? description : "N/A").append("\n");
         return sb.toString();
-    }
-
-    public void setTitle(String s) {
-        this.title = s;
-    }
-
-    public void setAuthors(String[] authors) {
-        this.authors = authors;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
     }
 }
