@@ -12,6 +12,7 @@ import models.dao.DocumentDAO;
 import models.data.DatabaseConnection;
 import models.entities.DocumentWithBorrowInfo;
 import models.services.DocumentService;
+import utils.AlertUtils;
 
 import java.awt.*;
 import java.sql.Connection;
@@ -71,36 +72,29 @@ public class LibrarianToEditController {
         String quantityText = adjustQuantityField.getText().trim();
 
         if (isbn.isEmpty() || quantityText.isEmpty()) {
-            showAlert("Thông báo", "Bạn cần nhập ISBN và số lượng thay đổi.");
+            AlertUtils.showAlert("Thông báo", "Bạn cần nhập ISBN và số lượng thay đổi.", Alert.AlertType.INFORMATION);
             return;
         }
 
         try {
             int quantityChange = Integer.parseInt(quantityText);
             if (quantityChange == 0) {
-                showAlert("Thông báo", "Số lượng thay đổi phải khác 0.");
+                AlertUtils.showAlert("Thông báo", "Số lượng thay đổi phải khác 0.", Alert.AlertType.INFORMATION);
                 return;
             }
 
             DocumentService.adjustBookQuantity(isbn, quantityChange);
-            showAlert("Thành công", "Cập nhật số lượng sách thành công.");
+            AlertUtils.showAlert("Thành công", "Cập nhật số lượng sách thành công.", Alert.AlertType.INFORMATION);
             loadBooksFromDatabase();
 
         } catch (NumberFormatException e) {
-            showAlert("Lỗi", "Số lượng phải là số nguyên.");
+            AlertUtils.showAlert("Lỗi", "Số lượng phải là số nguyên.", Alert.AlertType.ERROR);
         } catch (IllegalArgumentException e) {
-            showAlert("Cảnh báo", e.getMessage());
+            AlertUtils.showAlert("Cảnh báo", e.getMessage(), Alert.AlertType.WARNING);
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert("Lỗi", "Lỗi khi cập nhật sách.");
+            AlertUtils.showAlert("Lỗi", "Lỗi khi cập nhật sách.", Alert.AlertType.ERROR);
         }
     }
 
-    public void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 }

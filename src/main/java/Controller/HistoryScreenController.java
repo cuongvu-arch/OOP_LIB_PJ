@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import models.entities.BorrowedBookInfo;
 import models.entities.User;
 import models.services.BorrowRecordService;
+import utils.AlertUtils;
 import utils.SessionManager;
 
 import java.sql.Date;
@@ -93,20 +94,12 @@ public class HistoryScreenController {
         loadHistoryTask.setOnFailed(event -> {
             Throwable e = loadHistoryTask.getException();
             e.printStackTrace();
-            showAlert("Lỗi tải lịch sử mượn sách", e.getMessage());
+            AlertUtils.showAlert("Lỗi", "Lỗi tải lịch sử mượn sách", Alert.AlertType.ERROR);
         });
 
         Thread thread = new Thread(loadHistoryTask);
         thread.setDaemon(true);
         thread.start();
-    }
-
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
     }
 
     public void stopScheduler() {
