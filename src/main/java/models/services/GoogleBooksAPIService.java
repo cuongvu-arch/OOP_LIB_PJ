@@ -11,6 +11,9 @@ import org.json.JSONArray;
 
 import models.entities.Document;
 
+/**
+ * Service dùng để lấy thông tin sách từ Google Books API dựa vào ISBN.
+ */
 public class GoogleBooksAPIService {
     private static final String GOOGLE_BOOKS_API = "https://www.googleapis.com/books/v1/volumes?q=isbn:%s";
 
@@ -19,6 +22,14 @@ public class GoogleBooksAPIService {
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
+
+    /**
+     * Gọi Google Books API và trả về thông tin sách dưới dạng đối tượng {@link Document}.
+     *
+     * @param isbn Mã ISBN của sách.
+     * @return Đối tượng Document chứa thông tin sách, hoặc {@code null} nếu không tìm thấy.
+     * @throws Exception Nếu có lỗi xảy ra trong quá trình gửi request hoặc phân tích dữ liệu.
+     */
     public static Document fetchBookInfo(String isbn) throws Exception {
         JSONObject bookData = fetchFromGoogleBooks(isbn);
 
@@ -29,6 +40,13 @@ public class GoogleBooksAPIService {
         return null;
     }
 
+    /**
+     * Gửi yêu cầu đến Google Books API và lấy dữ liệu JSON của sách đầu tiên tìm được.
+     *
+     * @param isbn Mã ISBN để tìm kiếm.
+     * @return Đối tượng JSONObject của sách đầu tiên, hoặc {@code null} nếu không tìm thấy hoặc có lỗi.
+     * @throws Exception Nếu có lỗi xảy ra khi gửi request hoặc đọc phản hồi.
+     */
     private static JSONObject fetchFromGoogleBooks(String isbn) throws Exception {
         String url = String.format(GOOGLE_BOOKS_API, isbn);
         HttpRequest request = HttpRequest.newBuilder()
@@ -57,6 +75,13 @@ public class GoogleBooksAPIService {
         return jsonResponse.getJSONArray("items").getJSONObject(0);
     }
 
+    /**
+     * Phân tích dữ liệu JSON và chuyển thành đối tượng {@link Document}.
+     *
+     * @param isbn     Mã ISBN của sách.
+     * @param bookItem Đối tượng JSONObject chứa thông tin chi tiết của sách.
+     * @return Đối tượng Document đã được khởi tạo với các thông tin thu được.
+     */
     private static Document parseToDocument(String isbn, JSONObject bookItem) {
         JSONObject bookData = bookItem.getJSONObject("volumeInfo");
         String title = "";

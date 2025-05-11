@@ -81,6 +81,12 @@ public class Document {
         this.quantity = 1;
     }
 
+    /**
+     * Empty constructor with additional Google Books URL and default quantity = 1.
+     */
+    public Document(String isbn, String title, String[] authors, String publisher, String publishedDate, String description, String thumbnailUrl) {
+    }
+
     // === Getters ===
 
     /**

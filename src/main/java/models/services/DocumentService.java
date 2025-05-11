@@ -19,12 +19,31 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service class cung cấp các chức năng xử lý logic nghiệp vụ liên quan đến tài liệu (sách),
+ * bao gồm tìm kiếm, thêm, cập nhật, xóa, điều chỉnh số lượng, mã QR và tương tác với API Google Books.
+ */
 public class DocumentService {
     private final DocumentDAO documentDAO;
 
+    /**
+     * Service class cung cấp các chức năng xử lý logic nghiệp vụ liên quan đến tài liệu (sách),
+     * bao gồm tìm kiếm, thêm, cập nhật, xóa, điều chỉnh số lượng, mã QR và tương tác với API Google Books.
+     */
     public DocumentService() {
         this.documentDAO = new DocumentDAO();
     }
+
+
+    /**
+     * Điều chỉnh số lượng sách hiện có trong kho.
+     *
+     * @param isbn         Mã ISBN của sách.
+     * @param changeAmount Số lượng thay đổi (dương để tăng, âm để giảm).
+     * @return true nếu cập nhật thành công.
+     * @throws SQLException             nếu có lỗi khi truy cập cơ sở dữ liệu.
+     * @throws IllegalArgumentException nếu số lượng sau cập nhật bị âm.
+     */
 
     public static boolean adjustBookQuantity(String isbn, int changeAmount) throws SQLException {
         try (Connection conn = DatabaseConnection.getConnection()) {
@@ -37,6 +56,14 @@ public class DocumentService {
         }
     }
 
+    /**
+     * Tìm kiếm sách theo ISBN. Nếu người dùng là admin, có thể lấy thông tin từ Google Books nếu không có trong DB.
+     *
+     * @param isbn        Mã ISBN của sách cần tìm.
+     * @param currentUser Người dùng hiện tại đang tìm kiếm.
+     * @return Đối tượng Document nếu tìm thấy, ngược lại trả về null.
+     * @throws Exception nếu có lỗi xảy ra trong quá trình tìm kiếm.
+     */
     public Document searchBook(String isbn, User currentUser) throws SQLException, Exception {
         if (isbn == null || isbn.trim().isEmpty()) {
             return null;
@@ -83,10 +110,28 @@ public class DocumentService {
         return fetchedDoc;
     }
 
+    /**
+     * Kiểm tra sách có tồn tại trong cơ sở dữ liệu hay không.
+     *
+     * @param isbn Mã ISBN của sách.
+     * @return true nếu sách tồn tại, ngược lại false.
+     * @throws SQLException nếu có lỗi khi truy cập DB.
+     */
     public boolean bookExists(String isbn) throws SQLException {
         return documentDAO.bookExists(isbn);
     }
 
+
+    /**
+     * Thêm sách mới vào hệ thống (chỉ admin). Đồng thời tạo mã QR và lưu đường dẫn.
+     *
+     * @param document    Đối tượng sách cần thêm.
+     * @param currentUser Người dùng hiện tại.
+     * @return true nếu thêm thành công, ngược lại false.
+     * @throws SQLException    nếu lỗi truy cập DB.
+     * @throws WriterException nếu lỗi tạo mã QR.
+     * @throws IOException     nếu lỗi ghi tệp QR code.
+     */
     public boolean addBook(Document document, User currentUser) throws SQLException, WriterException, IOException {
         if (currentUser == null || !"admin".equalsIgnoreCase(currentUser.getRole())) {
             System.err.println("Thêm sách thất bại: người dùng không có quyền admin.");
@@ -119,6 +164,14 @@ public class DocumentService {
         return documentDAO.addBook(standardizedDoc);
     }
 
+    /**
+     * Cập nhật thông tin sách (chỉ admin).
+     *
+     * @param document    Thông tin sách cần cập nhật.
+     * @param currentUser Người dùng hiện tại.
+     * @return true nếu cập nhật thành công, ngược lại false.
+     * @throws SQLException nếu lỗi DB.
+     */
     public boolean updateBook(Document document, User currentUser) throws SQLException {
         if (currentUser == null || !"admin".equalsIgnoreCase(currentUser.getRole())) {
             System.err.println("Cập nhật sách thất bại: người dùng không có quyền admin.");
@@ -136,6 +189,14 @@ public class DocumentService {
         return documentDAO.updateBook(standardizedDoc);
     }
 
+    /**
+     * Xóa sách khỏi hệ thống (chỉ admin).
+     *
+     * @param isbn        Mã ISBN của sách cần xóa.
+     * @param currentUser Người dùng hiện tại.
+     * @return true nếu xóa thành công, ngược lại false.
+     * @throws SQLException nếu lỗi DB.
+     */
     public boolean deleteBook(String isbn, User currentUser) throws SQLException {
         if (currentUser == null || !"admin".equalsIgnoreCase(currentUser.getRole())) {
             System.err.println("Xóa sách thất bại: người dùng không có quyền admin.");
@@ -152,6 +213,13 @@ public class DocumentService {
         return documentDAO.deleteBook(isbn);
     }
 
+
+    /**
+     * Chuẩn hóa thông tin sách trước khi lưu trữ, đặc biệt là định dạng ngày xuất bản.
+     *
+     * @param doc Tài liệu cần chuẩn hóa.
+     * @return Document đã chuẩn hóa.
+     */
     private Document standardizeDocument(Document doc) {
         String publishDate = doc.getPublishedDate();
         if (publishDate != null && publishDate.matches("\\d{4}")) {
@@ -163,6 +231,17 @@ public class DocumentService {
                 publishDate, doc.getDescription(), doc.getThumbnailUrl(), doc.getQrCodePath(), doc.getGoogleBooksUrl());
     }
 
+
+    /**
+     * Tìm kiếm sách theo tiêu đề, tác giả, hoặc ngày xuất bản.
+     * Hỗ trợ lọc theo tác giả phía client nếu chuỗi tìm kiếm quá ngắn.
+     *
+     * @param title       Tên sách (có thể null).
+     * @param author      Tác giả (có thể null).
+     * @param publishDate Ngày xuất bản (có thể null).
+     * @return Danh sách các sách phù hợp với tiêu chí tìm kiếm.
+     * @throws SQLException nếu lỗi DB.
+     */
     public List<Document> searchBooks(String title, String author, String publishDate) throws SQLException {
         List<Document> results = new ArrayList<>();
         StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM books WHERE 1=1");
@@ -252,6 +331,15 @@ public class DocumentService {
         }
         return results;
     }
+
+    /**
+     * Tạo lại mã QR cho sách với đường dẫn đến Google Books URL.
+     *
+     * @param document    Sách cần tạo lại QR.
+     * @param currentUser Người dùng hiện tại.
+     * @return Đường dẫn đến tệp QR code mới.
+     * @throws Exception nếu lỗi xảy ra trong quá trình tạo hoặc xác minh QR.
+     */
     public String regenerateQRCode(Document document, User currentUser) throws Exception {
         if (currentUser == null || !"admin".equalsIgnoreCase(currentUser.getRole())) {
             throw new SecurityException("Chỉ admin mới có thể tạo lại mã QR.");
