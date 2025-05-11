@@ -1,0 +1,164 @@
+/* Chủ đề tối pastel - phối màu hài hòa với light.css */
+.root {
+  -fx-font-family: 'Open Sans';
+  -fx-primary-color: #4DB6AC;      /* xanh mint */
+  -fx-secondary-color: #546E7A;    /* xám xanh */
+  -fx-accent-color: #FF6F61;       /* hồng san hô */
+  -fx-light-color: #455A64;        /* dùng cho dòng lẻ - phân biệt rõ hơn */
+  -fx-dark-color: #ECEFF1;         /* dùng cho chữ chính */
+  -fx-background: #2B2F3A;         /* nền chính không quá tối */
+  -fx-text-fill: #F1F1F1;
+  -fx-base: #37474F;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  src: url('fonts/OpenSans-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Open Sans Bold';
+  src: url('fonts/OpenSans-Bold.ttf');
+}
+
+/* Navbar styles */
+.nav-bar {
+  -fx-background-color: #2c3e50;
+  -fx-padding: 0 20px;
+}
+
+.nav-brand {
+  -fx-text-fill: white;
+  -fx-font-weight: bold;
+  -fx-padding: 0 15 0 0;
+  -fx-cursor: hand;
+}
+
+.nav-item {
+  -fx-text-fill: #B0BEC5;
+  -fx-font-size: 14px;
+  -fx-cursor: hand;
+  -fx-padding: 0 10;
+}
+
+.nav-item:hover {
+  -fx-text-fill: white;
+  -fx-font-weight: bold;
+}
+
+/* Button styles */
+.button {
+  -fx-background-color: -fx-primary-color;
+  -fx-text-fill: white;
+  -fx-font-weight: bold;
+  -fx-padding: 8 15;
+  -fx-background-radius: 5;
+  -fx-cursor: hand;
+}
+
+.button:hover {
+  -fx-background-color: #26A69A;
+}
+
+.button-danger {
+  -fx-background-color: -fx-accent-color;
+  -fx-text-fill: white;
+}
+
+.button-danger:hover {
+  -fx-background-color: #E53935;
+}
+
+/* Text field styles */
+.text-field, .text-area, .choice-box {
+  -fx-background-color: #37474F;
+  -fx-background-radius: 5;
+  -fx-border-radius: 5;
+  -fx-border-color: #78909C;
+  -fx-text-fill: white;
+  -fx-padding: 5 10;
+}
+
+.text-field:focused, .text-area:focused {
+  -fx-border-color: -fx-primary-color;
+}
+
+/* Table styles */
+.table-view {
+  -fx-background-color: #2E3B4E;
+  -fx-border-color: #607D8B;
+  -fx-border-radius: 5;
+  -fx-text-fill: white;
+}
+
+.table-view .column-header {
+  -fx-background-color: -fx-secondary-color;
+  -fx-text-fill: white;
+  -fx-font-weight: bold;
+}
+
+.table-row-cell:odd {
+  -fx-background-color: -fx-light-color;
+}
+
+.table-row-cell:selected {
+  -fx-background-color: -fx-primary-color;
+  -fx-text-fill: white;
+}
+
+/* Card styles */
+.card {
+  -fx-background-color: #37474F;
+  -fx-background-radius: 5;
+  -fx-border-radius: 5;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 5, 0, 0, 0);
+  -fx-padding: 15;
+}
+
+/* Label styles */
+.title {
+  -fx-font-size: 18px;
+  -fx-font-weight: bold;
+  -fx-text-fill: -fx-dark-color;
+}
+
+.subtitle {
+  -fx-font-size: 14px;
+  -fx-text-fill: #B0BEC5;
+}
+
+/* Layout spacing */
+.vbox-spacing {
+  -fx-spacing: 15;
+  -fx-padding: 15;
+}
+
+.hbox-spacing {
+  -fx-spacing: 10;
+  -fx-padding: 10;
+}
+
+/* Dark mode toggle button */
+.dark-button {
+  -fx-background-color: linear-gradient(to bottom, #455A64, #37474F);
+  -fx-text-fill: #ffffff;
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+  -fx-background-radius: 8;
+  -fx-padding: 8 16;
+  -fx-border-color: #78909C;
+  -fx-border-width: 1;
+  -fx-border-radius: 8;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 5, 0.0, 0, 2);
+}
+
+.dark-button:hover {
+  -fx-background-color: linear-gradient(to bottom, #546E7A, #455A64);
+  -fx-text-fill: #eeeeee;
+}
+
+.dark-button:pressed {
+  -fx-background-color: #263238;
+  -fx-text-fill: #cccccc;
+}

@@ -129,3 +129,28 @@
     -fx-spacing: 10;
     -fx-padding: 10;
 }
+
+/* --- Dark Mode Toggle Button --- */
+.dark-button {
+    -fx-background-color: linear-gradient(to bottom, #2c2c2c, #1e1e1e);
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16;
+    -fx-border-color: #555555;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 5, 0.0, 0, 2);
+}
+
+.dark-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #3c3c3c, #2a2a2a);
+    -fx-text-fill: #dddddd;
+}
+
+.dark-button:pressed {
+    -fx-background-color: #111111;
+    -fx-text-fill: #bbbbbb;
+}
