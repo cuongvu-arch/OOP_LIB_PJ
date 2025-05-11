@@ -24,47 +24,29 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Controller cho màn hình duyệt sách. Cho phép người dùng tìm kiếm sách theo tiêu đề, tác giả hoặc ngày xuất bản
- * và hiển thị kết quả dưới dạng hình ảnh bìa sách.
- */
 public class BookBrowseController {
-
     @FXML
-    private TextField titleField;
-
+    TextField titleField;
     @FXML
-    private TextField authorField;
-
+    TextField authorField;
     @FXML
-    private TextField publishDateField;
-
+    TextField publishDateField;
     @FXML
-    private Button searchButton;
-
+    Button searchButton;
     @FXML
-    private FlowPane booksFlowPane;
+    FlowPane booksFlowPane;
 
     private DocumentService documentService;
-    private Document currentDocument;
+    Document currentDocument;
 
-    /**
-     * Phương thức khởi tạo của controller, được gọi sau khi các thành phần FXML đã được load.
-     * Khởi tạo dịch vụ tài liệu và ẩn vùng hiển thị sách.
-     */
     @FXML
-    private void initialize() {
+    void initialize() {
         documentService = new DocumentService();
         booksFlowPane.setVisible(false);
     }
 
-    /**
-     * Xử lý sự kiện khi người dùng nhấn nút tìm kiếm.
-     * Tiến hành truy vấn các sách dựa trên các tiêu chí nhập vào
-     * và hiển thị các kết quả trong `booksFlowPane`.
-     */
     @FXML
-    private void handleSearchButtonClick() {
+    void handleSearchButtonClick() {
         String title = titleField.getText().trim();
         String author = authorField.getText().trim();
         String publishDate = publishDateField.getText().trim();
@@ -87,6 +69,7 @@ public class BookBrowseController {
             }
         };
 
+        // Khi task hoàn thành thành công
         searchTask.setOnSucceeded(event -> {
             List<Document> searchResults = searchTask.getValue();
 
@@ -103,10 +86,11 @@ public class BookBrowseController {
             searchButton.setDisable(false);
         });
 
+        // Khi task bị lỗi
         searchTask.setOnFailed(event -> {
             Throwable error = searchTask.getException();
             if (error instanceof SQLException) {
-                AlertUtils.showAlert("Lỗi cơ sở dữ liệu", "Không thể truy vấn cơ sở dữ liệu: " + error.getMessage(), AlertType.ERROR);
+               AlertUtils.showAlert("Lỗi cơ sở dữ liệu", "Không thể truy vấn cơ sở dữ liệu: " + error.getMessage(), AlertType.ERROR);
             } else {
                 AlertUtils.showAlert("Lỗi hệ thống", "Đã xảy ra lỗi không mong muốn: " + error.getMessage(), AlertType.ERROR);
             }
@@ -119,14 +103,8 @@ public class BookBrowseController {
         searchThread.start();
     }
 
-    /**
-     * Tạo một đối tượng {@link ImageView} để hiển thị bìa sách cho tài liệu đã cho.
-     * Nếu không có ảnh bìa, hiển thị ảnh mặc định.
-     *
-     * @param doc Đối tượng Document chứa thông tin sách.
-     * @return ImageView hiển thị ảnh bìa sách.
-     */
-    private ImageView createBookCover(Document doc) {
+
+    ImageView createBookCover(Document doc) {
         ImageView coverView = new ImageView();
         coverView.setFitWidth(150);
         coverView.setFitHeight(200);
@@ -157,12 +135,7 @@ public class BookBrowseController {
         return coverView;
     }
 
-    /**
-     * Mở cửa sổ mới hiển thị chi tiết sách được chọn.
-     *
-     * @param book Đối tượng sách cần hiển thị thông tin.
-     */
-    private void openBookDetailWindow(Document book) {
+    void openBookDetailWindow(Document book) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/BookDetailScreen.fxml"));
             Parent root = loader.load();
@@ -183,13 +156,7 @@ public class BookBrowseController {
         }
     }
 
-    /**
-     * Thiết lập lại trạng thái UI.
-     * Nếu {@code clearFields} là true, sẽ xóa các trường nhập liệu.
-     *
-     * @param clearFields Có xóa các trường nhập liệu hay không.
-     */
-    private void resetUIState(boolean clearFields) {
+    void resetUIState(boolean clearFields) {
         currentDocument = null;
         if (clearFields) {
             titleField.clear();

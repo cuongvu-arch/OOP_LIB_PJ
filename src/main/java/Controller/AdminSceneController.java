@@ -28,7 +28,7 @@ public class AdminSceneController {
      * Gán các sự kiện click chuột cho các Label điều hướng.
      */
     @FXML
-    private void initialize() {
+    void initialize() {
         // Gán sự kiện cho Label toUserLabel
         toUserLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
