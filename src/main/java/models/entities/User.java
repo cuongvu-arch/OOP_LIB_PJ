@@ -27,6 +27,10 @@ public class User {
 
     }
 
+    public User() {
+
+    }
+
     /**
      * tạo các phương thức get/set.
      */
@@ -65,5 +69,12 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setRole(String admin) {
+    }
+
+    public void setId(int i) {
+
     }
 }

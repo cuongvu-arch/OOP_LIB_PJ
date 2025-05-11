@@ -10,6 +10,10 @@ public class Document {
     private String[] authors;
     private String publisher;
 
+    public Document() {
+
+    }
+
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
@@ -81,6 +85,9 @@ public class Document {
     public Document(String isbn, String title) {
         this.title = title;
         this.isbn = isbn;
+    }
+
+    public Document(String number, String javaBook, String[] strings, String publisherX, String date, String greatJavaBook, String s, double v, int i) {
     }
 
     public double getAvgRating() {
