@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import models.dao.UserDAO;
 import models.services.UserService;
+import utils.AlertUtils;
 import utils.SceneController;
 import utils.SessionManager;
 
@@ -30,7 +31,7 @@ public class LoginScreenController {
         String pass = password.getText();
 
         if (usn.isEmpty() || pass.isEmpty()) {
-            showAlert("Lỗi", "vui lòng nhập thông tin!");
+            AlertUtils.showAlert("Lỗi", "vui lòng nhập thông tin!", Alert.AlertType.ERROR);
             return;
         }
         try {
@@ -39,23 +40,15 @@ public class LoginScreenController {
                 SessionManager.setCurrentUser(user);
                 SceneController.getInstance().initRootLayout("/fxml/BaseLayout.fxml");
             } else {
-                showAlert("Lỗi", "Tên tài khoản hoặc mật khẩu của quý khách không chính xác!");
+                AlertUtils.showAlert("Lỗi", "Tên tài khoản hoặc mật khẩu của quý khách không chính xác!", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
-            showAlert("Lỗi hệ thống", "Đã xảy ra lỗi khi đăng nhập!");
+            AlertUtils.showAlert("Lỗi hệ thống", "Đã xảy ra lỗi khi đăng nhập!", Alert.AlertType.ERROR);
             e.printStackTrace();
         }
     }
 
     public void signUp() {
         SceneController.getInstance().switchToScene("/fxml/SignUpScene.fxml");
-    }
-
-    public void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

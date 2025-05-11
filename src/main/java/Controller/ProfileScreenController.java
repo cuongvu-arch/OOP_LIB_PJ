@@ -11,6 +11,7 @@ import models.dao.UserDAO;
 import models.entities.Library;
 import models.entities.User;
 import models.services.UserService;
+import utils.AlertUtils;
 import utils.SceneController;
 import utils.SessionManager;
 
@@ -122,17 +123,9 @@ public class ProfileScreenController {
             currentUser.setPhoneNumber(phoneNumber);
             SessionManager.setCurrentUser(currentUser);
             initialize();
-            showAlert("Thành Công", "Chỉnh sửa thông tin thành công");
+            AlertUtils.showAlert("Thành Công", "Chỉnh sửa thông tin thành công", Alert.AlertType.INFORMATION);
         } else {
-            showAlert("Lỗi", "Thông tin không hợp lệ");
+            AlertUtils.showAlert("Lỗi", "Thông tin không hợp lệ", Alert.AlertType.ERROR);
         }
-    }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

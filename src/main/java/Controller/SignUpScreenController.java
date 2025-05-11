@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import models.dao.UserDAO;
 import models.entities.Library;
 import models.services.UserService;
+import utils.AlertUtils;
 import utils.SceneController;
 
 public class SignUpScreenController {
@@ -31,24 +32,16 @@ public class SignUpScreenController {
         String phn = phoneNumber.getText();
 
         if (usn.isEmpty() || pass.isEmpty() || eml.isEmpty() || phn.isEmpty()) {
-            showAlert("Lỗi", "Vui lòng điền đầy đủ thông tin");
+            AlertUtils.showAlert("Lỗi", "Vui lòng điền đầy đủ thông tin", Alert.AlertType.ERROR);
             return;
         }
 
         if (userService.signup(usn, pass, eml, phn)) {
-            showAlert("Thành công", "Đăng ký thành công!");
+           AlertUtils.showAlert("Thành công", "Đăng ký thành công!", Alert.AlertType.INFORMATION);
             SceneController.getInstance().switchToScene("/fxml/loginScreen.fxml");
         } else {
-            showAlert("Lỗi", "Đăng ký thất bại (username/email đã tồn tại hoặc thông tin không hợp lệ)");
+            AlertUtils.showAlert("Lỗi", "Đăng ký thất bại (username/email đã tồn tại hoặc thông tin không hợp lệ)", Alert.AlertType.ERROR);
         }
-    }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     public void cancelSignUp() {
