@@ -157,7 +157,7 @@ public class HomePageScreenController {
             openBookDetailWindow(book);
         });
         bookBox.setOnMouseEntered(e -> bookBox.setStyle("-fx-background-color: #e9e9e9; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
-        bookBox.setOnMouseExited(e -> bookBox.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;"));
+        bookBox.setOnMouseExited(e -> bookBox.setStyle("-fx-background-color: ffffff; -fx-border-color: e0e0e0;"));
 
 
         return bookBox;

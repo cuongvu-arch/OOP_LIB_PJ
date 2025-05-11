@@ -1,9 +1,11 @@
 package Controller;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import models.entities.User;
@@ -17,8 +19,32 @@ public class NavBarController {
     @FXML
     private Label adminFunctionText;
 
+    @FXML
+    private Button darkModeButton;
+
+    private boolean isDarkMode = false;
+
     public void initialize() {
+        darkModeButton.setOnAction(e -> toggleTheme());
         updateUIByRole();
+    }
+
+    private void toggleTheme() {
+        Scene scene = darkModeButton.getScene();
+        if (scene != null) {
+            ObservableList<String> stylesheets = scene.getStylesheets();
+            stylesheets.clear(); // Xoá CSS cũ
+
+            if (isDarkMode) {
+                stylesheets.add(getClass().getResource("/css/styles.css").toExternalForm());
+                darkModeButton.setText("Dark Mode");
+            } else {
+                stylesheets.add(getClass().getResource("/css/dark.css").toExternalForm());
+                darkModeButton.setText("Light Mode");
+            }
+
+            isDarkMode = !isDarkMode;
+        }
     }
 
     public void home() {
