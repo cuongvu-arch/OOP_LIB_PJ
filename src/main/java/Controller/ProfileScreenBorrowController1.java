@@ -33,11 +33,20 @@ public class ProfileScreenBorrowController1 {
     @FXML
     private Label nameLabel1;
 
+    /**
+     * Khởi tạo controller. Khởi tạo BorrowRecordService.
+     */
     public ProfileScreenBorrowController1() {
         // Chỉ cần BorrowRecordDAO, không cần DocumentDAO vì đã tích hợp trong DAO
         this.borrowRecordService = new BorrowRecordService();
     }
 
+    /**
+     * Phương thức khởi tạo sau khi các thành phần @FXML được inject.
+     * - Thiết lập hiển thị cột thông tin sách.
+     * - Thiết lập xử lý sự kiện chuyển scene.
+     * - Tải danh sách sách đang mượn và tên người dùng bất đồng bộ.
+     */
     @FXML
     public void initialize() {
         // Cài đặt hiển thị tên sách
@@ -73,6 +82,10 @@ public class ProfileScreenBorrowController1 {
         new Thread(loadUserTask).start();
     }
 
+    /**
+     * Tải danh sách sách chưa được trả từ cơ sở dữ liệu và hiển thị lên bảng.
+     * Dữ liệu được lấy qua dịch vụ BorrowRecordService sử dụng connection JDBC.
+     */
     private void loadBorrowedBooks() {
         Task<List<BorrowedBookInfo>> task = new Task<>() {
             @Override
@@ -102,6 +115,9 @@ public class ProfileScreenBorrowController1 {
         new Thread(task).start();
     }
 
+    /**
+     * Xử lý khi người dùng nhấn nút "Thoát" để quay về trang chủ.
+     */
     public void Exit() {
         SceneController.getInstance().switchCenterContent("/fxml/HomePageScene.fxml");
     }

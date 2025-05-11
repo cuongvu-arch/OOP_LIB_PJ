@@ -20,15 +20,28 @@ import java.util.List;
 
 import javafx.concurrent.Task;
 
+/**
+ * Controller cho màn hình theo dõi các sách đang được mượn.
+ * Hiển thị danh sách các sách mà người dùng hiện tại đang mượn nhưng chưa trả.
+ */
 public class FollowScreenController {
 
     @FXML
     private FlowPane borrowedBooksPane;
 
+
+    /**
+     * Phương thức khởi tạo controller.
+     * Được gọi tự động sau khi FXML được tải, và bắt đầu tiến trình tải danh sách sách đang mượn.
+     */
     public void initialize() {
         loadBorrowedBooksInBackground();
     }
 
+    /**
+     * Tải danh sách sách đang được mượn trong một thread nền (background thread)
+     * để tránh làm treo giao diện người dùng.
+     */
     private void loadBorrowedBooksInBackground() {
         User currentUser = SessionManager.getCurrentUser();
         if (currentUser == null) {
@@ -65,6 +78,12 @@ public class FollowScreenController {
         thread.start();
     }
 
+
+    /**
+     * Tạo và thêm một card sách vào giao diện nếu sách đó chưa được trả.
+     *
+     * @param info Thông tin kết hợp giữa sách và bản ghi mượn sách.
+     */
     private void addBorrowedBook(BorrowedBookInfo info) {
         Document document = info.getDocument();
         BorrowRecord record = info.getBorrowRecord();

@@ -21,10 +21,19 @@ public class SignUpScreenController {
     private TextField email;
     @FXML
     private TextField phoneNumber;
+
+    /**
+     * Constructor khởi tạo dịch vụ người dùng với DAO tương ứng.
+     */
     public SignUpScreenController() {
         this.userService = new UserService(new UserDAO());
     }
 
+    /**
+     * Xử lý hành động khi người dùng nhấn nút "Đăng ký".
+     * Kiểm tra đầu vào, gọi service để đăng ký và điều hướng đến màn hình đăng nhập nếu thành công.
+     * Nếu không hợp lệ hoặc đăng ký thất bại, hiển thị cảnh báo.
+     */
     public void signUpFinal() {
         String usn = userName.getText();
         String pass = password.getText();
@@ -44,6 +53,9 @@ public class SignUpScreenController {
         }
     }
 
+    /**
+     * Hủy đăng ký và quay lại màn hình đăng nhập.
+     */
     public void cancelSignUp() {
         SceneController.getInstance().switchToScene("/fxml/loginScreen.fxml");
     }

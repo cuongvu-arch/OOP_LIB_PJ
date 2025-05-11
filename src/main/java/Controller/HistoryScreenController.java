@@ -18,6 +18,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Controller cho màn hình hiển thị lịch sử mượn sách của người dùng.
+ * Bao gồm các thông tin như tên sách, ngày mượn, ngày trả, trạng thái và số ngày còn lại.
+ */
 public class HistoryScreenController {
     private final BorrowRecordService borrowService = new BorrowRecordService();
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
@@ -34,6 +38,10 @@ public class HistoryScreenController {
     @FXML
     private TableColumn<BorrowedBookInfo, String> remainingDaysColumn;
 
+    /**
+     * Phương thức khởi tạo tự động được gọi sau khi FXML được tải xong.
+     * Thiết lập các cột trong bảng, tải dữ liệu ban đầu, và đặt lịch cập nhật lịch sử mượn.
+     */
     @FXML
     public void initialize() {
         // Cài đặt cell value factory cho các cột
@@ -78,6 +86,11 @@ public class HistoryScreenController {
         }
     }
 
+    /**
+     * Tải dữ liệu lịch sử mượn sách từ service trong background.
+     *
+     * @param userId ID của người dùng cần lấy lịch sử mượn sách.
+     */
     private void loadBorrowHistory(int userId) {
         Task<List<BorrowedBookInfo>> loadHistoryTask = new Task<>() {
             @Override

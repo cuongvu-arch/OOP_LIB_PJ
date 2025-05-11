@@ -32,6 +32,10 @@ public class LibrarianToUserController {
     @FXML
     private TableColumn<UserBorrowView, String> returnedColumn;
 
+    /**
+     * Phương thức khởi tạo controller khi giao diện được tải.
+     * Thiết lập liên kết cột và khởi động tải dữ liệu người dùng cùng lịch sử mượn sách.
+     */
     @FXML
     public void initialize() {
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
@@ -41,6 +45,10 @@ public class LibrarianToUserController {
         loadUserBorrowData();
     }
 
+    /**
+     * Tải dữ liệu người dùng và thông tin sách đã mượn hoặc đã trả từ cơ sở dữ liệu.
+     * Dữ liệu được tải thông qua một Task bất đồng bộ để tránh chặn luồng giao diện.
+     */
     private void loadUserBorrowData() {
         Task<ObservableList<UserBorrowView>> task = new Task<>() {
             @Override

@@ -6,14 +6,27 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import utils.SceneController;
 
+/**
+ * Controller cho giao diện quản trị viên (admin), xử lý các sự kiện điều hướng giữa các màn hình quản lý.
+ */
 public class AdminSceneController {
 
+    /**
+     * Label điều hướng đến giao diện người dùng.
+     */
     @FXML
     private Label toUserLabel;
 
+    /**
+     * Label điều hướng đến giao diện chỉnh sửa thư viện.
+     */
     @FXML
     private Label toLibraryLabel;
 
+    /**
+     * Khởi tạo controller sau khi các thành phần FXML đã được tải.
+     * Gán các sự kiện click chuột cho các Label điều hướng.
+     */
     @FXML
     private void initialize() {
         // Gán sự kiện cho Label toUserLabel
@@ -33,13 +46,19 @@ public class AdminSceneController {
         });
     }
 
+    /**
+     * Chuyển sang giao diện quản lý người dùng.
+     * Giao diện này được định nghĩa trong file FXML `/fxml/LibrarianToUser.fxml`.
+     */
     public void ToUser() {
-        // Chuyển sang scene chứa nội dung cho người dùng
-        SceneController.getInstance().switchCenterContent("/fxml/LibrarianToUser.fxml"); // Thay bằng đường dẫn đúng
+        SceneController.getInstance().switchCenterContent("/fxml/LibrarianToUser.fxml");
     }
 
+    /**
+     * Chuyển sang giao diện chỉnh sửa nội dung thư viện.
+     * Giao diện này được định nghĩa trong file FXML `/fxml/LibrarianToEdit.fxml`.
+     */
     public void ToEdit() {
-        // Chuyển sang scene chứa nội dung thư viện
-        SceneController.getInstance().switchCenterContent("/fxml/LibrarianToEdit.fxml"); // Thay bằng đường dẫn đúng
+        SceneController.getInstance().switchCenterContent("/fxml/LibrarianToEdit.fxml");
     }
 }

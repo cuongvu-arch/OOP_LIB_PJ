@@ -23,6 +23,11 @@ import utils.SessionManager;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Controller cho màn hình tìm kiếm sách theo ISBN.
+ * Cho phép người dùng (admin hoặc người dùng thường) tìm kiếm sách, xem chi tiết,
+ * và thực hiện các thao tác thêm, sửa, xoá (với quyền admin).
+ */
 public class BookSearchController {
     @FXML
     private TextField isbnTextField;
@@ -43,6 +48,10 @@ public class BookSearchController {
     private DocumentService documentService;
     private User currentUser;
 
+    /**
+     * Hàm khởi tạo controller, được gọi khi FXML được load.
+     * Thiết lập các thành phần giao diện và quyền hiển thị theo vai trò người dùng.
+     */
     @FXML
     private void initialize() {
         documentService = new DocumentService();
@@ -63,6 +72,11 @@ public class BookSearchController {
         });
     }
 
+    /**
+     * Mở cửa sổ chi tiết sách.
+     *
+     * @param book Đối tượng Document đại diện cho sách được hiển thị chi tiết.
+     */
     private void openBookDetailWindow(Document book) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/BookDetailScreen.fxml"));
@@ -84,6 +98,12 @@ public class BookSearchController {
         }
     }
 
+
+    /**
+     * Thiết lập người dùng hiện tại và cập nhật quyền thao tác theo vai trò.
+     *
+     * @param user Người dùng đang đăng nhập.
+     */
     public void setUser(User user) {
         this.currentUser = user;
         updateButtonVisibility();
@@ -99,6 +119,10 @@ public class BookSearchController {
         }
     }
 
+
+    /**
+     * Cập nhật hiển thị nút thao tác admin theo vai trò người dùng.
+     */
     private void updateButtonVisibility() {
         boolean isAdmin = currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole());
         addBookButton.setVisible(isAdmin);
@@ -106,6 +130,10 @@ public class BookSearchController {
         deleteBookButton.setVisible(isAdmin);
     }
 
+    /**
+     * Xử lý khi người dùng nhấn nút "Tìm kiếm".
+     * Tìm sách theo ISBN và hiển thị kết quả.
+     */
     @FXML
     private void handleSearchButtonClick() {
         String isbn = isbnTextField.getText().trim();
@@ -116,7 +144,7 @@ public class BookSearchController {
         }
 
         if (!isValidIsbn(isbn)) {
-            AlertUtils.showAlert( "ISBN không hợp lệ", "Vui lòng nhập ISBN 10 hoặc 13 chữ số hợp lệ.", AlertType.WARNING);
+            AlertUtils.showAlert("ISBN không hợp lệ", "Vui lòng nhập ISBN 10 hoặc 13 chữ số hợp lệ.", AlertType.WARNING);
             return;
         }
 
@@ -137,7 +165,7 @@ public class BookSearchController {
                 updateAdminButtonStates(false);
             }
         } catch (SQLException e) {
-            AlertUtils.showAlert("Lỗi cơ sở dữ liệu", "Không thể truy vấn: " + e.getMessage(),AlertType.ERROR);
+            AlertUtils.showAlert("Lỗi cơ sở dữ liệu", "Không thể truy vấn: " + e.getMessage(), AlertType.ERROR);
             e.printStackTrace();
         } catch (Exception e) {
             AlertUtils.showAlert("Lỗi hệ thống", "Đã xảy ra lỗi: " + e.getMessage(), AlertType.ERROR);
@@ -147,6 +175,11 @@ public class BookSearchController {
         }
     }
 
+    /**
+     * Hiển thị ảnh bìa sách (nếu có), ẩn phần mô tả văn bản.
+     *
+     * @param doc Tài liệu cần hiển thị ảnh.
+     */
     private void displayBookImageOnly(Document doc) {
         if (doc.getThumbnailUrl() != null && !doc.getThumbnailUrl().isEmpty()) {
             BookImageLoader.loadImage(doc.getThumbnailUrl(), bookImageView);
@@ -159,6 +192,12 @@ public class BookSearchController {
         resultTextArea.setVisible(false);
     }
 
+    /**
+     * Cập nhật trạng thái enable/disable của các nút admin
+     * tùy theo sách có trong DB hay không.
+     *
+     * @param existsInDb true nếu sách đã tồn tại trong hệ thống.
+     */
     private void updateAdminButtonStates(boolean existsInDb) {
         boolean isAdmin = currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole());
         if (!isAdmin || currentDocument == null) {
@@ -173,16 +212,20 @@ public class BookSearchController {
         deleteBookButton.setDisable(!existsInDb);
     }
 
+    /**
+     * Xử lý khi admin nhấn nút "Thêm sách".
+     * Thêm sách vào hệ thống nếu chưa tồn tại.
+     */
     @FXML
     private void handleAddBookButtonClick() {
         if (currentDocument == null || currentDocument.getIsbn() == null) {
-            AlertUtils.showAlert("Thiếu thông tin", "Không có thông tin sách hợp lệ để thêm.",AlertType.WARNING);
+            AlertUtils.showAlert("Thiếu thông tin", "Không có thông tin sách hợp lệ để thêm.", AlertType.WARNING);
             return;
         }
 
         try {
             if (documentService.addBook(currentDocument, this.currentUser)) {
-                AlertUtils.showAlert( "Thành công", "Đã thêm sách '" + currentDocument.getTitle() + "' vào kho.",AlertType.INFORMATION);
+                AlertUtils.showAlert("Thành công", "Đã thêm sách '" + currentDocument.getTitle() + "' vào kho.", AlertType.INFORMATION);
                 updateAdminButtonStates(true);
             } else {
                 AlertUtils.showAlert("Lỗi", "Thêm sách thất bại. Vui lòng kiểm tra quyền hoặc thông tin sách (có thể ISBN đã tồn tại).", AlertType.ERROR);
@@ -197,6 +240,10 @@ public class BookSearchController {
         }
     }
 
+    /**
+     * Xử lý khi admin nhấn nút "Cập nhật sách".
+     * Mở giao diện chỉnh sửa sách.
+     */
     @FXML
     private void handleUpdateBookButtonClick() {
         if (currentDocument == null) {
@@ -239,10 +286,14 @@ public class BookSearchController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            AlertUtils.showAlert( "Lỗi tải giao diện", "Không thể mở trang chỉnh sửa sách: " + e.getMessage(), Alert.AlertType.ERROR);
+            AlertUtils.showAlert("Lỗi tải giao diện", "Không thể mở trang chỉnh sửa sách: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
+    /**
+     * Xử lý khi admin nhấn nút "Xoá sách".
+     * Thực hiện xác nhận và xoá sách khỏi hệ thống.
+     */
     @FXML
     private void handleDeleteBookButtonClick() {
         if (currentDocument == null || currentDocument.getIsbn() == null) {
@@ -262,7 +313,7 @@ public class BookSearchController {
                 AlertUtils.showAlert("Thành công", "Đã xóa sách với ISBN: " + isbn + " khỏi kho.", AlertType.INFORMATION);
                 resetUIStateAfterSearch(true);
             } else {
-                AlertUtils.showAlert( "Lỗi", "Xóa sách thất bại. Vui lòng kiểm tra quyền hoặc thông tin sách.", AlertType.ERROR);
+                AlertUtils.showAlert("Lỗi", "Xóa sách thất bại. Vui lòng kiểm tra quyền hoặc thông tin sách.", AlertType.ERROR);
             }
         } catch (SQLException e) {
             AlertUtils.showAlert("Lỗi cơ sở dữ liệu", "Lỗi khi xóa sách: " + e.getMessage(), AlertType.ERROR);
@@ -270,6 +321,12 @@ public class BookSearchController {
         }
     }
 
+
+    /**
+     * Reset lại UI sau khi tìm kiếm hoặc xoá sách.
+     *
+     * @param clearIsbnField true nếu cần xoá cả ô nhập ISBN.
+     */
     private void resetUIStateAfterSearch(boolean clearIsbnField) {
         resultTextArea.clear();
         resultTextArea.setVisible(false);
@@ -284,6 +341,13 @@ public class BookSearchController {
         }
     }
 
+    /**
+     * Hiển thị hộp thoại xác nhận trước khi thực hiện hành động nguy hiểm (như xoá sách).
+     *
+     * @param title   Tiêu đề hộp thoại.
+     * @param message Nội dung xác nhận.
+     * @return true nếu người dùng xác nhận.
+     */
     private boolean showConfirmationDialog(String title, String message) {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle(title);
@@ -292,6 +356,12 @@ public class BookSearchController {
         return alert.showAndWait().filter(response -> response == javafx.scene.control.ButtonType.OK).isPresent();
     }
 
+    /**
+     * Kiểm tra định dạng ISBN hợp lệ (ISBN-10 hoặc ISBN-13).
+     *
+     * @param isbn Mã ISBN cần kiểm tra.
+     * @return true nếu hợp lệ, false nếu sai định dạng.
+     */
     private boolean isValidIsbn(String isbn) {
         if (isbn == null) return false;
         String cleanedIsbn = isbn.replaceAll("[^0-9X]", "");
