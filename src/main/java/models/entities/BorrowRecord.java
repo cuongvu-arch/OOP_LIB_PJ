@@ -104,4 +104,8 @@ public class BorrowRecord {
     public void setReturnDate(Object o) {
 
     }
+
+    public void setBorrowDate(Date date) {
+
+    }
 }
