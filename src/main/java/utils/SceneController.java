@@ -10,6 +10,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Singleton dùng để quản lý và chuyển đổi giữa các Scene trong ứng dụng JavaFX.
+ * Hỗ trợ chuyển đổi nội dung trong layout chính (BaseLayout) và chuyển scene hoàn toàn (ví dụ: Login).
+ */
 public class SceneController {
     private static SceneController instance;
     private Stage primaryStage;
@@ -18,12 +22,22 @@ public class SceneController {
     private SceneController() {
     }
 
+    /**
+     * Singleton dùng để quản lý và chuyển đổi giữa các Scene trong ứng dụng JavaFX.
+     * Hỗ trợ chuyển đổi nội dung trong layout chính (BaseLayout) và chuyển scene hoàn toàn (ví dụ: Login).
+     */
     public static SceneController getInstance() {
         if (instance == null) {
             instance = new SceneController();
         }
         return instance;
     }
+
+    /**
+     * Thiết lập stage chính của ứng dụng.
+     *
+     * @param stage Stage chính
+     */
 
     public void setPrimaryStage(Stage stage) {
         this.primaryStage = stage;
@@ -104,7 +118,13 @@ public class SceneController {
         }
     }
 
-
+    /**
+     * Hiển thị cảnh báo lỗi với nội dung tùy chỉnh.
+     *
+     * @param title   Tiêu đề của hộp thoại
+     * @param header  Tiêu đề phụ
+     * @param content Nội dung thông báo
+     */
     private void showErrorAlert(String title, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
