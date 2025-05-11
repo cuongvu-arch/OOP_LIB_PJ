@@ -101,18 +101,31 @@ public class DocumentService {
             return false;
         }
 
+        // Fetch book info from Google Books API if needed
+        if (document.getGoogleBooksUrl() == null || document.getGoogleBooksUrl().isEmpty()) {
+            try {
+                Document apiDoc = GoogleBooksAPIService.fetchBookInfo(document.getIsbn());
+                if (apiDoc != null && apiDoc.getGoogleBooksUrl() != null) {
+                    document.setGoogleBooksUrl(apiDoc.getGoogleBooksUrl());
+                } else {
+                    document.setGoogleBooksUrl("https://books.google.com/books?isbn=" + document.getIsbn());
+                }
+            } catch (Exception e) {
+                System.err.println("Lỗi Google Books API: " + e.getMessage());
+                document.setGoogleBooksUrl("https://books.google.com/books?isbn=" + document.getIsbn());
+            }
+        }
+
         // Generate and save QR code
         try {
-            String googleBooksUrl = document.getGoogleBooksUrl() != null
-                    ? document.getGoogleBooksUrl()
-                    : "https://www.google.com/books/isbn/" + document.getIsbn();
+            String googleBooksUrl = document.getGoogleBooksUrl();
             BufferedImage qrCodeImage = QRCodeGenerator.generateQRCodeImage(googleBooksUrl, 250, 250);
             String qrCodeFilePath = "qr_codes/qr_code_" + document.getIsbn() + ".png";
             QRCodeGenerator.saveQRCode(qrCodeImage, qrCodeFilePath);
             document.setQrCodePath(qrCodeFilePath);
         } catch (WriterException | IOException e) {
             System.err.println("Lỗi tạo mã QR: " + e.getMessage());
-            throw e; // Propagate the error
+            throw e;
         }
 
         Document standardizedDoc = standardizeDocument(document);
@@ -159,8 +172,14 @@ public class DocumentService {
         } else if (publishDate == null || publishDate.trim().isEmpty() || "Không rõ".equalsIgnoreCase(publishDate)) {
             publishDate = null;
         }
+
+        String googleBooksUrl = doc.getGoogleBooksUrl();
+        if (googleBooksUrl == null || googleBooksUrl.isEmpty()) {
+            googleBooksUrl = "https://books.google.com/books?isbn=" + doc.getIsbn();
+        }
+
         return new Document(doc.getIsbn(), doc.getTitle(), doc.getAuthors(), doc.getPublisher(),
-                publishDate, doc.getDescription(), doc.getThumbnailUrl(), doc.getQrCodePath(), doc.getGoogleBooksUrl());
+                publishDate, doc.getDescription(), doc.getThumbnailUrl(), doc.getQrCodePath(), googleBooksUrl);
     }
 
     public List<Document> searchBooks(String title, String author, String publishDate) throws SQLException {

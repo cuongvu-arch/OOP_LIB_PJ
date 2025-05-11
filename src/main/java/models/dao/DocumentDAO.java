@@ -110,8 +110,8 @@ public class DocumentDAO {
             return false;
         }
 
-        String sql = "INSERT INTO books (isbn, title, authors, publisher, publish_date, description, thumbnail_url, qr_code_path) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO books (isbn, title, authors, publisher, publish_date, description, thumbnail_url, qr_code_path, google_books_url) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -132,7 +132,8 @@ public class DocumentDAO {
             stmt.setString(5, book.getPublishedDate());
             stmt.setString(6, book.getDescription());
             stmt.setString(7, book.getThumbnailUrl());
-            stmt.setString(8, book.getQrCodePath());// Thêm thumbnail_url
+            stmt.setString(8, book.getQrCodePath());
+            stmt.setString(9, book.getGoogleBooksUrl()); // Thêm google_books_url
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
