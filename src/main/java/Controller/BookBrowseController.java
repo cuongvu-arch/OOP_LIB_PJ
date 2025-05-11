@@ -26,27 +26,27 @@ import java.util.List;
 
 public class BookBrowseController {
     @FXML
-    private TextField titleField;
+    TextField titleField;
     @FXML
-    private TextField authorField;
+    TextField authorField;
     @FXML
-    private TextField publishDateField;
+    TextField publishDateField;
     @FXML
-    private Button searchButton;
+    Button searchButton;
     @FXML
-    private FlowPane booksFlowPane;
+    FlowPane booksFlowPane;
 
     private DocumentService documentService;
-    private Document currentDocument;
+    Document currentDocument;
 
     @FXML
-    private void initialize() {
+    void initialize() {
         documentService = new DocumentService();
         booksFlowPane.setVisible(false);
     }
 
     @FXML
-    private void handleSearchButtonClick() {
+    void handleSearchButtonClick() {
         String title = titleField.getText().trim();
         String author = authorField.getText().trim();
         String publishDate = publishDateField.getText().trim();
@@ -104,7 +104,7 @@ public class BookBrowseController {
     }
 
 
-    private ImageView createBookCover(Document doc) {
+    ImageView createBookCover(Document doc) {
         ImageView coverView = new ImageView();
         coverView.setFitWidth(150);
         coverView.setFitHeight(200);
@@ -135,7 +135,7 @@ public class BookBrowseController {
         return coverView;
     }
 
-    private void openBookDetailWindow(Document book) {
+    void openBookDetailWindow(Document book) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/BookDetailScreen.fxml"));
             Parent root = loader.load();
@@ -156,7 +156,7 @@ public class BookBrowseController {
         }
     }
 
-    private void resetUIState(boolean clearFields) {
+    void resetUIState(boolean clearFields) {
         currentDocument = null;
         if (clearFields) {
             titleField.clear();

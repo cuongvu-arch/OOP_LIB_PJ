@@ -15,7 +15,7 @@ public class AdminSceneController {
     private Label toLibraryLabel;
 
     @FXML
-    private void initialize() {
+    void initialize() {
         // Gán sự kiện cho Label toUserLabel
         toUserLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override

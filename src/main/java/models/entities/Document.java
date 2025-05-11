@@ -10,6 +10,7 @@ public class Document {
     private String[] authors;
     private String publisher;
 
+
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
