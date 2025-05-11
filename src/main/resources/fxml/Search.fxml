@@ -6,7 +6,7 @@
 <?import javafx.scene.text.*?>
 
 <?import java.net.URL?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1"
+<VBox stylesheets="@../css/styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1"
       fx:controller="Controller.BookSearchController" spacing="20" alignment="TOP_CENTER"
       style="-fx-padding: 30; -fx-background-color: #f5f5f5;">
 

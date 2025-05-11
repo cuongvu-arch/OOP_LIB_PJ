@@ -1,10 +1,21 @@
 /* Màu sắc chủ đạo - pastel hiện đại */
 .root {
-    -fx-primary-color: #4DB6AC;      /* xanh mint */
-    -fx-secondary-color: #546E7A;    /* xám xanh */
-    -fx-accent-color: #FF6F61;       /* hồng san hô */
-    -fx-light-color: #F1F8E9;        /* trắng ngà nhạt */
-    -fx-dark-color: #37474F;         /* xám than */
+  -fx-font-family: 'Open Sans';
+      -fx-primary-color: #4DB6AC;      /* xanh mint */
+      -fx-secondary-color: #546E7A;    /* xám xanh */
+      -fx-accent-color: #FF6F61;       /* hồng san hô */
+      -fx-light-color: #F1F8E9;        /* trắng ngà nhạt */
+      -fx-dark-color: #37474F;        /* xám than */
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('fonts/OpenSans-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Open Sans Bold';
+    src: url('fonts/OpenSans-Bold.ttf');
 }
 
 /* Navbar styles */
