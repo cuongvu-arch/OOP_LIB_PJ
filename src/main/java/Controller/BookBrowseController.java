@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import utils.AlertUtils;
 import utils.BookImageLoader;
 
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class BookBrowseController {
         String publishDate = publishDateField.getText().trim();
 
         if (title.isEmpty() && author.isEmpty() && publishDate.isEmpty()) {
-            showAlert(AlertType.WARNING, "Thiếu thông tin", "Vui lòng nhập ít nhất một tiêu chí tìm kiếm.");
+            AlertUtils.showAlert("Thiếu thông tin", "Vui lòng nhập ít nhất một tiêu chí tìm kiếm.", AlertType.WARNING);
             return;
         }
 
@@ -73,7 +74,7 @@ public class BookBrowseController {
             List<Document> searchResults = searchTask.getValue();
 
             if (searchResults == null || searchResults.isEmpty()) {
-                showAlert(AlertType.INFORMATION, "Không tìm thấy", "Không tìm thấy sách phù hợp với tiêu chí tìm kiếm.");
+                AlertUtils.showAlert("Không tìm thấy", "Không tìm thấy sách phù hợp với tiêu chí tìm kiếm.", AlertType.INFORMATION);
             } else {
                 booksFlowPane.setVisible(true);
                 for (Document doc : searchResults) {
@@ -89,9 +90,9 @@ public class BookBrowseController {
         searchTask.setOnFailed(event -> {
             Throwable error = searchTask.getException();
             if (error instanceof SQLException) {
-                showAlert(AlertType.ERROR, "Lỗi cơ sở dữ liệu", "Không thể truy vấn cơ sở dữ liệu: " + error.getMessage());
+               AlertUtils.showAlert("Lỗi cơ sở dữ liệu", "Không thể truy vấn cơ sở dữ liệu: " + error.getMessage(), AlertType.ERROR);
             } else {
-                showAlert(AlertType.ERROR, "Lỗi hệ thống", "Đã xảy ra lỗi không mong muốn: " + error.getMessage());
+                AlertUtils.showAlert("Lỗi hệ thống", "Đã xảy ra lỗi không mong muốn: " + error.getMessage(), AlertType.ERROR);
             }
             error.printStackTrace();
             searchButton.setDisable(false);
@@ -151,7 +152,7 @@ public class BookBrowseController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(AlertType.ERROR, "Lỗi", "Không thể mở trang chi tiết sách: " + e.getMessage());
+            AlertUtils.showAlert("Lỗi", "Không thể mở trang chi tiết sách: " + e.getMessage(), AlertType.ERROR);
         }
     }
 
@@ -162,13 +163,5 @@ public class BookBrowseController {
             authorField.clear();
             publishDateField.clear();
         }
-    }
-
-    private void showAlert(AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

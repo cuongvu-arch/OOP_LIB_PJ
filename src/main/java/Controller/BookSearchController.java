@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import models.entities.Document;
 import models.entities.User;
 import models.services.DocumentService;
+import utils.AlertUtils;
 import utils.BookImageLoader;
 import utils.SessionManager;
 
@@ -78,7 +79,7 @@ public class BookSearchController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể mở trang chi tiết sách: " + e.getMessage());
+            AlertUtils.showAlert("Lỗi", "Không thể mở trang chi tiết sách: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -108,13 +109,13 @@ public class BookSearchController {
     private void handleSearchButtonClick() {
         String isbn = isbnTextField.getText().trim();
         if (isbn.isEmpty()) {
-            showAlert(AlertType.WARNING, "Thiếu thông tin", "Vui lòng nhập ISBN để tìm kiếm.");
+            AlertUtils.showAlert("Thiếu thông tin", "Vui lòng nhập ISBN để tìm kiếm.", AlertType.WARNING);
             resetUIStateAfterSearch(true);
             return;
         }
 
         if (!isValidIsbn(isbn)) {
-            showAlert(AlertType.WARNING, "ISBN không hợp lệ", "Vui lòng nhập ISBN 10 hoặc 13 chữ số hợp lệ.");
+            AlertUtils.showAlert( "ISBN không hợp lệ", "Vui lòng nhập ISBN 10 hoặc 13 chữ số hợp lệ.", AlertType.WARNING);
             return;
         }
 
@@ -129,16 +130,16 @@ public class BookSearchController {
                 boolean existsInDb = documentService.bookExists(isbn);
                 updateAdminButtonStates(existsInDb);
             } else {
-                showAlert(AlertType.INFORMATION, "Không tìm thấy", "Không tìm thấy sách với ISBN: " + isbn);
+                AlertUtils.showAlert("Không tìm thấy", "Không tìm thấy sách với ISBN: " + isbn, AlertType.INFORMATION);
                 bookImageView.setVisible(false);
                 resultTextArea.setVisible(false);
                 updateAdminButtonStates(false);
             }
         } catch (SQLException e) {
-            showAlert(AlertType.ERROR, "Lỗi cơ sở dữ liệu", "Không thể truy vấn: " + e.getMessage());
+            AlertUtils.showAlert("Lỗi cơ sở dữ liệu", "Không thể truy vấn: " + e.getMessage(),AlertType.ERROR);
             e.printStackTrace();
         } catch (Exception e) {
-            showAlert(AlertType.ERROR, "Lỗi hệ thống", "Đã xảy ra lỗi: " + e.getMessage());
+            AlertUtils.showAlert("Lỗi hệ thống", "Đã xảy ra lỗi: " + e.getMessage(), AlertType.ERROR);
             e.printStackTrace();
         } finally {
             searchButton.setDisable(false);
@@ -174,19 +175,19 @@ public class BookSearchController {
     @FXML
     private void handleAddBookButtonClick() {
         if (currentDocument == null || currentDocument.getIsbn() == null) {
-            showAlert(AlertType.WARNING, "Thiếu thông tin", "Không có thông tin sách hợp lệ để thêm.");
+            AlertUtils.showAlert("Thiếu thông tin", "Không có thông tin sách hợp lệ để thêm.",AlertType.WARNING);
             return;
         }
 
         try {
             if (documentService.addBook(currentDocument, this.currentUser)) {
-                showAlert(AlertType.INFORMATION, "Thành công", "Đã thêm sách '" + currentDocument.getTitle() + "' vào kho.");
+                AlertUtils.showAlert( "Thành công", "Đã thêm sách '" + currentDocument.getTitle() + "' vào kho.",AlertType.INFORMATION);
                 updateAdminButtonStates(true);
             } else {
-                showAlert(AlertType.ERROR, "Lỗi", "Thêm sách thất bại. Vui lòng kiểm tra quyền hoặc thông tin sách (có thể ISBN đã tồn tại).");
+                AlertUtils.showAlert("Lỗi", "Thêm sách thất bại. Vui lòng kiểm tra quyền hoặc thông tin sách (có thể ISBN đã tồn tại).", AlertType.ERROR);
             }
         } catch (SQLException e) {
-            showAlert(AlertType.ERROR, "Lỗi cơ sở dữ liệu", "Lỗi khi thêm sách: " + e.getMessage());
+            AlertUtils.showAlert("Lỗi cơ sở dữ liệu", "Lỗi khi thêm sách: " + e.getMessage(), AlertType.ERROR);
             e.printStackTrace();
         }
     }
@@ -194,12 +195,12 @@ public class BookSearchController {
     @FXML
     private void handleUpdateBookButtonClick() {
         if (currentDocument == null) {
-            showAlert(Alert.AlertType.WARNING, "Chưa chọn sách", "Vui lòng tìm và chọn một cuốn sách để cập nhật.");
+            AlertUtils.showAlert("Chưa chọn sách", "Vui lòng tìm và chọn một cuốn sách để cập nhật.", Alert.AlertType.WARNING);
             return;
         }
 
         if (this.currentUser == null || !"admin".equalsIgnoreCase(this.currentUser.getRole())) {
-            showAlert(Alert.AlertType.ERROR, "Không có quyền", "Chỉ quản trị viên mới có thể cập nhật sách.");
+            AlertUtils.showAlert("Không có quyền", "Chỉ quản trị viên mới có thể cập nhật sách.", Alert.AlertType.ERROR);
             return;
         }
 
@@ -228,19 +229,19 @@ public class BookSearchController {
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
-                showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không thể tải lại thông tin sách sau khi cập nhật.");
+                AlertUtils.showAlert("Cảnh báo", "Không thể tải lại thông tin sách sau khi cập nhật.", Alert.AlertType.WARNING);
             }
 
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Lỗi tải giao diện", "Không thể mở trang chỉnh sửa sách: " + e.getMessage());
+            AlertUtils.showAlert( "Lỗi tải giao diện", "Không thể mở trang chỉnh sửa sách: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     @FXML
     private void handleDeleteBookButtonClick() {
         if (currentDocument == null || currentDocument.getIsbn() == null) {
-            showAlert(AlertType.WARNING, "Thiếu thông tin", "Không có ISBN sách để xóa.");
+            AlertUtils.showAlert("Thiếu thông tin", "Không có ISBN sách để xóa.", AlertType.WARNING);
             return;
         }
 
@@ -253,13 +254,13 @@ public class BookSearchController {
 
         try {
             if (documentService.deleteBook(isbn, this.currentUser)) {
-                showAlert(AlertType.INFORMATION, "Thành công", "Đã xóa sách với ISBN: " + isbn + " khỏi kho.");
+                AlertUtils.showAlert("Thành công", "Đã xóa sách với ISBN: " + isbn + " khỏi kho.", AlertType.INFORMATION);
                 resetUIStateAfterSearch(true);
             } else {
-                showAlert(AlertType.ERROR, "Lỗi", "Xóa sách thất bại. Vui lòng kiểm tra quyền hoặc thông tin sách.");
+                AlertUtils.showAlert( "Lỗi", "Xóa sách thất bại. Vui lòng kiểm tra quyền hoặc thông tin sách.", AlertType.ERROR);
             }
         } catch (SQLException e) {
-            showAlert(AlertType.ERROR, "Lỗi cơ sở dữ liệu", "Lỗi khi xóa sách: " + e.getMessage());
+            AlertUtils.showAlert("Lỗi cơ sở dữ liệu", "Lỗi khi xóa sách: " + e.getMessage(), AlertType.ERROR);
             e.printStackTrace();
         }
     }
@@ -276,14 +277,6 @@ public class BookSearchController {
         if (clearIsbnField) {
             isbnTextField.clear();
         }
-    }
-
-    private void showAlert(AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     private boolean showConfirmationDialog(String title, String message) {

@@ -14,6 +14,7 @@ import models.entities.BorrowRecord;
 import models.entities.Review;
 import models.entities.Document;
 import models.entities.User;
+import utils.AlertUtils;
 import utils.BookImageLoader;
 import javafx.scene.image.Image;
 
@@ -161,20 +162,11 @@ public class BookDetailController {
 
             if (borrowRecordDAO.isBorrowed(conn, currentUser.getId(), selectedDoc.getIsbn())) {
                 // Tạo thông báo khi đã mượn sách rồi
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Thông báo");
-                alert.setHeaderText(null);
-                alert.setContentText("Bạn đã mượn sách này rồi.");
-                alert.showAndWait();
+                AlertUtils.showAlert("Thông báo", "Bạn đã mượn sách này rồi", Alert.AlertType.INFORMATION);
             } else {
                 borrowRecordDAO.add(conn, borrowRecord);  // Thêm thông tin vào cơ sở dữ liệu
                 // Tạo thông báo khi mượn sách thành công
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Thông báo");
-                alert.setHeaderText(null);
-                alert.setContentText("Đã mượn sách: " + selectedDoc.getTitle());
-                alert.showAndWait();
-
+                AlertUtils.showAlert("Thông báo", "Đã mượn sách: " + selectedDoc.getTitle(), Alert.AlertType.INFORMATION);
             }
         } catch (SQLException e) {
             System.err.println("Lỗi khi mượn sách: " + e.getMessage());
