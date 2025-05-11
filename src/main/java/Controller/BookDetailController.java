@@ -81,7 +81,7 @@ public class BookDetailController {
     private Document currentBook;
     private DocumentService documentService;
 
-    public void initialize() {
+    public void initialize() throws Exception {
         ReviewDAO.loadReviewData();
         ratingChoiceBox.getItems().addAll(1, 2, 3, 4, 5);
         ratingChoiceBox.setValue(5);
