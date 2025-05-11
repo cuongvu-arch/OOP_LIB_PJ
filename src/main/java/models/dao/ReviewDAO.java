@@ -10,8 +10,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DAO class responsible for managing review data.
+ * Includes CRUD operations and support for loading into memory and rating calculations.
+ */
 public class ReviewDAO {
 
+    /**
+     * Retrieves all reviews from the database.
+     *
+     * @param conn The database connection.
+     * @return A list of {@link Review} objects.
+     */
     public static List<Review> getAllReviews(Connection conn) {
         List<Review> reviews = new ArrayList<>();
         String sql = "SELECT * FROM review";
@@ -38,6 +48,9 @@ public class ReviewDAO {
         return reviews;
     }
 
+    /**
+     * Loads all review data from the database and stores it in memory via {@link Library#setReviewList(List)}.
+     */
     public static void loadReviewData() {
         try (Connection conn = DatabaseConnection.getConnection()) {
             List<Review> reviews = getAllReviews(conn);
@@ -48,10 +61,20 @@ public class ReviewDAO {
         }
     }
 
+    /**
+     * Retrieves all reviews currently loaded in memory.
+     *
+     * @return A list of {@link Review} objects.
+     */
     public static List<Review> getAllReviewsFromMemory() {
         return Library.getReviewList();
     }
 
+    /**
+     * Inserts a new review into the database.
+     *
+     * @param review The {@link Review} object to be added.
+     */
     public static void addReview(Review review) {
         String sql = "INSERT INTO review(user_id, document_isbn, rating, comment, created_at) VALUES (?, ?, ?, ?, ?)";
 
@@ -71,6 +94,11 @@ public class ReviewDAO {
         }
     }
 
+    /**
+     * Updates an existing review in the database.
+     *
+     * @param review The {@link Review} object containing updated information.
+     */
     public static void updateReview(Review review) {
         String sql = "UPDATE review SET rating = ?, comment = ? WHERE user_id = ? AND document_isbn = ? AND created_at = ?";
 
@@ -103,6 +131,14 @@ public class ReviewDAO {
         }
     }
 
+
+    /**
+     * Retrieves the createdAt timestamp for a review by user and document.
+     *
+     * @param userId        The user ID.
+     * @param documentIsbn  The document ISBN.
+     * @return The {@link LocalDateTime} of the review creation, or null if not found.
+     */
     private static LocalDateTime getCreatedAtFromDatabase(int userId, String documentIsbn) {
         String sql = "SELECT created_at FROM review WHERE user_id = ? AND document_isbn = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -124,6 +160,12 @@ public class ReviewDAO {
         return null;
     }
 
+    /**
+     * Deletes a review from the database using user ID, document ISBN, and creation time.
+     *
+     * @param userId       The user ID of the review.
+     * @param documentIsbn The document ISBN of the review.
+     */
     public static void deleteReview(int userId, String documentIsbn) {
         // Lấy createdAt từ database trước khi xoá review
         LocalDateTime createdAt = getCreatedAtFromDatabase(userId, documentIsbn);
@@ -157,6 +199,12 @@ public class ReviewDAO {
         }
     }
 
+    /**
+     * Calculates the average rating of a document based on its ISBN.
+     *
+     * @param isbn The ISBN of the document.
+     * @return The average rating as a double.
+     */
     public static double calculateAverageRating(String isbn) {
         double avgRating = 0;
         int totalRating = 0;
@@ -192,6 +240,12 @@ public class ReviewDAO {
         return avgRating;
     }
 
+    /**
+     * Retrieves the top N documents with the highest average ratings.
+     *
+     * @param topN Number of top-rated documents to retrieve.
+     * @return A list of {@link Document} objects with title, ISBN, and average rating.
+     */
     public List<Document> getTopRatedDocuments(int topN) {
         List<Document> result = new ArrayList<>();
 

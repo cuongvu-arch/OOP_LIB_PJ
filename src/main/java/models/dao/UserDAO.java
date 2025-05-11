@@ -10,8 +10,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object (DAO) cho thực thể User.
+ * Thực hiện các thao tác liên quan đến cơ sở dữ liệu cho người dùng như:
+ * đăng ký, đăng nhập, cập nhật hồ sơ, kiểm tra tồn tại, và lấy danh sách người dùng.
+ */
 public class UserDAO {
 
+    /**
+     * Lấy toàn bộ danh sách người dùng trong hệ thống.
+     *
+     * @param connection Kết nối đến cơ sở dữ liệu
+     * @return Danh sách các đối tượng User, hoặc null nếu có lỗi xảy ra
+     */
     public static List<User> getAllUser(Connection connection) {
         List<User> Result = new ArrayList<>();
         String sql = "SELECT * FROM users";
@@ -33,6 +44,18 @@ public class UserDAO {
         return null;
     }
 
+    /**
+     * Thêm một người dùng mới vào cơ sở dữ liệu với vai trò mặc định là "USER".
+     * Mật khẩu được mã hoá bằng BCrypt.
+     *
+     * @param conn        Kết nối đến cơ sở dữ liệu
+     * @param username    Tên người dùng
+     * @param password    Mật khẩu (chưa mã hoá)
+     * @param email       Email của người dùng
+     * @param phoneNumber Số điện thoại
+     * @return true nếu thêm thành công, false nếu thất bại
+     * @throws SQLException Nếu có lỗi khi thao tác với cơ sở dữ liệu
+     */
     public boolean insertUser(Connection conn, String username, String password,
                               String email, String phoneNumber) throws SQLException {
         String sql = "INSERT INTO users (username, password, email, phone_number, role) VALUES (?, ?, ?, ?, ?)";
@@ -50,6 +73,16 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Lấy thông tin người dùng nếu tên đăng nhập và mật khẩu khớp.
+     * Mật khẩu đầu vào sẽ được so sánh với bản mã hoá trong DB.
+     *
+     * @param conn     Kết nối đến cơ sở dữ liệu
+     * @param username Tên người dùng
+     * @param password Mật khẩu chưa mã hoá
+     * @return Đối tượng User nếu đăng nhập thành công, null nếu thất bại
+     * @throws SQLException Nếu có lỗi khi thao tác với cơ sở dữ liệu
+     */
     public User getUserByUsernameAndPassword(Connection conn, String username, String password) throws SQLException {
         String sql = "SELECT * FROM users WHERE username = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -72,6 +105,16 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Kiểm tra xem người dùng có tồn tại dựa trên tên đăng nhập hoặc email.
+     * So sánh không phân biệt chữ hoa - thường và loại bỏ khoảng trắng dư.
+     *
+     * @param connection Kết nối đến cơ sở dữ liệu
+     * @param username   Tên người dùng
+     * @param email      Địa chỉ email
+     * @return true nếu người dùng tồn tại, false nếu không
+     * @throws SQLException Nếu có lỗi khi thao tác với cơ sở dữ liệu
+     */
     public boolean isUserExists(Connection connection, String username, String email) throws SQLException {
         String sql = "SELECT 1 FROM users WHERE LOWER(TRIM(username)) = LOWER(TRIM(?)) OR LOWER(TRIM(email)) = LOWER(TRIM(?))";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -83,6 +126,17 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Cập nhật hồ sơ người dùng bao gồm tên người dùng, email, và số điện thoại.
+     *
+     * @param connection    Kết nối đến cơ sở dữ liệu
+     * @param currentUserId ID của người dùng hiện tại
+     * @param newUserName   Tên người dùng mới
+     * @param email         Email mới
+     * @param phoneNumber   Số điện thoại mới
+     * @return true nếu cập nhật thành công, false nếu thất bại
+     * @throws SQLException Nếu có lỗi khi thao tác với cơ sở dữ liệu
+     */
     public boolean updateUserProfile(Connection connection, int currentUserId, String newUserName, String email, String phoneNumber) throws SQLException {
         String sql = "UPDATE users SET username = ?, email = ?, phone_number = ?  WHERE Id = ?;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {

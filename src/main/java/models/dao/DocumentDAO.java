@@ -9,8 +9,24 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object (DAO) cho thực thể Document.
+ *
+ * Lớp này cung cấp các phương thức để thao tác với cơ sở dữ liệu liên quan đến sách (Document),
+ * bao gồm thêm, sửa, xoá, truy vấn theo ISBN, phân trang, và thống kê số lượng sách.
+ *
+ * Sử dụng JDBC để giao tiếp với cơ sở dữ liệu và sử dụng JSON để xử lý danh sách tác giả.
+ */
 public class DocumentDAO {
 
+    /**
+     * Lấy tổng số lượng sách theo ISBN.
+     *
+     * @param conn kết nối cơ sở dữ liệu.
+     * @param isbn mã ISBN của sách.
+     * @return tổng số lượng sách.
+     * @throws SQLException nếu xảy ra lỗi truy vấn.
+     */
     public static int getQuantityByIsbn(Connection conn, String isbn) throws SQLException {
         String sql = "SELECT total_quantity FROM books WHERE isbn = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -24,6 +40,14 @@ public class DocumentDAO {
         }
     }
 
+    /**
+     * Cập nhật số lượng sách theo ISBN (cộng thêm hoặc trừ bớt).
+     *
+     * @param conn kết nối cơ sở dữ liệu.
+     * @param isbn mã ISBN của sách.
+     * @param quantityChange số lượng thay đổi (+ hoặc -).
+     * @throws SQLException nếu xảy ra lỗi truy vấn.
+     */
     public static void updateBookQuantity(Connection conn, String isbn, int quantityChange) throws SQLException {
         String sql = "UPDATE books SET total_quantity = total_quantity + ? WHERE isbn = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -33,6 +57,13 @@ public class DocumentDAO {
         }
     }
 
+    /**
+     * Lấy danh sách tất cả sách trong cơ sở dữ liệu.
+     *
+     * @param conn kết nối cơ sở dữ liệu.
+     * @return danh sách các đối tượng Document.
+     * @throws SQLException nếu xảy ra lỗi truy vấn.
+     */
     public static List<Document> getAllDocs(Connection conn) throws SQLException {
         List<Document> documents = new ArrayList<>();
         String sql = "SELECT isbn, title, authors, publisher, publish_date, description, thumbnail_url FROM books";
@@ -68,6 +99,13 @@ public class DocumentDAO {
         return documents;
     }
 
+    /**
+     * Lấy danh sách tất cả sách cùng với thông tin mượn hiện tại.
+     *
+     * @param conn kết nối cơ sở dữ liệu.
+     * @return danh sách DocumentWithBorrowInfo.
+     * @throws SQLException nếu xảy ra lỗi truy vấn.
+     */
     public static List<DocumentWithBorrowInfo> getAllDocumentsWithBorrowInfo(Connection conn) throws SQLException {
         List<DocumentWithBorrowInfo> list = new ArrayList<>();
 
@@ -104,6 +142,12 @@ public class DocumentDAO {
         return list;
     }
 
+    /**
+     * Thêm một sách mới vào cơ sở dữ liệu.
+     *
+     * @param book đối tượng Document chứa thông tin sách.
+     * @return true nếu thêm thành công, false nếu thất bại.
+     */
     public boolean addBook(Document book) {
         if (book == null || book.getIsbn() == null || book.getIsbn().trim().isEmpty()) {
             System.err.println("Lỗi khi thêm sách: Dữ liệu sách không hợp lệ (thiếu ISBN).");
@@ -152,6 +196,12 @@ public class DocumentDAO {
         }
     }
 
+    /**
+     * Cập nhật thông tin sách theo ISBN.
+     *
+     * @param book đối tượng Document chứa thông tin cần cập nhật.
+     * @return true nếu cập nhật thành công, false nếu thất bại.
+     */
     public boolean updateBook(Document book) {
         if (book == null || book.getIsbn() == null || book.getIsbn().trim().isEmpty()) {
             System.err.println("Lỗi khi cập nhật sách: Dữ liệu sách không hợp lệ (thiếu ISBN).");
@@ -195,6 +245,12 @@ public class DocumentDAO {
         }
     }
 
+    /**
+     * Xoá sách khỏi cơ sở dữ liệu theo ISBN.
+     *
+     * @param isbn mã ISBN của sách cần xoá.
+     * @return true nếu xoá thành công, false nếu thất bại.
+     */
     public boolean deleteBook(String isbn) {
         // Không cần thay đổi vì không thao tác với cột authors
         if (isbn == null || isbn.trim().isEmpty()) {
@@ -218,6 +274,13 @@ public class DocumentDAO {
         }
     }
 
+    /**
+     * Kiểm tra một sách có tồn tại trong cơ sở dữ liệu theo ISBN.
+     *
+     * @param isbn mã ISBN của sách.
+     * @return true nếu sách tồn tại, false nếu không.
+     * @throws SQLException nếu xảy ra lỗi truy vấn.
+     */
     public boolean bookExists(String isbn) throws SQLException {
         String sql = "SELECT 1 FROM books WHERE isbn = ? LIMIT 1";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -229,6 +292,13 @@ public class DocumentDAO {
         }
     }
 
+    /**
+     * Truy xuất thông tin chi tiết của một sách theo ISBN.
+     *
+     * @param isbn mã ISBN cần truy vấn.
+     * @return đối tượng Document nếu tìm thấy, null nếu không.
+     * @throws SQLException nếu xảy ra lỗi truy vấn.
+     */
     public Document getBookByIsbn(String isbn) throws SQLException {
         String sql = "SELECT isbn, title, authors, publisher, publish_date, description, thumbnail_url, qr_code_path, google_books_url, total_quantity FROM books WHERE isbn = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -274,6 +344,15 @@ public class DocumentDAO {
         }
     }
 
+    /**
+     * Lấy danh sách sách có phân trang.
+     *
+     * @param conn kết nối cơ sở dữ liệu.
+     * @param page trang hiện tại (tính từ 1).
+     * @param booksPerPage số lượng sách mỗi trang.
+     * @return danh sách Document trên trang đó.
+     * @throws SQLException nếu xảy ra lỗi truy vấn.
+     */
     public List<Document> getBooksPaginated(Connection conn, int page, int booksPerPage) throws SQLException {
         List<Document> books = new ArrayList<>();
         int offset = (page - 1) * booksPerPage;
