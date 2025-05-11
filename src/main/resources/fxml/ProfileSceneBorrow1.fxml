@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1"
+<BorderPane stylesheets="@../css/styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1"
             fx:controller="Controller.ProfileScreenBorrowController1">
     <center>
         <AnchorPane style="-fx-padding: 20;" BorderPane.alignment="CENTER_LEFT">

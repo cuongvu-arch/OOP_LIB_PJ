@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1"
+<BorderPane stylesheets="@../css/styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1"
             fx:controller="Controller.HistoryScreenController">
     <center>
         <VBox alignment="TOP_CENTER" spacing="20" style="-fx-padding: 30;">

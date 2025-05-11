@@ -4,7 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:id="bookCard" spacing="10" prefWidth="140"
+<VBox stylesheets="@../css/styles.css" xmlns:fx="http://javafx.com/fxml" fx:id="bookCard" spacing="10" prefWidth="140"
       alignment="CENTER"
       xmlns="http://javafx.com/javafx"
       fx:controller="Controller.BookCardController"

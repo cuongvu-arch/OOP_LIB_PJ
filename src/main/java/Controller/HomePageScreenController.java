@@ -175,7 +175,8 @@ public class HomePageScreenController {
             detailStage.setTitle("Chi tiết sách: " + (book.getTitle() != null ? book.getTitle() : "Không có tiêu đề"));
             detailStage.setScene(new Scene(root));
             detailStage.initModality(Modality.APPLICATION_MODAL);
-            detailStage.setResizable(false);
+            detailStage.sizeToScene();
+            detailStage.setResizable(true);
             detailStage.showAndWait();
 
         } catch (IOException e) {
