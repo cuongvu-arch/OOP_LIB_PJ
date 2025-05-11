@@ -21,11 +21,18 @@ public class LoginScreenController {
     @FXML
     private TextField password;
 
-
+    /**
+     * Constructor khởi tạo service với DAO tương ứng.
+     */
     public LoginScreenController() {
         this.userService = new UserService(new UserDAO());
     }
 
+    /**
+     * Xử lý sự kiện khi người dùng nhấn nút "Đăng nhập".
+     * Kiểm tra hợp lệ đầu vào, xác thực thông tin, và chuyển đến giao diện chính nếu thành công.
+     * Nếu không thành công, hiển thị cảnh báo tương ứng.
+     */
     public void login() {
         String usn = username.getText();
         String pass = password.getText();
@@ -48,6 +55,10 @@ public class LoginScreenController {
         }
     }
 
+    /**
+     * Xử lý khi người dùng nhấn nút "Đăng ký".
+     * Chuyển sang giao diện đăng ký tài khoản.
+     */
     public void signUp() {
         SceneController.getInstance().switchToScene("/fxml/SignUpScene.fxml");
     }

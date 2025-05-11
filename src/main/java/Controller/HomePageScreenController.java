@@ -28,6 +28,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Controller cho màn hình trang chủ của ứng dụng thư viện,
+ * hiển thị danh sách các sách theo phân trang và cho phép người dùng xem chi tiết sách.
+ */
 public class HomePageScreenController {
     private static final int BOOKS_PER_PAGE = 6;
     @FXML
@@ -41,6 +45,10 @@ public class HomePageScreenController {
     private int currentPage = 1;
     private DocumentDAO documentDAO = new DocumentDAO();
 
+    /**
+     * Phương thức khởi tạo controller, gọi khi màn hình được load.
+     * Thiết lập sự kiện cho các nút điều hướng và tải danh sách sách cho trang hiện tại.
+     */
     @FXML
     public void initialize() {
         loadBooks(currentPage);
@@ -58,6 +66,12 @@ public class HomePageScreenController {
         });
     }
 
+
+    /**
+     * Tải danh sách sách cho một trang cụ thể từ cơ sở dữ liệu và hiển thị lên giao diện.
+     *
+     * @param page trang cần hiển thị
+     */
     private void loadBooks(int page) {
         booksGrid.getChildren().clear();
 
@@ -106,7 +120,12 @@ public class HomePageScreenController {
         thread.start();
     }
 
-
+    /**
+     * Tạo một hộp chứa thông tin sách gồm ảnh bìa, tiêu đề và tác giả.
+     *
+     * @param book đối tượng Document đại diện cho sách
+     * @return VBox chứa thông tin sách
+     */
     private VBox createBookBox(Document book) {
         VBox bookBox = new VBox(10);
         bookBox.getStyleClass().add("book-box");
@@ -163,6 +182,12 @@ public class HomePageScreenController {
         return bookBox;
     }
 
+
+    /**
+     * Mở cửa sổ chi tiết sách dưới dạng modal.
+     *
+     * @param book sách cần hiển thị chi tiết
+     */
     private void openBookDetailWindow(Document book) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/BookDetailScreen.fxml"));
@@ -186,7 +211,11 @@ public class HomePageScreenController {
         }
     }
 
-
+    /**
+     * Cập nhật giao diện phân trang: hiển thị số trang và bật/tắt nút điều hướng.
+     *
+     * @param booksLoaded số lượng sách đã tải cho trang hiện tại
+     */
     private void updatePaginationUI(int booksLoaded) {
         pageLabel.setText("Trang " + currentPage);
         prevButton.setDisable(currentPage <= 1);

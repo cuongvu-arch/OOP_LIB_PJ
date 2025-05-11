@@ -33,10 +33,18 @@ public class ProfileScreenBorrowController2 {
     @FXML
     private Label nameLabel2;
 
+    /**
+     * Constructor khởi tạo service để truy xuất dữ liệu mượn trả.
+     */
     public ProfileScreenBorrowController2() {
         this.borrowRecordService = new BorrowRecordService();
     }
 
+    /**
+     * Phương thức khởi tạo sau khi FXML được load.
+     * Thiết lập sự kiện cho nhãn, hiển thị tên người dùng,
+     * và gọi hàm load danh sách sách đã trả.
+     */
     @FXML
     public void initialize() {
         // Thiết lập cột trong bảng
@@ -70,6 +78,11 @@ public class ProfileScreenBorrowController2 {
         new Thread(loadUserTask).start();
     }
 
+    /**
+     * Tải danh sách sách đã trả từ cơ sở dữ liệu và hiển thị trong bảng.
+     *
+     * @param userId ID của người dùng cần truy xuất thông tin
+     */
     private void loadReturnedBooks(int userId) {
         Task<List<BorrowedBookInfo>> task = new Task<>() {
             @Override
@@ -97,6 +110,10 @@ public class ProfileScreenBorrowController2 {
         new Thread(task).start();
     }
 
+    /**
+     * Xử lý hành động khi người dùng nhấn vào nút "Thoát".
+     * Điều hướng về giao diện trang chủ.
+     */
     public void Exit() {
         SceneController.getInstance().switchCenterContent("/fxml/HomePageScene.fxml");
     }

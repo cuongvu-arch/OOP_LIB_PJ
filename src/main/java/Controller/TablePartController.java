@@ -18,11 +18,21 @@ public class TablePartController {
     @FXML
     private TableColumn<BookRatingView, BookRatingView> documentInfoColumn;
 
+    /**
+     * Phương thức khởi tạo controller.
+     * Thiết lập cấu trúc bảng và nạp dữ liệu top 10 tài liệu được đánh giá cao nhất.
+     */
     public void initialize() {
         setupDocumentTable();
         loadTopRatedBooks();
     }
 
+
+    /**
+     * Thiết lập cấu hình cho TableView:
+     * - Gán kiểu dữ liệu hiển thị cho cột
+     * - Thiết lập cách hiển thị nội dung mỗi dòng bằng cách override TableCell
+     */
     private void setupDocumentTable() {
         documentInfoColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue()));
 
@@ -45,6 +55,11 @@ public class TablePartController {
         documentTableView.setItems(FXCollections.observableArrayList());
     }
 
+    /**
+     * Tải dữ liệu từ cơ sở dữ liệu và hiển thị danh sách các tài liệu có đánh giá trung bình cao nhất.
+     * Sử dụng ReviewDAO để truy vấn top 10 tài liệu.
+     * Dữ liệu được chuyển sang dạng ViewModel để phù hợp với TableView.
+     */
     private void loadTopRatedBooks() {
         // Lấy dữ liệu thực từ cơ sở dữ liệu
         ReviewDAO reviewDAO = new ReviewDAO();

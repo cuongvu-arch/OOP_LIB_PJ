@@ -11,6 +11,10 @@ public class BorrowedBookInfo {
         this.borrowRecord = borrowRecord;
     }
 
+    public BorrowedBookInfo() {
+
+    }
+
     public Document getDocument() {
         return document;
     }
@@ -21,5 +25,12 @@ public class BorrowedBookInfo {
 
     public Date getBorrowDate() {
         return borrowRecord.getBorrowDate();
+    }
+
+    public void setBorrowRecord(BorrowRecord rec1) {
+    }
+
+    public void setDocument(Document doc1) {
+
     }
 }

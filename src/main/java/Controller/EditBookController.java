@@ -17,6 +17,10 @@ import utils.SessionManager;
 import java.net.URL;
 import java.sql.SQLException;
 
+/**
+ * Controller cho giao diện chỉnh sửa thông tin sách.
+ * Cho phép admin cập nhật các thông tin như tiêu đề, tác giả, ngày xuất bản, mô tả,...
+ */
 public class EditBookController {
 
     @FXML
@@ -43,6 +47,9 @@ public class EditBookController {
     private Document currentBook; // Sách đang được chỉnh sửa
     private DocumentService documentService;
 
+    /**
+     * Khởi tạo controller, gán listener cho trường URL ảnh để cập nhật ảnh bìa khi thay đổi.
+     */
     public void initialize() {
         documentService = new DocumentService();
         thumbnailUrlTextField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -54,6 +61,11 @@ public class EditBookController {
         });
     }
 
+    /**
+     * Gán sách cần chỉnh sửa vào form.
+     *
+     * @param book đối tượng Document cần chỉnh sửa.
+     */
     public void setBookToEdit(Document book) {
         this.currentBook = book;
         if (book == null) {
@@ -81,6 +93,10 @@ public class EditBookController {
         }
     }
 
+    /**
+     * Tải ảnh placeholder nếu URL không hợp lệ hoặc trống.
+     */
+
     private void loadPlaceholderImage() {
         try {
             String placeholderPath = "/image/img.png";
@@ -95,6 +111,9 @@ public class EditBookController {
         }
     }
 
+    /**
+     * Xử lý khi nhấn nút Lưu: kiểm tra quyền, validate và cập nhật sách.
+     */
     @FXML
     private void handleSaveButtonClick() {
         if (this.currentBook == null) {
@@ -146,16 +165,30 @@ public class EditBookController {
         }
     }
 
+    /**
+     * Xử lý khi nhấn nút Hủy: đóng cửa sổ chỉnh sửa.
+     */
     @FXML
     private void handleCancelButtonClick() {
         closeWindow();
     }
 
+
+    /**
+     * Đóng cửa sổ hiện tại.
+     */
     private void closeWindow() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Hiển thị một hộp thoại cảnh báo/thông báo cho người dùng.
+     *
+     * @param alertType loại cảnh báo.
+     * @param title     tiêu đề hộp thoại.
+     * @param message   nội dung thông báo.
+     */
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

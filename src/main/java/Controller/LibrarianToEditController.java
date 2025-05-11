@@ -19,6 +19,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Controller cho giao diện thủ thư chỉnh sửa số lượng sách.
+ * <p>
+ * Cho phép hiển thị danh sách sách với thông tin số lượng hiện có, số lượng đang được mượn,
+ * và cho phép cập nhật số lượng sách dựa trên ISBN.
+ */
 public class LibrarianToEditController {
 
     private final ObservableList<DocumentWithBorrowInfo> books = FXCollections.observableArrayList();
@@ -40,6 +46,10 @@ public class LibrarianToEditController {
     @FXML
     private javafx.scene.control.TextField adjustQuantityField;
 
+    /**
+     * Phương thức khởi tạo controller khi giao diện được tải.
+     * Thiết lập bảng và tải dữ liệu ban đầu từ cơ sở dữ liệu.
+     */
     @FXML
     public void initialize() {
         // Liên kết cột với thuộc tính
@@ -56,6 +66,10 @@ public class LibrarianToEditController {
         loadBooksFromDatabase();
     }
 
+
+    /**
+     * Tải dữ liệu sách từ cơ sở dữ liệu và cập nhật bảng hiển thị.
+     */
     private void loadBooksFromDatabase() {
         try (Connection conn = DatabaseConnection.getConnection()) {
             // Lấy danh sách sách với thông tin số lượng mượn, tổng số lượng và số lượng còn lại
@@ -66,6 +80,10 @@ public class LibrarianToEditController {
         }
     }
 
+    /**
+     * Xử lý sự kiện khi người dùng nhấn nút cập nhật số lượng sách.
+     * Kiểm tra dữ liệu đầu vào, thực hiện cập nhật và tải lại dữ liệu.
+     */
     @FXML
     private void handleAdjustQuantity() {
         String isbn = adjustIsbnField.getText().trim();

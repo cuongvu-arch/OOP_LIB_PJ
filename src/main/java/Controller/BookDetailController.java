@@ -28,6 +28,11 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Controller cho giao diện chi tiết sách trong ứng dụng JavaFX.
+ * Cho phép người dùng xem thông tin chi tiết của một cuốn sách, đánh giá, bình luận và thực hiện hành động mượn sách.
+ * Nếu là admin, người dùng còn có thể tái tạo mã QR cho sách.
+ */
 public class BookDetailController {
     @FXML
     private Button regenerateQRButton;
@@ -69,6 +74,10 @@ public class BookDetailController {
     private Document currentBook;
     private DocumentService documentService;
 
+    /**
+     * Khởi tạo controller, tải dữ liệu cần thiết như danh sách đánh giá và cấu hình quyền admin.
+     * Thực hiện trên thread nền để tránh chặn giao diện.
+     */
     public void initialize() {
         Task<Void> initTask = new Task<>() {
             @Override
@@ -101,6 +110,11 @@ public class BookDetailController {
         new Thread(initTask).start();
     }
 
+    /**
+     * Xử lý khi người dùng gửi bình luận mới.
+     * Bình luận sẽ được lưu trữ thông qua ReviewDAO và hiển thị lên giao diện.
+     * Yêu cầu người dùng đã đăng nhập và sách hiện tại không null.
+     */
     @FXML
     private void handleSubmitComment() {
         String commentText = newCommentTextArea.getText().trim();
@@ -140,6 +154,11 @@ public class BookDetailController {
         }
     }
 
+    /**
+     * Xử lý khi người dùng gửi đánh giá.
+     * Đánh giá được lưu vào DAO và cập nhật lại giao diện với đánh giá mới và điểm trung bình mới.
+     * Yêu cầu người dùng đã đăng nhập và sách hiện tại không null.
+     */
     @FXML
     private void handleSubmitRating() {
         Integer rating = ratingChoiceBox.getValue();
@@ -181,6 +200,12 @@ public class BookDetailController {
         }
     }
 
+    /**
+     * Xử lý khi người dùng nhấn nút "Mượn".
+     * Nếu người dùng chưa từng mượn sách này, tạo bản ghi mượn mới.
+     * Nếu đã mượn rồi, hiện thông báo.
+     * Tất cả thao tác với database được thực hiện ở background thread.
+     */
     @FXML
     private void handleBorrowButtonClick() {
         Document selectedDoc = currentBook;
@@ -217,6 +242,13 @@ public class BookDetailController {
         new Thread(borrowTask).start();
     }
 
+    /**
+     * Gán dữ liệu sách hiện tại và hiển thị thông tin sách lên giao diện.
+     * Bao gồm: tiêu đề, tác giả, mô tả, hình ảnh bìa, mã QR, đánh giá trung bình và các bình luận.
+     * Nếu là admin và chưa có QR code, sẽ tự động tạo mã mới.
+     *
+     * @param book đối tượng Document đại diện cho sách đang được xem
+     */
     public void setBookData(Document book) {
         this.currentBook = book;
         if (book == null) {
@@ -282,6 +314,11 @@ public class BookDetailController {
         new Thread(loadBookDetailsTask).start();
     }
 
+    /**
+     * Cập nhật điểm đánh giá trung bình của sách hiện tại trên giao diện.
+     * Được gọi sau khi có đánh giá mới.
+     * Thực hiện trong một task nền để lấy dữ liệu từ ReviewDAO.
+     */
     private void updateAvgRatingOnUI() {
         if (currentBook == null) return;
         Task<Double> calculateRatingTask = new Task<>() {
@@ -304,6 +341,13 @@ public class BookDetailController {
         new Thread(calculateRatingTask).start();
     }
 
+    /**
+     * Cập nhật văn bản hiển thị điểm đánh giá trung bình của sách.
+     * Nếu điểm đánh giá lớn hơn 0, hiển thị với định dạng một chữ số thập phân.
+     * Ngược lại, hiển thị "Chưa có đánh giá".
+     *
+     * @param avgRating Điểm đánh giá trung bình.
+     */
     private void updateAvgRatingText(double avgRating) {
         if (avgRating > 0) {
             avgRatingText.setText(String.format("%.1f", avgRating));
@@ -312,6 +356,12 @@ public class BookDetailController {
         }
     }
 
+    /**
+     * Hiển thị danh sách đánh giá và bình luận lên giao diện người dùng
+     * cho tài liệu hiện tại. Chỉ thêm đánh giá hoặc bình luận nếu ISBN khớp.
+     *
+     * @param reviews Danh sách các đánh giá cần hiển thị.
+     */
     private void loadReviewsOnUI(List<Review> reviews) {
         if (currentBook == null) return;
         commentsVBox.getChildren().clear();
@@ -332,12 +382,21 @@ public class BookDetailController {
         Platform.runLater(() -> commentsScrollPane.setVvalue(0));
     }
 
+    /**
+     * Đóng cửa sổ hiện tại khi người dùng nhấn nút "Đóng".
+     */
     @FXML
     private void handleCloseButtonClick() {
         Stage stage = (Stage) closeButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Thêm bình luận của người dùng vào giao diện.
+     *
+     * @param username Tên người dùng (hoặc định danh).
+     * @param comment  Nội dung bình luận.
+     */
     private void addCommentToUI(String username, String comment) {
         VBox commentBox = new VBox(5);
         commentBox.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;");
@@ -353,6 +412,12 @@ public class BookDetailController {
         Platform.runLater(() -> commentsScrollPane.setVvalue(0));
     }
 
+    /**
+     * Thêm đánh giá của người dùng vào giao diện.
+     *
+     * @param username Tên người dùng (hoặc định danh).
+     * @param rating   Số điểm đánh giá.
+     */
     private void addRatingToUI(String username, Integer rating) {
         VBox ratingBox = new VBox(5);
         ratingBox.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;");
@@ -367,6 +432,11 @@ public class BookDetailController {
         commentsVBox.getChildren().add(0, ratingBox);
     }
 
+    /**
+     * Xử lý sự kiện khi người dùng (admin) yêu cầu tạo lại mã QR cho sách.
+     * Gọi documentService để tạo lại mã QR, cập nhật hình ảnh mới vào giao diện.
+     * Hiển thị thông báo thành công hoặc lỗi tương ứng.
+     */
     @FXML
     private void handleRegenerateQRButtonClick() {
         if (currentBook == null || documentService == null) return;
@@ -401,6 +471,12 @@ public class BookDetailController {
         new Thread(qrTask).start();
     }
 
+    /**
+     * Tải ảnh mã QR từ đường dẫn đã lưu, nếu tệp tồn tại.
+     *
+     * @param qrCodePath Đường dẫn đến tệp ảnh mã QR.
+     * @return Ảnh mã QR, hoặc {@code null} nếu không tìm thấy.
+     */
     private Image loadQRCodeImageInBackground(String qrCodePath) {
         if (qrCodePath != null && !qrCodePath.isEmpty()) {
             File qrFile = new File(qrCodePath);
