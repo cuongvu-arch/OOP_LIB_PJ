@@ -4,21 +4,29 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import models.dao.BorrowRecordDAO;
 import models.dao.UserDAO;
 import models.data.DatabaseConnection;
 import models.entities.BorrowedBookInfo;
 import models.entities.User;
 import models.viewmodel.UserBorrowView;
+import utils.SceneController;
 
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LibrarianToUserController {
+
+
+    @FXML
+    private Button addUserButton;
+
 
     @FXML
     private TableView<UserBorrowView> tableView;
@@ -101,5 +109,9 @@ public class LibrarianToUserController {
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
+    }
+
+    public void addUser() {
+        SceneController.getInstance().switchCenterContent("/fxml/UserManager.fxml");
     }
 }

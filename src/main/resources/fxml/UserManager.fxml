@@ -1,30 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1"
-            fx:controller="Controller.UserFormController" prefWidth="400" prefHeight="200"
-            stylesheets="@../css/styles.css">
+<AnchorPane prefHeight="500" prefWidth="700" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.UserManagerController">
+
     <children>
-        <GridPane layoutX="30" layoutY="30" hgap="10" vgap="15">
-            <children>
-                <Label text="Họ và tên:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                <TextField fx:id="nameField" promptText="Nhập họ và tên"
-                           GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-            </children>
-        </GridPane>
+        <VBox layoutX="20.0" layoutY="20.0" spacing="15">
 
-        <HBox layoutX="100" layoutY="120" spacing="15">
-            <children>
-                <Button fx:id="saveButton" text="Lưu" styleClass="primary-button"/>
-                <Button fx:id="cancelButton" text="Hủy" styleClass="secondary-button"/>
-            </children>
-        </HBox>
+            <!-- Tiêu đề -->
+            <Label styleClass="title" text="Quản lý người dùng" />
+
+            <!-- Các trường nhập -->
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="120" />
+                    <ColumnConstraints minWidth="300" />
+                </columnConstraints>
+                <children>
+                    <Label text="Tên người dùng:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <TextField fx:id="nameField" promptText="Nhập tên người dùng" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <TextField fx:id="emailField" promptText="Nhập email" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                    <Label text="Số điện thoại:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <TextField fx:id="phoneField" promptText="Nhập số điện thoại" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                    <Label text="Mật khẩu:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <PasswordField fx:id="passwordField" promptText="Nhập mật khẩu" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                </children>
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
+            </GridPane>
+
+            <!-- Các nút -->
+            <HBox spacing="10">
+                <Button fx:id="searchButton" onMouseClicked="#handleSearchUser" styleClass="primary-button"  text="Tìm" />
+                <Button fx:id="addButton" onMouseClicked="#handleAddUser" styleClass="primary-button" text="Thêm người dùng" />
+                <Button fx:id="editButton" onMouseClicked="#handleEditUser" styleClass="secondary-button" text="Sửa thông tin" />
+                <Button fx:id="deleteButton" onMouseClicked="#handleDeleteUser" styleClass="danger-button" text="Xóa người dùng" />
+            </HBox>
+
+            <!-- Bảng người dùng -->
+            <TableView fx:id="userTable" prefHeight="250" prefWidth="650">
+                <columns>
+                    <TableColumn fx:id="nameColumn" prefWidth="200" text="Tên người dùng" />
+                    <TableColumn fx:id="emailColumn" prefWidth="250" text="Email" />
+                    <TableColumn fx:id="phoneColumn" prefWidth="200" text="Số điện thoại" />
+                </columns>
+            </TableView>
+
+            <!-- Thông báo -->
+            <Label fx:id="statusLabel" style="-fx-text-fill: #2ecc71;" text="" />
+        </VBox>
     </children>
 </AnchorPane>

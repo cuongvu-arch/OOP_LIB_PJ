@@ -193,4 +193,9 @@ public class UserService {
             closeQuietly(conn);
         }
     }
+
+    /**
+     * Phương thức để thêm người dùng trong admin func.
+     */
+
 }
