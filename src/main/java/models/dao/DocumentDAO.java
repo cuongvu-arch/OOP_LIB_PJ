@@ -253,27 +253,54 @@ public class DocumentDAO {
      * @return true nếu xoá thành công, false nếu thất bại.
      */
     public boolean deleteBook(String isbn) {
-        // Không cần thay đổi vì không thao tác với cột authors
         if (isbn == null || isbn.trim().isEmpty()) {
             System.err.println("Lỗi khi xóa sách: ISBN không hợp lệ.");
             return false;
         }
 
-        String sql = "DELETE FROM books WHERE isbn = ?";
+        String deleteBorrowRecords = "DELETE FROM borrow_records WHERE isbn = ?";
+        String deleteReviews = "DELETE FROM review WHERE document_isbn = ?";
+        String deleteBook = "DELETE FROM books WHERE isbn = ?";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            assert conn != null;
+            conn.setAutoCommit(false); // Bắt đầu transaction
 
-            stmt.setString(1, isbn);
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
+            try (PreparedStatement stmt1 = conn.prepareStatement(deleteBorrowRecords);
+                 PreparedStatement stmt2 = conn.prepareStatement(deleteReviews);
+                 PreparedStatement stmt3 = conn.prepareStatement(deleteBook)) {
+
+                // Xóa borrow_records trước
+                stmt1.setString(1, isbn);
+                stmt1.executeUpdate();
+
+                // Xóa reviews liên quan đến sách
+                stmt2.setString(1, isbn);
+                stmt2.executeUpdate();
+
+                // Cuối cùng xóa sách
+                stmt3.setString(1, isbn);
+                int rowsAffected = stmt3.executeUpdate();
+
+                conn.commit();
+                return rowsAffected > 0;
+
+            } catch (SQLException e) {
+                conn.rollback();
+                System.err.println("Lỗi khi xóa sách (ISBN: " + isbn + "): " + e.getMessage());
+                e.printStackTrace();
+                return false;
+            } finally {
+                conn.setAutoCommit(true);
+            }
 
         } catch (SQLException e) {
-            System.err.println("Lỗi khi xóa sách (ISBN: " + isbn + "): " + e.getMessage());
+            System.err.println("Lỗi kết nối cơ sở dữ liệu khi xóa sách.");
             e.printStackTrace();
             return false;
         }
     }
+
 
     /**
      * Kiểm tra một sách có tồn tại trong cơ sở dữ liệu theo ISBN.
