@@ -4,15 +4,28 @@ public class Document {
 
     private String isbn;
     private String title;
-
-
-
     private String[] authors;
     private String publisher;
+    private String thumbnailUrl;
+    private double avgRating;
+    private int quantity;
+    private String qrCodePath;
+    private String googleBooksUrl;
+    private String description;
+    private String publishedDate;
 
-    public Document() {
-
+    public Document(String isbn, String title, String[] authors, String publisher, String publishedDate, String description, String thumbnailUrl, int quantity, String qrCodePath) {
+        this.isbn = isbn;
+        this.title = title;
+        this.authors = authors;
+        this.publisher = publisher;
+        this.publishedDate = publishedDate;
+        this.description = description;
+        this.thumbnailUrl = thumbnailUrl;
+        this.quantity = quantity;
+        this.qrCodePath = qrCodePath;
     }
+
 
 
     public void setPublisher(String publisher) {
@@ -23,23 +36,18 @@ public class Document {
         this.publishedDate = publishedDate;
     }
 
-    private String publishedDate;
+
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    private String description;
+
 
     public void setThumbnailUrl(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
     }
 
-    private String thumbnailUrl;
-    private double avgRating;
-    private int quantity;
-    private String qrCodePath;
-    private String googleBooksUrl;
 
 
     public Document(String isbn, String title, String[] authors, String publisher, String publishedDate, String description, String thumbnailUrl, String qrCodePath) {

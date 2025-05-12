@@ -358,7 +358,7 @@ public class DocumentDAO {
         List<Document> books = new ArrayList<>();
         int offset = (page - 1) * booksPerPage;
 
-        String sql = "SELECT isbn, title, authors, publisher, publish_date, description, thumbnail_url, qr_code_path " +
+        String sql = "SELECT isbn, title, authors, publisher, publish_date, description, thumbnail_url, total_quantity, qr_code_path " +
                 "FROM books LIMIT ? OFFSET ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -381,6 +381,14 @@ public class DocumentDAO {
                 }
 
                 String qrCodePath = rs.getString("qr_code_path");
+                String totalQuantityStr = rs.getString("total_quantity");
+                int totalQuantity = 0;
+                try {
+                    totalQuantity = Integer.parseInt(totalQuantityStr);
+                } catch (NumberFormatException e) {
+                    System.err.println("Error parsing total_quantity to integer for ISBN: " + rs.getString("isbn"));
+                    // Gán giá trị mặc định hoặc xử lý lỗi khác nếu cần
+                }
 
                 Document book = new Document(
                         rs.getString("isbn"),
@@ -390,6 +398,7 @@ public class DocumentDAO {
                         rs.getString("publish_date"),
                         rs.getString("description"),
                         rs.getString("thumbnail_url"),
+                        totalQuantity,
                         qrCodePath
                 );
                 books.add(book);

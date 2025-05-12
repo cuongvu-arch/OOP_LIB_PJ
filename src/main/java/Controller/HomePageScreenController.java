@@ -189,6 +189,7 @@ public class HomePageScreenController {
      * @param book sách cần hiển thị chi tiết
      */
     private void openBookDetailWindow(Document book) {
+        System.out.println("openBookDetailWindow() được gọi với book: " + book);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/BookDetailScreen.fxml"));
             Parent root = loader.load();

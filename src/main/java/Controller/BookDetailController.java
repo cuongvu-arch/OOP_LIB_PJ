@@ -300,6 +300,7 @@ public class BookDetailController {
                     }
                     updateAvgRatingText(avgRating);
                     loadReviewsOnUI(reviews);
+                    System.out.println("Book Title: " + book.getTitle() + ", Quantity: " + book.getQuantity());
                     borrowButton.setDisable(book.getQuantity() == 0);
                 });
                 return null;
