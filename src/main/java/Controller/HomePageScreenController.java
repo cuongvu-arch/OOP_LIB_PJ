@@ -201,7 +201,7 @@ public class HomePageScreenController {
             detailStage.setTitle("Chi tiết sách: " + (book.getTitle() != null ? book.getTitle() : "Không có tiêu đề"));
             detailStage.setScene(new Scene(root));
             detailStage.initModality(Modality.APPLICATION_MODAL);
-            detailStage.sizeToScene();
+            detailStage.setMaximized(true); // ✅ Full màn hình
             detailStage.setResizable(true);
             detailStage.showAndWait();
 
@@ -211,6 +211,7 @@ public class HomePageScreenController {
             alert.showAndWait();
         }
     }
+
 
     /**
      * Cập nhật giao diện phân trang: hiển thị số trang và bật/tắt nút điều hướng.

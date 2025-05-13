@@ -397,15 +397,6 @@ public class BookDetailController {
     }
 
     /**
-     * Đóng cửa sổ hiện tại khi người dùng nhấn nút "Đóng".
-     */
-    @FXML
-    private void handleCloseButtonClick() {
-        Stage stage = (Stage) closeButton.getScene().getWindow();
-        stage.close();
-    }
-
-    /**
      * Thêm bình luận của người dùng vào giao diện.
      *
      * @param username Tên người dùng (hoặc định danh).
