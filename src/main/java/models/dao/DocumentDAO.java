@@ -310,12 +310,15 @@ public class DocumentDAO {
      * @throws SQLException nếu xảy ra lỗi truy vấn.
      */
     public boolean bookExists(String isbn) throws SQLException {
-        String sql = "SELECT 1 FROM books WHERE isbn = ? LIMIT 1";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, isbn);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next();
+        String normalizedIsbn = isbn.replaceAll("-", ""); // loại bỏ dấu '-'
+        String sql = "SELECT 1 FROM books WHERE REPLACE(isbn, '-', '') = ? LIMIT 1";
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            assert conn != null;
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, normalizedIsbn);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    return rs.next();
+                }
             }
         }
     }

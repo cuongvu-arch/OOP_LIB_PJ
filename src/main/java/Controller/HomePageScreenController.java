@@ -202,7 +202,6 @@ public class HomePageScreenController {
             detailStage.setScene(new Scene(root));
             detailStage.initModality(Modality.APPLICATION_MODAL);
             detailStage.setMaximized(true); // ✅ Full màn hình
-            detailStage.setResizable(true);
             detailStage.showAndWait();
 
         } catch (IOException e) {
