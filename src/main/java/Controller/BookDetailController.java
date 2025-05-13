@@ -217,17 +217,27 @@ public class BookDetailController {
             protected Void call() throws Exception {
                 try (Connection conn = DatabaseConnection.getConnection()) {
                     BorrowRecordDAO borrowRecordDAO = new BorrowRecordDAO();
-                    if (borrowRecordDAO.isBorrowed(conn, currentUser.getId(), selectedDoc.getIsbn())) {
-                        Platform.runLater(() ->
-                                AlertUtils.showAlert("Thông báo", "Bạn đã mượn sách này rồi", Alert.AlertType.INFORMATION)
-                        );
+
+                    boolean isCurrentlyBorrowing = borrowRecordDAO.isCurrentlyBorrowing(
+                            conn, currentUser.getId(), selectedDoc.getIsbn()
+                    );
+
+                    if (isCurrentlyBorrowing) {
+                        Platform.runLater(() -> AlertUtils.showAlert(
+                                "Thông báo", "Bạn đang mượn sách này và chưa trả.", Alert.AlertType.INFORMATION
+                        ));
                     } else {
-                        BorrowRecord borrowRecord = new BorrowRecord(currentUser.getId(), selectedDoc.getIsbn(),
-                                new java.sql.Date(new Date().getTime()), null, "Đang mượn");
-                        borrowRecordDAO.add(conn, borrowRecord);
-                        Platform.runLater(() ->
-                                AlertUtils.showAlert("Thông báo", "Đã mượn sách: " + selectedDoc.getTitle(), Alert.AlertType.INFORMATION)
+                        BorrowRecord borrowRecord = new BorrowRecord(
+                                currentUser.getId(),
+                                selectedDoc.getIsbn(),
+                                new java.sql.Date(new Date().getTime()),
+                                null,
+                                "Đang mượn"
                         );
+                        borrowRecordDAO.add(conn, borrowRecord);
+                        Platform.runLater(() -> AlertUtils.showAlert(
+                                "Thông báo", "Đã mượn sách: " + selectedDoc.getTitle(), Alert.AlertType.INFORMATION
+                        ));
                     }
                 }
                 return null;
@@ -236,11 +246,14 @@ public class BookDetailController {
             @Override
             protected void failed() {
                 getException().printStackTrace();
-                Platform.runLater(() -> AlertUtils.showAlert("Lỗi", "Không thể thực hiện mượn sách.", Alert.AlertType.ERROR));
+                Platform.runLater(() -> AlertUtils.showAlert(
+                        "Lỗi", "Không thể thực hiện mượn sách.", Alert.AlertType.ERROR
+                ));
             }
         };
         new Thread(borrowTask).start();
     }
+
 
     /**
      * Gán dữ liệu sách hiện tại và hiển thị thông tin sách lên giao diện.

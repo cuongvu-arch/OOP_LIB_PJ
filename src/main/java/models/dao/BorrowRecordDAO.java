@@ -11,6 +11,16 @@ import java.util.List;
 
 public class BorrowRecordDAO {
 
+    public boolean isCurrentlyBorrowing(Connection conn, int userId, String isbn) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM borrow_records WHERE user_id = ? AND isbn = ? AND return_date IS NULL";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            stmt.setString(2, isbn);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        }
+    }
+
     /**
      * Trả về danh sách tất cả bản ghi mượn sách trong cơ sở dữ liệu.
      *
