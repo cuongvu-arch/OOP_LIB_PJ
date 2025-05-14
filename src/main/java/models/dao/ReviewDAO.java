@@ -282,4 +282,18 @@ public class ReviewDAO {
         return result;
     }
 
+    public static void addOrUpdateReview(Review review) {
+        LocalDateTime existingCreatedAt = getCreatedAtFromDatabase(review.getUserId(), review.getDocumentIsbn());
+        if (existingCreatedAt != null) {
+            // Cập nhật review
+            updateReview(review);
+        } else {
+            // Thêm review mới
+            addReview(review);
+        }
+
+        // Đồng bộ lại bộ nhớ sau khi thay đổi
+        loadReviewData();
+    }
+
 }
