@@ -3,6 +3,9 @@ package Controller;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,16 +20,17 @@ import models.entities.Document;
 import models.entities.Review;
 import models.entities.User;
 import models.services.DocumentService;
-import utils.AlertUtils;
-import utils.BookImageLoader;
-import utils.SessionManager;
+import utils.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Controller cho giao diện chi tiết sách trong ứng dụng JavaFX.
@@ -73,6 +77,10 @@ public class BookDetailController {
 
     private Document currentBook;
     private DocumentService documentService;
+    private ReviewDAO reviewDAO = new ReviewDAO(); // Khởi tạo DAO
+    private Connection conn = DatabaseConnection.getConnection();
+    private List<Review> allReviews = reviewDAO.getAllReviews(conn);
+
 
     /**
      * Khởi tạo controller, tải dữ liệu cần thiết như danh sách đánh giá và cấu hình quyền admin.
@@ -110,6 +118,29 @@ public class BookDetailController {
         new Thread(initTask).start();
     }
 
+    @FXML
+    private void handleViewAllComments() {
+        if (currentBook == null) return;
+
+        // Truyền dữ liệu qua holder
+        AllCommentsDataHolder.setCurrentBook(currentBook);
+        AllCommentsDataHolder.setAllReviews(allReviews);
+
+        // Mở giao diện mới bằng Stage
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AllCommentsView.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Tất cả bình luận");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * Xử lý khi người dùng gửi bình luận mới.
      * Bình luận sẽ được lưu trữ thông qua ReviewDAO và hiển thị lên giao diện.
@@ -136,9 +167,15 @@ public class BookDetailController {
             Task<Void> saveCommentTask = new Task<>() {
                 @Override
                 protected Void call() throws Exception {
-                    ReviewDAO.addReview(review);
+                    ReviewDAO.addReview(review); // Lưu vào DB
                     Platform.runLater(() -> {
-                        addCommentToUI(currentUser.getUsername(), commentText);
+                        allReviews.add(review); // Cập nhật vào danh sách tất cả comment
+
+                        // Nếu số comment hiển thị trong VBox (bên trong ScrollPane) < 3 thì thêm vào UI
+                        if (commentsVBox.getChildren().size() < 3) {
+                            addCommentToUI(currentUser.getUsername(), commentText);
+                        }
+
                         newCommentTextArea.clear();
                     });
                     return null;
@@ -370,29 +407,31 @@ public class BookDetailController {
         }
     }
 
-    /**
-     * Hiển thị danh sách đánh giá và bình luận lên giao diện người dùng
-     * cho tài liệu hiện tại. Chỉ thêm đánh giá hoặc bình luận nếu ISBN khớp.
-     *
-     * @param reviews Danh sách các đánh giá cần hiển thị.
-     */
     private void loadReviewsOnUI(List<Review> reviews) {
         if (currentBook == null) return;
         commentsVBox.getChildren().clear();
 
+        List<Review> matchingComments = new ArrayList<>();
+
+        // Lọc các review có comment hợp lệ và ISBN khớp
         for (Review review : reviews) {
-            if (review.getDocumentIsbn().equals(currentBook.getIsbn())) {
-                String username = "Người dùng #" + review.getUserId();
-                Platform.runLater(() -> {
-                    if (review.getRating() > 0) {
-                        addRatingToUI(username, review.getRating());
-                    }
-                    if (review.getComment() != null && !review.getComment().isBlank()) {
-                        addCommentToUI(username, review.getComment());
-                    }
-                });
+            if (review.getDocumentIsbn().equals(currentBook.getIsbn()) &&
+                    review.getComment() != null &&
+                    !review.getComment().isBlank()) {
+                matchingComments.add(review);
             }
         }
+
+        // Chỉ lấy tối đa 3 comment
+        List<Review> top3Comments = matchingComments.stream()
+                .limit(3)
+                .collect(Collectors.toList());
+
+        for (Review review : top3Comments) {
+            String username = "Người dùng #" + review.getUserId();
+            Platform.runLater(() -> addCommentToUI(username, review.getComment()));
+        }
+
         Platform.runLater(() -> commentsScrollPane.setVvalue(0));
     }
 
