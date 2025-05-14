@@ -16,6 +16,7 @@ import models.dao.ReviewDAO;
 import models.viewmodel.BookRatingView;
 import models.entities.Document;
 import Controller.BookDetailController;
+import utils.BookDetailHelper;
 import utils.SceneController;
 
 import java.io.IOException;
@@ -67,6 +68,19 @@ public class TablePartController {
         });
 
         documentTableView.setItems(FXCollections.observableArrayList());
+
+        //  BẮT SỰ KIỆN CLICK
+        documentTableView.setRowFactory(tv -> {
+            TableRow<BookRatingView> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getClickCount() == 2) {
+                    BookRatingView vm = row.getItem();
+                    Document doc = vm.getDocument();
+                    BookDetailHelper.openBookDetailWindow(doc);
+                }
+            });
+            return row;
+        });
     }
 
 

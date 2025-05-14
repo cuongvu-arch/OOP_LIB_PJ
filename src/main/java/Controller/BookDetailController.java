@@ -70,7 +70,7 @@ public class BookDetailController {
     private Label star1, star2, star3, star4, star5;
 
     private Document currentBook;
-    private DocumentService documentService;
+    private DocumentService documentService = new DocumentService();
     private ReviewDAO reviewDAO = new ReviewDAO(); // Khởi tạo DAO
     private Connection conn = DatabaseConnection.getConnection();
     private List<Review> allReviews = reviewDAO.getAllReviews(conn);
