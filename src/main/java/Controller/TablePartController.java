@@ -1,53 +1,67 @@
 package Controller;
 
-import models.dao.ReviewDAO;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.stage.Stage;
+import models.dao.ReviewDAO;
 import models.viewmodel.BookRatingView;
 import models.entities.Document;
+import Controller.BookDetailController;
+import utils.SceneController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TablePartController {
     @FXML
-    private TableView<BookRatingView> documentTableView; // TableView để hiển thị danh sách tài liệu
+    private TableView<BookRatingView> documentTableView;
     @FXML
     private TableColumn<BookRatingView, BookRatingView> documentInfoColumn;
 
-    /**
-     * Phương thức khởi tạo controller.
-     * Thiết lập cấu trúc bảng và nạp dữ liệu top 10 tài liệu được đánh giá cao nhất.
-     */
     public void initialize() {
         setupDocumentTable();
         loadTopRatedBooks();
     }
 
-
-    /**
-     * Thiết lập cấu hình cho TableView:
-     * - Gán kiểu dữ liệu hiển thị cho cột
-     * - Thiết lập cách hiển thị nội dung mỗi dòng bằng cách override TableCell
-     */
     private void setupDocumentTable() {
         documentInfoColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue()));
 
         documentInfoColumn.setCellFactory(column -> new TableCell<>() {
+            private final ImageView imageView = new ImageView();
+            private final Text text = new Text();
+            private final HBox hbox = new HBox(10, imageView, text);
+
+            {
+                hbox.setStyle("-fx-padding: 5px; -fx-alignment: center-left;");
+                imageView.setFitHeight(60);
+                imageView.setFitWidth(40);
+                imageView.setPreserveRatio(true);
+            }
+
             @Override
             protected void updateItem(BookRatingView vm, boolean empty) {
                 super.updateItem(vm, empty);
                 if (empty || vm == null) {
-                    setText(null);
                     setGraphic(null);
+                    setText(null);
                 } else {
                     int index = getIndex() + 1;
-                    String display = index + ". " + vm.titleProperty().get() + "\nISBN: " + vm.isbnProperty().get();
-                    setText(display);
-                    setGraphic(null);
+                    text.setText(index + ". " + vm.titleProperty().get() + "\nISBN: " + vm.isbnProperty().get());
+
+                    Image image = vm.getThumbnailImage();  // <-- Lấy ảnh từ phương thức mới
+                    imageView.setImage(image);
+
+                    setGraphic(hbox);
                 }
             }
         });
@@ -55,22 +69,15 @@ public class TablePartController {
         documentTableView.setItems(FXCollections.observableArrayList());
     }
 
-    /**
-     * Tải dữ liệu từ cơ sở dữ liệu và hiển thị danh sách các tài liệu có đánh giá trung bình cao nhất.
-     * Sử dụng ReviewDAO để truy vấn top 10 tài liệu.
-     * Dữ liệu được chuyển sang dạng ViewModel để phù hợp với TableView.
-     */
+
     private void loadTopRatedBooks() {
-        // Lấy dữ liệu thực từ cơ sở dữ liệu
         ReviewDAO reviewDAO = new ReviewDAO();
         List<Document> topDocuments = reviewDAO.getTopRatedDocuments(10);
 
-        // Chuyển đổi các Document thành BookRatingView (ViewModel) để hiển thị trong TableView
         List<BookRatingView> viewModels = topDocuments.stream()
                 .map(BookRatingView::new)
                 .collect(Collectors.toList());
 
-        // Cập nhật dữ liệu vào TableView
         documentTableView.setItems(FXCollections.observableArrayList(viewModels));
     }
 }
