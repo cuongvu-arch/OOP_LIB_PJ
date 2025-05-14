@@ -250,7 +250,7 @@ public class ReviewDAO {
         List<Document> result = new ArrayList<>();
 
         String sql = """
-                SELECT d.isbn, d.title, AVG(r.rating) AS avg_rating
+                SELECT d.isbn, d.title, d.thumbnail_url, AVG(r.rating) AS avg_rating
                 FROM books d
                 JOIN review r ON d.isbn = r.document_isbn
                 GROUP BY d.isbn, d.title
@@ -268,9 +268,11 @@ public class ReviewDAO {
             while (rs.next()) {
                 String isbn = rs.getString("isbn");
                 String title = rs.getString("title");
+                String thumbnailUrl = rs.getString("thumbnail_url");
                 double avgRating = rs.getDouble("avg_rating");
 
                 Document doc = new Document(isbn, title);
+                doc.setThumbnailUrl(thumbnailUrl);
                 doc.setAvgRating(avgRating);
                 result.add(doc);
             }
