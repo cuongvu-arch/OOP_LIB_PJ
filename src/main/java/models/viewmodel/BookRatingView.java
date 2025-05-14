@@ -30,7 +30,7 @@ public class BookRatingView {
 
     public Image getThumbnailImage() {
         String url = thumbnailUrl.get();
-        
+
         if (url == null || url.isEmpty()) {
             System.out.println("Thumbnail URL is null or empty");
             return null;
