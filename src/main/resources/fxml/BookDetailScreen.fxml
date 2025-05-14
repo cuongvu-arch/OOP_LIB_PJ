@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
@@ -82,8 +81,16 @@
                                         <VBox spacing="8.0">
                                             <children>
                                                 <Label style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #333;" text="Đánh giá của bạn:" />
-                                                <ChoiceBox fx:id="ratingChoiceBox" prefWidth="100" />
-                                                <Button fx:id="submitRatingButton" onAction="#handleSubmitRating" style="-fx-background-color: #4DB6AC; -fx-text-fill: white; -fx-font-weight: bold;" text="Gửi đánh giá" />
+                                                <HBox fx:id="starRatingBox" alignment="CENTER_LEFT" spacing="5.0">
+                                                    <children>
+                                                        <Label fx:id="star1" onMouseClicked="#handleStar1Click" style="-fx-font-size: 30; -fx-cursor: hand;" text="☆" />
+                                                        <Label fx:id="star2" onMouseClicked="#handleStar2Click" style="-fx-font-size: 30; -fx-cursor: hand;" text="☆" />
+                                                        <Label fx:id="star3" onMouseClicked="#handleStar3Click" style="-fx-font-size: 30; -fx-cursor: hand;" text="☆" />
+                                                        <Label fx:id="star4" onMouseClicked="#handleStar4Click" style="-fx-font-size: 30; -fx-cursor: hand;" text="☆" />
+                                                        <Label fx:id="star5" onMouseClicked="#handleStar5Click" style="-fx-font-size: 30; -fx-cursor: hand;" text="☆" />
+                                                    </children>
+                                                </HBox>
+
                                             </children>
                                         </VBox>
                                     </children>
