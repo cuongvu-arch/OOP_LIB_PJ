@@ -27,9 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -40,8 +38,6 @@ import java.util.stream.Collectors;
 public class BookDetailController {
     @FXML
     private Button regenerateQRButton;
-    @FXML
-    private Button submitRatingButton;
     @FXML
     private ImageView qrCodeImageView;
     @FXML
@@ -63,23 +59,23 @@ public class BookDetailController {
     @FXML
     private TextArea descriptionTextArea;
     @FXML
-    private Button closeButton;
-    @FXML
     private VBox commentsVBox;
     @FXML
     private TextArea newCommentTextArea;
     @FXML
     private ScrollPane commentsScrollPane;
     @FXML
-    private ChoiceBox<Integer> ratingChoiceBox;
-    @FXML
     private Button borrowButton;
+    @FXML
+    private Label star1, star2, star3, star4, star5;
 
     private Document currentBook;
     private DocumentService documentService;
     private ReviewDAO reviewDAO = new ReviewDAO(); // Khởi tạo DAO
     private Connection conn = DatabaseConnection.getConnection();
     private List<Review> allReviews = reviewDAO.getAllReviews(conn);
+    private List<Label> stars;
+    private int currentRating = 0;
 
 
     /**
@@ -87,6 +83,8 @@ public class BookDetailController {
      * Thực hiện trên thread nền để tránh chặn giao diện.
      */
     public void initialize() {
+        stars = Arrays.asList(star1, star2, star3, star4, star5);
+
         Task<Void> initTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
@@ -100,8 +98,6 @@ public class BookDetailController {
                 boolean isAdmin = currentUser != null && "admin".equalsIgnoreCase(currentUser.getRole());
 
                 Platform.runLater(() -> {
-                    ratingChoiceBox.getItems().addAll(1, 2, 3, 4, 5);
-                    ratingChoiceBox.setValue(5);
                     regenerateQRButton.setDisable(!isAdmin);
                     regenerateQRButton.setVisible(isAdmin);
                     qrCodeImageView.setVisible(true);
@@ -118,123 +114,152 @@ public class BookDetailController {
         new Thread(initTask).start();
     }
 
-    @FXML
-    private void handleViewAllComments() {
+
+    private void updateStarDisplay(int rating) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Xác nhận đánh giá");
+        alert.setHeaderText(null);
+        alert.setContentText("Bạn có chắc muốn đánh giá " + rating + " sao không?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            for (int i = 0; i < stars.size(); i++) {
+                stars.get(i).setText(i < rating ? "★" : "☆");
+            }
+            currentRating = rating;
+            saveRatingToDatabase(rating);
+        }
+    }
+
+    private void saveRatingToDatabase(int rating) {
+        User currentUser = SessionManager.getCurrentUser();
+        if (currentUser == null || currentBook == null) return;
+
+        Review newReview = new Review(
+                currentUser.getId(),
+                currentBook.getIsbn(),
+                rating,
+                "", // comment để trống, chỉ update rating
+                LocalDateTime.now()
+        );
+
+        Task<Void> saveTask = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                ReviewDAO.addOrUpdateReview(newReview);
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                updateAvgRatingOnUI();
+            }
+
+            @Override
+            protected void failed() {
+                getException().printStackTrace();
+                Platform.runLater(() -> AlertUtils.showAlert("Lỗi", "Không thể lưu đánh giá.", Alert.AlertType.ERROR));
+            }
+        };
+
+        new Thread(saveTask).start();
+    }
+
+    @FXML private void handleStar1Click() { updateStarDisplay(1); }
+    @FXML private void handleStar2Click() { updateStarDisplay(2); }
+    @FXML private void handleStar3Click() { updateStarDisplay(3); }
+    @FXML private void handleStar4Click() { updateStarDisplay(4); }
+    @FXML private void handleStar5Click() { updateStarDisplay(5); }
+
+    /**
+     * Cập nhật điểm đánh giá trung bình của sách hiện tại trên giao diện.
+     * Được gọi sau khi có đánh giá mới.
+     * Thực hiện trong một task nền để lấy dữ liệu từ ReviewDAO.
+     */
+    private void updateAvgRatingOnUI() {
         if (currentBook == null) return;
-
-        // Truyền dữ liệu qua holder
-        AllCommentsDataHolder.setCurrentBook(currentBook);
-        AllCommentsDataHolder.setAllReviews(allReviews);
-
-        // Mở giao diện mới bằng Stage
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AllCommentsView.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = new Stage();
-            stage.setTitle("Tất cả bình luận");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * Xử lý khi người dùng gửi bình luận mới.
-     * Bình luận sẽ được lưu trữ thông qua ReviewDAO và hiển thị lên giao diện.
-     * Yêu cầu người dùng đã đăng nhập và sách hiện tại không null.
-     */
-    @FXML
-    private void handleSubmitComment() {
-        String commentText = newCommentTextArea.getText().trim();
-        if (!commentText.isEmpty() && currentBook != null) {
-            User currentUser = SessionManager.getCurrentUser();
-            if (currentUser == null) {
-                System.out.println("Người dùng chưa đăng nhập.");
-                return;
+        Task<Double> calculateRatingTask = new Task<>() {
+            @Override
+            protected Double call() throws Exception {
+                return ReviewDAO.calculateAverageRating(currentBook.getIsbn());
             }
 
-            Review review = new Review(
-                    currentUser.getId(),
-                    currentBook.getIsbn(),
-                    0,  // Không có rating trong comment
-                    commentText,
-                    LocalDateTime.now()
-            );
+            @Override
+            protected void succeeded() {
+                updateAvgRatingText(getValue());
+            }
 
-            Task<Void> saveCommentTask = new Task<>() {
-                @Override
-                protected Void call() throws Exception {
-                    ReviewDAO.addReview(review); // Lưu vào DB
-                    Platform.runLater(() -> {
-                        allReviews.add(review); // Cập nhật vào danh sách tất cả comment
-
-                        // Nếu số comment hiển thị trong VBox (bên trong ScrollPane) < 3 thì thêm vào UI
-                        if (commentsVBox.getChildren().size() < 3) {
-                            addCommentToUI(currentUser.getUsername(), commentText);
-                        }
-
-                        newCommentTextArea.clear();
-                    });
-                    return null;
-                }
-
-                @Override
-                protected void failed() {
-                    getException().printStackTrace();
-                    Platform.runLater(() -> AlertUtils.showAlert("Lỗi", "Không thể gửi bình luận.", Alert.AlertType.ERROR));
-                }
-            };
-            new Thread(saveCommentTask).start();
-        }
+            @Override
+            protected void failed() {
+                getException().printStackTrace();
+                Platform.runLater(() -> avgRatingText.setText("Lỗi tải"));
+            }
+        };
+        new Thread(calculateRatingTask).start();
     }
 
     /**
-     * Xử lý khi người dùng gửi đánh giá.
-     * Đánh giá được lưu vào DAO và cập nhật lại giao diện với đánh giá mới và điểm trung bình mới.
-     * Yêu cầu người dùng đã đăng nhập và sách hiện tại không null.
+     * Cập nhật văn bản hiển thị điểm đánh giá trung bình của sách.
+     * Nếu điểm đánh giá lớn hơn 0, hiển thị với định dạng một chữ số thập phân.
+     * Ngược lại, hiển thị "Chưa có đánh giá".
+     *
+     * @param avgRating Điểm đánh giá trung bình.
      */
-    @FXML
-    private void handleSubmitRating() {
-        Integer rating = ratingChoiceBox.getValue();
-        if (rating != null && currentBook != null) {
-            User currentUser = SessionManager.getCurrentUser();
-            if (currentUser == null) {
-                System.out.println("Người dùng chưa đăng nhập.");
-                return;
-            }
-
-            String commentText = "Đánh giá: " + rating.toString();
-
-            Review review = new Review(
-                    currentUser.getId(),
-                    currentBook.getIsbn(),
-                    rating,
-                    commentText,
-                    LocalDateTime.now()
-            );
-
-            Task<Void> saveRatingTask = new Task<>() {
-                @Override
-                protected Void call() throws Exception {
-                    ReviewDAO.addReview(review);
-                    Platform.runLater(() -> {
-                        addRatingToUI(currentUser.getUsername(), rating);
-                        updateAvgRatingOnUI(); // Update average rating after submitting a new rating
-                    });
-                    return null;
-                }
-
-                @Override
-                protected void failed() {
-                    getException().printStackTrace();
-                    Platform.runLater(() -> AlertUtils.showAlert("Lỗi", "Không thể gửi đánh giá.", Alert.AlertType.ERROR));
-                }
-            };
-            new Thread(saveRatingTask).start();
+    private void updateAvgRatingText(double avgRating) {
+        if (avgRating > 0) {
+            avgRatingText.setText(String.format("%.1f ★", avgRating));
+        } else {
+            avgRatingText.setText("Chưa có đánh giá");
         }
+    }
+
+    private void loadReviewsOnUI(List<Review> reviews) {
+        if (currentBook == null) return;
+        commentsVBox.getChildren().clear();
+
+        List<Review> matchingComments = new ArrayList<>();
+
+        // Lọc các review có comment hợp lệ và ISBN khớp
+        for (Review review : reviews) {
+            if (review.getDocumentIsbn().equals(currentBook.getIsbn()) &&
+                    review.getComment() != null &&
+                    !review.getComment().isBlank()) {
+                matchingComments.add(review);
+            }
+        }
+
+        // Chỉ lấy tối đa 3 comment
+        List<Review> top3Comments = matchingComments.stream()
+                .limit(3)
+                .collect(Collectors.toList());
+
+        for (Review review : top3Comments) {
+            String username = "Người dùng #" + review.getUserId();
+            Platform.runLater(() -> addCommentToUI(username, review.getComment()));
+        }
+
+        Platform.runLater(() -> commentsScrollPane.setVvalue(0));
+    }
+
+    /**
+     * Thêm bình luận của người dùng vào giao diện.
+     *
+     * @param username Tên người dùng (hoặc định danh).
+     * @param comment  Nội dung bình luận.
+     */
+    private void addCommentToUI(String username, String comment) {
+        VBox commentBox = new VBox(5);
+        commentBox.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;");
+
+        Label userLabel = new Label(username);
+        userLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #333;");
+
+        Text commentText = new Text(comment);
+        commentText.setWrappingWidth(commentsScrollPane.getWidth() - 30);
+
+        commentBox.getChildren().addAll(userLabel, commentText);
+        commentsVBox.getChildren().add(0, commentBox);
+        Platform.runLater(() -> commentsScrollPane.setVvalue(0));
     }
 
     /**
@@ -291,6 +316,77 @@ public class BookDetailController {
         new Thread(borrowTask).start();
     }
 
+    @FXML
+    private void handleViewAllComments() {
+        if (currentBook == null) return;
+
+        // Truyền dữ liệu qua holder
+        AllCommentsDataHolder.setCurrentBook(currentBook);
+        AllCommentsDataHolder.setAllReviews(allReviews);
+
+        // Mở giao diện mới bằng Stage
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AllCommentsView.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Tất cả bình luận");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Xử lý khi người dùng gửi bình luận mới.
+     * Bình luận sẽ được lưu trữ thông qua ReviewDAO và hiển thị lên giao diện.
+     * Yêu cầu người dùng đã đăng nhập và sách hiện tại không null.
+     */
+    @FXML
+    private void handleSubmitComment() {
+        String commentText = newCommentTextArea.getText().trim();
+        if (!commentText.isEmpty() && currentBook != null) {
+            User currentUser = SessionManager.getCurrentUser();
+            if (currentUser == null) {
+                System.out.println("Người dùng chưa đăng nhập.");
+                return;
+            }
+
+            Review review = new Review(
+                    currentUser.getId(),
+                    currentBook.getIsbn(),
+                    0,  // Không có rating trong comment
+                    commentText,
+                    LocalDateTime.now()
+            );
+
+            Task<Void> saveCommentTask = new Task<>() {
+                @Override
+                protected Void call() throws Exception {
+                    ReviewDAO.addReview(review); // Lưu vào DB
+                    Platform.runLater(() -> {
+                        allReviews.add(review); // Cập nhật vào danh sách tất cả comment
+
+                        // Nếu số comment hiển thị trong VBox (bên trong ScrollPane) < 3 thì thêm vào UI
+                        if (commentsVBox.getChildren().size() < 3) {
+                            addCommentToUI(currentUser.getUsername(), commentText);
+                        }
+
+                        newCommentTextArea.clear();
+                    });
+                    return null;
+                }
+
+                @Override
+                protected void failed() {
+                    getException().printStackTrace();
+                    Platform.runLater(() -> AlertUtils.showAlert("Lỗi", "Không thể gửi bình luận.", Alert.AlertType.ERROR));
+                }
+            };
+            new Thread(saveCommentTask).start();
+        }
+    }
 
     /**
      * Gán dữ liệu sách hiện tại và hiển thị thông tin sách lên giao diện.
@@ -363,117 +459,6 @@ public class BookDetailController {
             }
         };
         new Thread(loadBookDetailsTask).start();
-    }
-
-    /**
-     * Cập nhật điểm đánh giá trung bình của sách hiện tại trên giao diện.
-     * Được gọi sau khi có đánh giá mới.
-     * Thực hiện trong một task nền để lấy dữ liệu từ ReviewDAO.
-     */
-    private void updateAvgRatingOnUI() {
-        if (currentBook == null) return;
-        Task<Double> calculateRatingTask = new Task<>() {
-            @Override
-            protected Double call() throws Exception {
-                return ReviewDAO.calculateAverageRating(currentBook.getIsbn());
-            }
-
-            @Override
-            protected void succeeded() {
-                updateAvgRatingText(getValue());
-            }
-
-            @Override
-            protected void failed() {
-                getException().printStackTrace();
-                Platform.runLater(() -> avgRatingText.setText("Lỗi tải"));
-            }
-        };
-        new Thread(calculateRatingTask).start();
-    }
-
-    /**
-     * Cập nhật văn bản hiển thị điểm đánh giá trung bình của sách.
-     * Nếu điểm đánh giá lớn hơn 0, hiển thị với định dạng một chữ số thập phân.
-     * Ngược lại, hiển thị "Chưa có đánh giá".
-     *
-     * @param avgRating Điểm đánh giá trung bình.
-     */
-    private void updateAvgRatingText(double avgRating) {
-        if (avgRating > 0) {
-            avgRatingText.setText(String.format("%.1f", avgRating));
-        } else {
-            avgRatingText.setText("Chưa có đánh giá");
-        }
-    }
-
-    private void loadReviewsOnUI(List<Review> reviews) {
-        if (currentBook == null) return;
-        commentsVBox.getChildren().clear();
-
-        List<Review> matchingComments = new ArrayList<>();
-
-        // Lọc các review có comment hợp lệ và ISBN khớp
-        for (Review review : reviews) {
-            if (review.getDocumentIsbn().equals(currentBook.getIsbn()) &&
-                    review.getComment() != null &&
-                    !review.getComment().isBlank()) {
-                matchingComments.add(review);
-            }
-        }
-
-        // Chỉ lấy tối đa 3 comment
-        List<Review> top3Comments = matchingComments.stream()
-                .limit(3)
-                .collect(Collectors.toList());
-
-        for (Review review : top3Comments) {
-            String username = "Người dùng #" + review.getUserId();
-            Platform.runLater(() -> addCommentToUI(username, review.getComment()));
-        }
-
-        Platform.runLater(() -> commentsScrollPane.setVvalue(0));
-    }
-
-    /**
-     * Thêm bình luận của người dùng vào giao diện.
-     *
-     * @param username Tên người dùng (hoặc định danh).
-     * @param comment  Nội dung bình luận.
-     */
-    private void addCommentToUI(String username, String comment) {
-        VBox commentBox = new VBox(5);
-        commentBox.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;");
-
-        Label userLabel = new Label(username);
-        userLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #333;");
-
-        Text commentText = new Text(comment);
-        commentText.setWrappingWidth(commentsScrollPane.getWidth() - 30);
-
-        commentBox.getChildren().addAll(userLabel, commentText);
-        commentsVBox.getChildren().add(0, commentBox);
-        Platform.runLater(() -> commentsScrollPane.setVvalue(0));
-    }
-
-    /**
-     * Thêm đánh giá của người dùng vào giao diện.
-     *
-     * @param username Tên người dùng (hoặc định danh).
-     * @param rating   Số điểm đánh giá.
-     */
-    private void addRatingToUI(String username, Integer rating) {
-        VBox ratingBox = new VBox(5);
-        ratingBox.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 10; -fx-border-radius: 5; -fx-background-radius: 5;");
-
-        Label userLabel = new Label(username);
-        userLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #333;");
-
-        Text ratingText = new Text("Đánh giá: " + rating);
-        ratingText.setWrappingWidth(commentsScrollPane.getWidth() - 30);
-
-        ratingBox.getChildren().addAll(userLabel, ratingText);
-        commentsVBox.getChildren().add(0, ratingBox);
     }
 
     /**
