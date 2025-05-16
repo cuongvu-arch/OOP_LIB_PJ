@@ -68,7 +68,6 @@ public class LibrarianToUserControllerTest {
         User fakeUser = new User();
         fakeUser.setId(1);
         fakeUser.setUsername("test_user");
-
         Document doc = new Document();
         doc.setTitle("Book A");
 
@@ -84,8 +83,6 @@ public class LibrarianToUserControllerTest {
 
             Connection mockConn = mock(Connection.class);
             dbMock.when(DatabaseConnection::getConnection).thenReturn(mockConn);
-            userDaoMock.when(() -> UserDAO.getAllUser(mockConn)).thenReturn(List.of(fakeUser));
-
             BorrowRecordDAO mockBorrowDAO = mock(BorrowRecordDAO.class);
             when(mockBorrowDAO.getBorrowedBooksWithInfoByUserId(mockConn, 1)).thenReturn(borrowedList);
 

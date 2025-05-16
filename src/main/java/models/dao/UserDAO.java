@@ -1,5 +1,6 @@
 package models.dao;
 
+import models.data.DatabaseConnection;
 import models.entities.User;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -23,7 +24,7 @@ public class UserDAO {
      * @param connection Kết nối đến cơ sở dữ liệu
      * @return Danh sách các đối tượng User, hoặc null nếu có lỗi xảy ra
      */
-    public static List<User> getAllUser(Connection connection) {
+    public List<User> getAllUser(Connection connection) {
         List<User> Result = new ArrayList<>();
         String sql = "SELECT * FROM users";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -145,6 +146,54 @@ public class UserDAO {
             preparedStatement.setString(3, phoneNumber);
             preparedStatement.setInt(4, currentUserId);
             return preparedStatement.executeUpdate() > 0;
+        }
+    }
+
+    public boolean deleteUser(int id) {
+        if (id == 0) {
+            System.err.println("Lỗi khi xóa người dùng: id không hợp lệ");
+            return false;
+        }
+        String deleteBorrowRecords = "DELETE FROM borrow_records WHERE user_id = ?";
+        String deleteReviews = "DELETE FROM review WHERE user_id = ?";
+        String deleteUser = "DELETE FROM users WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            assert conn != null;
+            conn.setAutoCommit(false); // Bắt đầu transaction
+
+            try (PreparedStatement stmt1 = conn.prepareStatement(deleteBorrowRecords);
+                 PreparedStatement stmt2 = conn.prepareStatement(deleteReviews);
+                 PreparedStatement stmt3 = conn.prepareStatement(deleteUser)) {
+
+                // Xóa borrow_records trước
+                stmt1.setInt(1, id);
+                stmt1.executeUpdate();
+
+                // Xóa reviews liên quan đến người dùng
+                stmt2.setInt(1, id);
+                stmt2.executeUpdate();
+
+                // Cuối cùng xóa người dùng
+                stmt3.setInt(1, id);
+                int rowsAffected = stmt3.executeUpdate();
+
+                conn.commit();
+                return rowsAffected > 0;
+
+            } catch (SQLException e) {
+                conn.rollback();
+                System.err.println("Lỗi khi xóa người dùng (Id: " + id + "): " + e.getMessage());
+                e.printStackTrace();
+                return false;
+            } finally {
+                conn.setAutoCommit(true);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Lỗi kết nối cơ sở dữ liệu khi xóa người dùng.");
+            e.printStackTrace();
+            return false;
         }
     }
 

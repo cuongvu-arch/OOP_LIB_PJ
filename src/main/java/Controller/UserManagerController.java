@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import models.dao.UserDAO;
 import models.data.DatabaseConnection;
+import models.entities.Library;
 import models.entities.User;
 import models.services.UserService;
 
@@ -77,9 +78,9 @@ public class UserManagerController {
             deleteButton.setDisable(true);
             return;
         }
-
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            List<User> users = UserDAO.getAllUser(conn);
+            UserDAO userDAO = new UserDAO();
+            UserService userService = new UserService(userDAO);
+            List<User> users = userService.getAllUser();
             assert users != null;
             List<User> filtered = users.stream()
                     .filter(user -> user.getUsername().toLowerCase().contains(keyword))
@@ -103,14 +104,6 @@ public class UserManagerController {
                     deleteButton.setDisable(true);
                 }
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            statusLabel.setText("Lỗi khi tìm kiếm.");
-            // Vô hiệu hóa nút sửa và xóa khi có lỗi
-            editButton.setDisable(true);
-            deleteButton.setDisable(true);
-        }
     }
 
     @FXML
@@ -189,14 +182,13 @@ public class UserManagerController {
 
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            try (Connection conn = DatabaseConnection.getConnection()) {
-                PreparedStatement stmt = conn.prepareStatement("DELETE FROM users WHERE id = ?");
-                stmt.setInt(1, selected.getId());
-                int rows = stmt.executeUpdate();
-                if (rows > 0) {
+                UserDAO userDAO = new UserDAO();
+                UserService userService = new UserService(userDAO);
+                if (userService.deleteUser(selected.getId())) {
                     statusLabel.setText("Đã xóa người dùng.");
                     userList.remove(selected);
                     clearForm();
+                    Library.setUserList(userService.getAllUser());
                     // Sau khi xóa, có thể vô hiệu hóa lại nút sửa và xóa nếu không còn user nào được chọn
                     if (userTable.getItems().isEmpty()) {
                         editButton.setDisable(true);
@@ -205,10 +197,6 @@ public class UserManagerController {
                 } else {
                     statusLabel.setText("Không thể xóa.");
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                statusLabel.setText("Lỗi khi xóa.");
-            }
         }
     }
 

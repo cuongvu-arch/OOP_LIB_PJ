@@ -11,6 +11,7 @@ import utils.SessionManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,6 +24,7 @@ import static models.data.DatabaseConnection.*;
 public class UserService {
 
     private final UserDAO userDAO;
+
 
     /**
      * Khởi tạo UserService với một đối tượng UserDAO.
@@ -195,7 +197,26 @@ public class UserService {
     }
 
     /**
-     * Phương thức để thêm người dùng trong admin func.
+     * Phương thức để lấy toàn bộ dùng trong admin func.
      */
+
+    public List<User> getAllUser() {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            return userDAO.getAllUser(conn);
+
+        } catch (SQLException e) {
+            System.err.println("Can't get all user" + e.getMessage());
+        }
+        return Collections.emptyList();
+    }
+
+    public boolean deleteUser(int id) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            return userDAO.deleteUser(id);
+        } catch (SQLException e) {
+            System.err.println("Can't delete user" + e.getMessage());
+        }
+        return false;
+    }
 
 }

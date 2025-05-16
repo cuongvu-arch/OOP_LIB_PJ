@@ -96,6 +96,8 @@ public class Document {
         this.isbn = isbn;
     }
 
+    public Document(){}
+
     public double getAvgRating() {
         return avgRating;
     }
