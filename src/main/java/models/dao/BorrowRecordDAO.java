@@ -149,10 +149,11 @@ public class BorrowRecordDAO {
      * @throws SQLException Nếu có lỗi SQL.
      */
     public void markAsReturned(Connection conn, int userId, String isbn) throws SQLException {
-        String update = "UPDATE borrow_records SET return_date = CURRENT_DATE WHERE user_id = ? AND isbn = ? AND return_date IS NULL";
+        String update = "UPDATE borrow_records SET return_date = CURRENT_DATE, status = ? WHERE user_id = ? AND isbn = ? AND return_date IS NULL";
         try (PreparedStatement stmt = conn.prepareStatement(update)) {
-            stmt.setInt(1, userId);
-            stmt.setString(2, isbn);
+            stmt.setString(1, "Đã trả");
+            stmt.setInt(2, userId);
+            stmt.setString(3, isbn);
             stmt.executeUpdate();
         }
     }
