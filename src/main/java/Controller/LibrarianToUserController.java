@@ -14,6 +14,7 @@ import models.dao.UserDAO;
 import models.data.DatabaseConnection;
 import models.entities.BorrowedBookInfo;
 import models.entities.User;
+import models.services.BorrowRecordService;
 import models.viewmodel.UserBorrowView;
 import utils.SceneController;
 
@@ -24,8 +25,10 @@ import java.util.List;
 public class LibrarianToUserController {
 
 
+
     @FXML
     private Button addUserButton;
+
 
 
     @FXML
@@ -40,6 +43,10 @@ public class LibrarianToUserController {
     @FXML
     private TableColumn<UserBorrowView, String> returnedColumn;
 
+    @FXML
+    private TableColumn<UserBorrowView, String> dueDateColumn;
+
+
     /**
      * Phương thức khởi tạo controller khi giao diện được tải.
      * Thiết lập liên kết cột và khởi động tải dữ liệu người dùng cùng lịch sử mượn sách.
@@ -49,7 +56,7 @@ public class LibrarianToUserController {
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         borrowedColumn.setCellValueFactory(new PropertyValueFactory<>("borrowedBooks"));
         returnedColumn.setCellValueFactory(new PropertyValueFactory<>("returnedBooks"));
-
+        dueDateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
         loadUserBorrowData();
     }
 
@@ -65,22 +72,26 @@ public class LibrarianToUserController {
 
                 try (Connection conn = DatabaseConnection.getConnection()) {
                     List<User> userList = UserDAO.getAllUser(conn);
-                    BorrowRecordDAO borrowRecordDAO = new BorrowRecordDAO();
+                    BorrowRecordService borrowRecordService = new BorrowRecordService();
 
                     for (User user : userList) {
-                        List<BorrowedBookInfo> borrowedInfos = borrowRecordDAO.getBorrowedBooksWithInfoByUserId(conn, user.getId());
+                        List<BorrowedBookInfo> borrowedInfos = borrowRecordService.getBorrowedBooksByUserId(user.getId());
 
                         List<String> borrowed = new ArrayList<>();
                         List<String> returned = new ArrayList<>();
+                        List<String> dueDate = new ArrayList<>();
 
                         if (borrowedInfos.isEmpty()) {
                             borrowed.add("chưa có cuốn sách nào");
                             returned.add("chưa có cuốn sách nào");
+                            dueDate.add("");
                         } else {
                             for (BorrowedBookInfo info : borrowedInfos) {
                                 String title = info.getDocument().getTitle();
+                                String due = borrowRecordService.getRemainingDays(info.getBorrowRecord());
                                 if (info.getBorrowRecord().getReturnDate() == null) {
                                     borrowed.add(title);
+                                    dueDate.add(due);
                                 } else {
                                     returned.add(title);
                                 }
@@ -90,7 +101,8 @@ public class LibrarianToUserController {
                         viewList.add(new UserBorrowView(
                                 user.getUsername(),
                                 String.join("\n", borrowed),
-                                String.join("\n", returned)
+                                String.join("\n", returned),
+                                String.join("\n", dueDate)
                         ));
                     }
                 }

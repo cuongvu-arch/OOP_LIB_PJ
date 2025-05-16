@@ -23,9 +23,11 @@
                 <TableView fx:id="tableView" layoutX="20.0" layoutY="100.0" prefHeight="450.0" prefWidth="760.0" styleClass="card">
                     <columns>
                         <TableColumn fx:id="usernameColumn" prefWidth="200.0" text="Họ và tên" />
-                        <TableColumn fx:id="borrowedColumn" prefWidth="300.0" text="Sách đang mượn">
+                        <TableColumn fx:id="borrowedColumn" prefWidth="150.0" text="Sách đang mượn">
                         </TableColumn>
                         <TableColumn fx:id="returnedColumn" prefWidth="260.0" text="Sách đã trả">
+                        </TableColumn>
+                        <TableColumn fx:id="dueDateColumn" prefWidth="150.0" text="Thời hạn">
                         </TableColumn>
                     </columns>
                 </TableView>

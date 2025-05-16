@@ -10,6 +10,7 @@ public class UserBorrowView {
     private final SimpleStringProperty username;
     private final SimpleStringProperty borrowedBooks;
     private final SimpleStringProperty returnedBooks;
+    private final SimpleStringProperty dueDate;
 
     /**
      * Khởi tạo một đối tượng UserBorrowView với thông tin người dùng và sách đã mượn/trả.
@@ -18,10 +19,11 @@ public class UserBorrowView {
      * @param borrowedBooks  Danh sách sách đã mượn (dạng chuỗi).
      * @param returnedBooks  Danh sách sách đã trả (dạng chuỗi).
      */
-    public UserBorrowView(String username, String borrowedBooks, String returnedBooks) {
+    public UserBorrowView(String username, String borrowedBooks, String returnedBooks, String dueDate) {
         this.username = new SimpleStringProperty(username);
         this.borrowedBooks = new SimpleStringProperty(borrowedBooks);
         this.returnedBooks = new SimpleStringProperty(returnedBooks);
+        this.dueDate = new SimpleStringProperty(dueDate);
     }
 
     /**
@@ -76,5 +78,13 @@ public class UserBorrowView {
      */
     public SimpleStringProperty returnedBooksProperty() {
         return returnedBooks;
+    }
+
+    public String getDueDate() {
+        return dueDate.get();
+    }
+
+    public SimpleStringProperty dueDateProperty() {
+        return dueDate;
     }
 }
