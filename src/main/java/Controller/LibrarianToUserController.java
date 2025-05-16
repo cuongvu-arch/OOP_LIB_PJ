@@ -1,5 +1,4 @@
 package Controller;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -8,19 +7,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
-import models.dao.BorrowRecordDAO;
-import models.dao.UserDAO;
-import models.data.DatabaseConnection;
-import models.entities.BorrowedBookInfo;
-import models.entities.User;
-import models.services.BorrowRecordService;
-import models.viewmodel.UserBorrowView;
+import models.entities.*;
 import utils.SceneController;
 
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class LibrarianToUserController {
 
@@ -32,19 +22,19 @@ public class LibrarianToUserController {
 
 
     @FXML
-    private TableView<UserBorrowView> tableView;
+    private TableView<User> tableView;
 
     @FXML
-    private TableColumn<UserBorrowView, String> usernameColumn;
+    private TableColumn<User, String> usernameColumn;
 
     @FXML
-    private TableColumn<UserBorrowView, String> borrowedColumn;
+    private TableColumn<User, String> emailColumn;
 
     @FXML
-    private TableColumn<UserBorrowView, String> returnedColumn;
+    private TableColumn<User, String> phoneNumberColumn;
 
     @FXML
-    private TableColumn<UserBorrowView, String> dueDateColumn;
+    private TableColumn<User, String> roleColumn;
 
 
     /**
@@ -54,59 +44,27 @@ public class LibrarianToUserController {
     @FXML
     public void initialize() {
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
-        borrowedColumn.setCellValueFactory(new PropertyValueFactory<>("borrowedBooks"));
-        returnedColumn.setCellValueFactory(new PropertyValueFactory<>("returnedBooks"));
-        dueDateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
-        loadUserBorrowData();
+        emailColumn.setCellValueFactory(new PropertyValueFactory<>("Email"));
+        phoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+        roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
+        loadUser();
     }
 
-    /**
-     * Tải dữ liệu người dùng và thông tin sách đã mượn hoặc đã trả từ cơ sở dữ liệu.
-     * Dữ liệu được tải thông qua một Task bất đồng bộ để tránh chặn luồng giao diện.
-     */
-    private void loadUserBorrowData() {
-        Task<ObservableList<UserBorrowView>> task = new Task<>() {
+    private void  loadUser() {
+        Task<ObservableList<User>> task = new Task<>() {
             @Override
-            protected ObservableList<UserBorrowView> call() throws Exception {
-                ObservableList<UserBorrowView> viewList = FXCollections.observableArrayList();
-
-                try (Connection conn = DatabaseConnection.getConnection()) {
-                    List<User> userList = UserDAO.getAllUser(conn);
-                    BorrowRecordService borrowRecordService = new BorrowRecordService();
-
+            protected ObservableList<User> call() throws Exception {
+                ObservableList<User> viewList = FXCollections.observableArrayList();
+                    List<User> userList = Library.getUserList();
                     for (User user : userList) {
-                        List<BorrowedBookInfo> borrowedInfos = borrowRecordService.getBorrowedBooksByUserId(user.getId());
 
-                        List<String> borrowed = new ArrayList<>();
-                        List<String> returned = new ArrayList<>();
-                        List<String> dueDate = new ArrayList<>();
-
-                        if (borrowedInfos.isEmpty()) {
-                            borrowed.add("chưa có cuốn sách nào");
-                            returned.add("chưa có cuốn sách nào");
-                            dueDate.add("");
-                        } else {
-                            for (BorrowedBookInfo info : borrowedInfos) {
-                                String title = info.getDocument().getTitle();
-                                String due = borrowRecordService.getRemainingDays(info.getBorrowRecord());
-                                if (info.getBorrowRecord().getReturnDate() == null) {
-                                    borrowed.add(title);
-                                    dueDate.add(due);
-                                } else {
-                                    returned.add(title);
-                                }
-                            }
-                        }
-
-                        viewList.add(new UserBorrowView(
+                        viewList.add(new User(
                                 user.getUsername(),
-                                String.join("\n", borrowed),
-                                String.join("\n", returned),
-                                String.join("\n", dueDate)
+                                user.getEmail(),
+                                user.getPhoneNumber(),
+                                user.getRole()
                         ));
                     }
-                }
-
                 return viewList;
             }
         };
@@ -126,4 +84,5 @@ public class LibrarianToUserController {
     public void addUser() {
         SceneController.getInstance().switchCenterContent("/fxml/UserManager.fxml");
     }
+
 }

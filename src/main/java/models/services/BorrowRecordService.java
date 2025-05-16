@@ -4,6 +4,7 @@ import models.dao.BorrowRecordDAO;
 import models.data.DatabaseConnection;
 import models.entities.BorrowRecord;
 import models.entities.BorrowedBookInfo;
+import models.entities.UserBorrowJoinInfo;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -159,5 +160,14 @@ public class BorrowRecordService {
         } catch (SQLException e) {
             System.out.println("Error update Record" + e.getMessage());
         }
+    }
+
+    public List<UserBorrowJoinInfo> getAllUserBorrowJoinInfo() {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            return borrowRecordDAO.getAllUserBorrowJoinInfo(conn);
+        } catch (SQLException e) {
+            System.out.println("Error get userBorrowJoinInfo" + e.getMessage());
+        }
+        return Collections.emptyList();
     }
 }

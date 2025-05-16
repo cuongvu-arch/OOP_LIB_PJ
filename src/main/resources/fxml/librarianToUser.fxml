@@ -22,16 +22,15 @@
 
                 <TableView fx:id="tableView" layoutX="20.0" layoutY="100.0" prefHeight="450.0" prefWidth="760.0" styleClass="card">
                     <columns>
-                        <TableColumn fx:id="usernameColumn" prefWidth="200.0" text="Họ và tên" />
-                        <TableColumn fx:id="borrowedColumn" prefWidth="150.0" text="Sách đang mượn">
+                        <TableColumn fx:id="usernameColumn" prefWidth="176.7999496459961" text="Họ và tên" />
+                        <TableColumn fx:id="emailColumn" prefWidth="137.5999755859375" text="Email">
                         </TableColumn>
-                        <TableColumn fx:id="returnedColumn" prefWidth="260.0" text="Sách đã trả">
+                        <TableColumn fx:id="phoneNumberColumn" prefWidth="249.60000610351562" text="Số điện thoại">
                         </TableColumn>
-                        <TableColumn fx:id="dueDateColumn" prefWidth="150.0" text="Thời hạn">
+                        <TableColumn fx:id="roleColumn" prefWidth="163.199951171875" text="Vai trò">
                         </TableColumn>
                     </columns>
                 </TableView>
-
                 <HBox layoutX="20.0" layoutY="520.0" spacing="10.0">
                     <children>
                         <Button fx:id="addUserButton" onMouseClicked="#addUser" styleClass="primary-button" text="Sửa" />

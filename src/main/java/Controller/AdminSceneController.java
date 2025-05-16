@@ -94,4 +94,8 @@ public class AdminSceneController {
             System.out.println("Lỗi khi mở trang tìm kiếm: " + e.getMessage());
         }
     }
+
+    public void ToBorrow() {
+        SceneController.getInstance().switchCenterContent("/fxml/LibrarianToBorrow.fxml");
+    }
 }

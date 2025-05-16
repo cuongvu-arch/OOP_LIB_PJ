@@ -36,6 +36,12 @@
                <Label fx:id="toSearchLabel" alignment="CENTER" layoutX="-1.0" layoutY="1.0" onMouseClicked="#ToAdd" prefHeight="101.0" prefWidth="200.0" styleClass="title" text="Thêm Sách" textAlignment="CENTER" />
             </children>
          </Pane>
+
+            <Pane prefHeight="200.0" prefWidth="300.0" styleClass="card" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <children>
+                    <Label fx:id="toBorrowLabel" alignment="CENTER" layoutX="-1.0" layoutY="1.0" onMouseClicked="#ToBorrow" prefHeight="101.0" prefWidth="200.0" styleClass="title" text="Danh Sách Mượn" textAlignment="CENTER" />
+                </children>
+            </Pane>
         </GridPane>
     </center>
 </BorderPane>

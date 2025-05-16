@@ -68,14 +68,14 @@ public class BorrowRecord {
      * @return the date the document was borrowed
      */
     public Date getBorrowDate() {
-        return borrowDate;
+        return this.borrowDate;
     }
 
     /**
      * @return the date the document was returned, or null if not yet returned
      */
     public Date getReturnDate() {
-        return returnDate;
+        return this.returnDate;
     }
 
     /**

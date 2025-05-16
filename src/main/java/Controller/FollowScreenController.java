@@ -11,6 +11,7 @@ import models.entities.BorrowRecord;
 import models.entities.BorrowedBookInfo;
 import models.entities.Document;
 import models.entities.User;
+import models.services.BorrowRecordService;
 import utils.SessionManager;
 
 import java.io.IOException;
@@ -52,10 +53,8 @@ public class FollowScreenController {
         Task<List<BorrowedBookInfo>> loadTask = new Task<>() {
             @Override
             protected List<BorrowedBookInfo> call() throws Exception {
-                try (Connection conn = DatabaseConnection.getConnection()) {
-                    BorrowRecordDAO borrowRecordDAO = new BorrowRecordDAO();
-                    return borrowRecordDAO.getBorrowedBooksWithInfoByUserId(conn, currentUser.getId());
-                }
+                    BorrowRecordService borrowRecordService = new BorrowRecordService();
+                    return borrowRecordService.getBorrowedBooksByUserId(currentUser.getId());
             }
         };
 

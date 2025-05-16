@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0" >
+<BorderPane stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LibrarianToBorrowController">
+    <stylesheets>
+        <URL value="@../css/styles.css" />
+    </stylesheets>
+    <top>
+        <AnchorPane style="-fx-padding: 20;" BorderPane.alignment="CENTER">
+            <children>
+                <Label layoutX="20.0" layoutY="20.0" styleClass="subtitle" text="Trang chủ &gt;&gt; Thủ thư &gt;&gt; Người dùng" />
 
-</AnchorPane>
+                <Label layoutX="20.0" layoutY="60.0" style="-fx-text-fill: #3498db;" styleClass="title" text="DANH SÁCH THÀNH VIÊN" />
+
+                <TableView fx:id="tableView" layoutX="20.0" layoutY="100.0" prefHeight="450.0" prefWidth="760.0" styleClass="card">
+                    <columns>
+                        <TableColumn fx:id="usernameColumn" prefWidth="200.0" text="Họ và tên" />
+                        <TableColumn fx:id="borrowedColumn" prefWidth="150.0" text="Sách đang mượn">
+                        </TableColumn>
+                        <TableColumn fx:id="returnedColumn" prefWidth="260.0" text="Sách đã trả">
+                        </TableColumn>
+                        <TableColumn fx:id="dueDateColumn" prefWidth="150.0" text="Thời hạn">
+                        </TableColumn>
+                    </columns>
+                </TableView>
+            </children>
+        </AnchorPane>
+    </top>
+</BorderPane>

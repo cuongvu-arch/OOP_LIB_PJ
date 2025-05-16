@@ -61,7 +61,11 @@ public class User {
     public User() {
     }
 
-    public User(int i, String oldUser, String mail, String number, String user) {
+    public User(String username,String email, String phoneNumber, String role) {
+        this.username = username;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
     }
 
     /**

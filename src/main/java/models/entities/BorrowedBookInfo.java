@@ -6,51 +6,60 @@ import java.sql.Date;
  * Lớp kết hợp thông tin của một tài liệu (Document) và bản ghi mượn tương ứng (BorrowRecord).
  * Dùng để hiển thị hoặc xử lý thông tin sách đã được mượn bởi người dùng.
  */
-public class UserBorrowJoinInfo {
-    private int userId;
-    private String username;
-    private String bookTitle;
-    private String isbn;
-    private Date borrowDate;
-    private Date returnDate;
+public class BorrowedBookInfo {
+    private Document document;
+    private BorrowRecord borrowRecord;
 
     /**
      * Tạo một đối tượng BorrowedBookInfo mới với đầy đủ thông tin.
+     *
+     * @param document     Thông tin sách
+     * @param borrowRecord Thông tin mượn sách
      */
-    public UserBorrowJoinInfo(int userId, String username, String bookTitle, String isbn,
-                              Date borrowDate, Date returnDate) {
-        this.userId = userId;
-        this.username = username;
-        this.bookTitle = bookTitle;
-        this.isbn = isbn;
-        this.borrowDate = borrowDate;
-        this.returnDate = returnDate;
+    public BorrowedBookInfo(Document document, BorrowRecord borrowRecord) {
+        this.document = document;
+        this.borrowRecord = borrowRecord;
     }
 
-
-    // Getters
-
-    public int getUserId() {
-        return userId;
+    /**
+     * Constructor mặc định.
+     */
+    public BorrowedBookInfo() {
     }
 
-    public String getUsername() {
-        return username;
+    /**
+     * Lấy thông tin sách.
+     *
+     * @return Đối tượng Document
+     */
+    public Document getDocument() {
+        return document;
     }
 
-    public String getBookTitle() {
-        return bookTitle;
+    /**
+     * Lấy thông tin bản ghi mượn.
+     *
+     * @return Đối tượng BorrowRecord
+     */
+    public BorrowRecord getBorrowRecord() {
+        return borrowRecord;
     }
 
-    public String getIsbn() {
-        return isbn;
-    }
-
+    /**
+     * Lấy ngày mượn sách từ bản ghi mượn.
+     *
+     * @return Ngày mượn (java.sql.Date), hoặc null nếu borrowRecord là null
+     */
     public Date getBorrowDate() {
-        return borrowDate;
+        return borrowRecord.getBorrowDate();
     }
 
-    public Date getReturnDate() {
-        return returnDate;
+    /**
+     * Cập nhật thông tin sách.
+     *
+     * @param doc1 Tài liệu cần thiết lập
+     */
+    public void setDocument(Document doc1) {
+
     }
 }

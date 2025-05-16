@@ -4,6 +4,7 @@ import models.data.DatabaseConnection;
 import models.entities.BorrowRecord;
 import models.entities.BorrowedBookInfo;
 import models.entities.Document;
+import models.entities.UserBorrowJoinInfo;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -207,4 +208,38 @@ public class BorrowRecordDAO {
             stmt.executeUpdate();
         }
     }
+
+    public List<UserBorrowJoinInfo> getAllUserBorrowJoinInfo(Connection conn) throws SQLException {
+        List<UserBorrowJoinInfo> list = new ArrayList<>();
+
+        String sql = """
+        SELECT u.Id AS user_id, u.username, b.title, b.isbn, br.borrow_date, br.return_date
+        FROM users u
+        JOIN borrow_records br ON u.Id = br.user_id
+        JOIN books b ON br.isbn = b.isbn
+        ORDER BY u.username, br.borrow_date
+    """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int userId = rs.getInt("user_id");
+                    String username = rs.getString("username");
+                    String title = rs.getString("title");
+                    String isbn = rs.getString("isbn");
+                    Date borrowDate = rs.getDate("borrow_date");
+                    Date returnDate = rs.getDate("return_date");
+
+                    UserBorrowJoinInfo info = new UserBorrowJoinInfo(
+                            userId, username, title, isbn, borrowDate, returnDate
+                    );
+
+                    list.add(info);
+                }
+            }
+        }
+
+        return list;
+    }
+
 }
