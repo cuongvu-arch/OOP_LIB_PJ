@@ -11,37 +11,38 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane stylesheets="@../css/styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1"
-            fx:controller="Controller.LibrarianToEditController">
+<BorderPane stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LibrarianToEditController">
     <stylesheets>
-        <URL value="@../css/styles.css"/>
+        <URL value="@../css/styles.css" />
     </stylesheets>
 
     <center>
         <AnchorPane style="-fx-padding: 20;">
             <children>
                 <VBox spacing="20.0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-                    <Label styleClass="subtitle" text="Trang chủ &gt;&gt; Thủ thư &gt;&gt; Quản lý sách"/>
+                    <Label styleClass="subtitle" text="Trang chủ &gt;&gt; Thủ thư &gt;&gt; Quản lý sách" />
 
-                    <Label styleClass="title" text="Quản lý kho sách"/>
+                    <Label styleClass="title" text="Quản lý kho sách" />
 
                     <TableView fx:id="bookTable" prefHeight="400.0">
                         <columns>
-                            <TableColumn fx:id="isbnColumn" prefWidth="120" text="ISBN"/>
-                            <TableColumn fx:id="titleColumn" prefWidth="250" text="Tiêu đề"/>
-                            <TableColumn fx:id="quantityColumn" prefWidth="80" text="Tổng SL"/>
-                            <TableColumn fx:id="borrowedColumn" prefWidth="80" text="Đang mượn"/>
-                            <TableColumn fx:id="availableColumn" prefWidth="80" text="Còn lại"/>
+                            <TableColumn fx:id="isbnColumn" prefWidth="120" text="ISBN" />
+                            <TableColumn fx:id="titleColumn" prefWidth="250" text="Tiêu đề" />
+                            <TableColumn fx:id="quantityColumn" prefWidth="80" text="Tổng SL" />
+                            <TableColumn fx:id="borrowedColumn" prefWidth="80" text="Đang mượn" />
+                            <TableColumn fx:id="availableColumn" prefWidth="80" text="Còn lại" />
                         </columns>
+                  <columnResizePolicy>
+                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                  </columnResizePolicy>
                     </TableView>
 
                     <HBox alignment="CENTER_LEFT" spacing="10">
-                        <Label text="Nhập ISBN:"/>
-                        <TextField fx:id="adjustIsbnField" prefWidth="150"/>
-                        <Label text="Thêm/Bớt SL:"/>
-                        <TextField fx:id="adjustQuantityField" prefWidth="80"/>
-                        <Button fx:id="adjustButton" onAction="#handleAdjustQuantity" styleClass="button"
-                                text="Cập nhật số lượng"/>
+                        <Label text="Nhập ISBN:" />
+                        <TextField fx:id="adjustIsbnField" prefWidth="150" />
+                        <Label text="Thêm/Bớt SL:" />
+                        <TextField fx:id="adjustQuantityField" prefWidth="80" />
+                        <Button fx:id="adjustButton" onAction="#handleAdjustQuantity" styleClass="button" text="Cập nhật số lượng" />
                     </HBox>
                 </VBox>
             </children>

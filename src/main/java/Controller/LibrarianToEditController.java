@@ -3,11 +3,13 @@ package Controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import models.dao.DocumentDAO;
 import models.data.DatabaseConnection;
 import models.entities.DocumentWithBorrowInfo;
@@ -18,6 +20,8 @@ import java.awt.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 
 /**
  * Controller cho giao diện thủ thư chỉnh sửa số lượng sách.
@@ -59,13 +63,38 @@ public class LibrarianToEditController {
         borrowedColumn.setCellValueFactory(new PropertyValueFactory<>("currentlyBorrowed"));
         availableColumn.setCellValueFactory(new PropertyValueFactory<>("availableQuantity"));
 
+        // Cho phép chọn từng ô (cell) thay vì cả hàng
+        bookTable.getSelectionModel().setCellSelectionEnabled(true);
+
         // Gán danh sách vào bảng
         bookTable.setItems(books);
+
+        // Xử lý Ctrl+C để copy giá trị ô
+        bookTable.setOnKeyPressed(this::handleCopyCellToClipboard);
 
         // Tải dữ liệu từ database
         loadBooksFromDatabase();
     }
 
+
+    /**
+     * Xử lý sao chép nội dung ô khi nhấn Ctrl + C
+     */
+    private void handleCopyCellToClipboard(KeyEvent event) {
+        if (event.isControlDown() && event.getCode() == KeyCode.C) {
+            TablePosition<?, ?> pos = bookTable.getSelectionModel().getSelectedCells().get(0);
+            if (pos != null) {
+                int row = pos.getRow();
+                TableColumn<?, ?> column = pos.getTableColumn();
+                Object cell = column.getCellObservableValue(row).getValue();
+                if (cell != null) {
+                    ClipboardContent content = new ClipboardContent();
+                    content.putString(cell.toString());
+                    Clipboard.getSystemClipboard().setContent(content);
+                }
+            }
+        }
+    }
 
     /**
      * Tải dữ liệu sách từ cơ sở dữ liệu và cập nhật bảng hiển thị.
