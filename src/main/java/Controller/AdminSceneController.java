@@ -2,15 +2,24 @@ package Controller;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import utils.SceneController;
+import utils.SessionManager;
+
+import java.io.IOException;
 
 /**
  * Controller cho giao diện quản trị viên (admin), xử lý các sự kiện điều hướng giữa các màn hình quản lý.
  */
 public class AdminSceneController {
 
+    @FXML
+    private Label toSearchLabel;
     /**
      * Label điều hướng đến giao diện người dùng.
      */
@@ -44,6 +53,14 @@ public class AdminSceneController {
                 ToEdit();
             }
         });
+
+        //Gán sự kiện cho Label toSearchLabel
+        toSearchLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                ToAdd();
+            }
+        });
     }
 
     /**
@@ -60,5 +77,21 @@ public class AdminSceneController {
      */
     public void ToEdit() {
         SceneController.getInstance().switchCenterContent("/fxml/LibrarianToEdit.fxml");
+    }
+
+    public void ToAdd() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Search.fxml"));
+            Parent root = loader.load();
+            BookSearchController controller = loader.getController();
+            controller.setUser(SessionManager.getCurrentUser());
+            Stage searchStage = new Stage();
+            searchStage.setScene(new Scene(root));
+            searchStage.setTitle("Tìm kiếm sách");
+            searchStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Lỗi khi mở trang tìm kiếm: " + e.getMessage());
+        }
     }
 }

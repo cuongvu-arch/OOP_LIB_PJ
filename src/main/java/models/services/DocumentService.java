@@ -261,7 +261,7 @@ public class DocumentService {
      * @return Danh sách các sách phù hợp với tiêu chí tìm kiếm.
      * @throws SQLException nếu lỗi DB.
      */
-    public List<Document> searchBooks(String title, String author, String publishDate) throws SQLException {
+    public List<Document> searchBooks(String title, String author, String publishDate, String isbn) throws SQLException {
         List<Document> results = new ArrayList<>();
         StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM books WHERE 1=1");
         List<Object> params = new ArrayList<>();
@@ -287,6 +287,11 @@ public class DocumentService {
         if (publishDate != null && !publishDate.trim().isEmpty()) {
             sqlBuilder.append(" AND publish_date LIKE ?");
             params.add(publishDate.trim() + "%");
+        }
+
+        if(isbn != null && !isbn.trim().isEmpty()) {
+            sqlBuilder.append(" AND isbn LIKE ?");
+            params.add(isbn.trim() + "%");
         }
 
         try (Connection conn = DatabaseConnection.getConnection();

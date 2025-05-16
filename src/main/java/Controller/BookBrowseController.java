@@ -26,6 +26,8 @@ import java.util.List;
 
 public class BookBrowseController {
     @FXML
+    TextField isbnField;
+    @FXML
     TextField titleField;
     @FXML
     TextField authorField;
@@ -50,8 +52,9 @@ public class BookBrowseController {
         String title = titleField.getText().trim();
         String author = authorField.getText().trim();
         String publishDate = publishDateField.getText().trim();
+        String isbn = isbnField.getText().trim();
 
-        if (title.isEmpty() && author.isEmpty() && publishDate.isEmpty()) {
+        if (title.isEmpty() && author.isEmpty() && publishDate.isEmpty() && isbn.isEmpty()) {
             AlertUtils.showAlert("Thiếu thông tin", "Vui lòng nhập ít nhất một tiêu chí tìm kiếm.", AlertType.WARNING);
             return;
         }
@@ -65,7 +68,7 @@ public class BookBrowseController {
         Task<List<Document>> searchTask = new Task<>() {
             @Override
             protected List<Document> call() throws Exception {
-                return documentService.searchBooks(title, author, publishDate);
+                return documentService.searchBooks(title, author, publishDate,isbn);
             }
         };
 
@@ -135,7 +138,8 @@ public class BookBrowseController {
         return coverView;
     }
 
-    void openBookDetailWindow(Document book) {
+    private void openBookDetailWindow(Document book) {
+        System.out.println("openBookDetailWindow() được gọi với book: " + book);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/BookDetailScreen.fxml"));
             Parent root = loader.load();
@@ -147,12 +151,13 @@ public class BookBrowseController {
             detailStage.setTitle("Chi tiết sách: " + (book.getTitle() != null ? book.getTitle() : "Không có tiêu đề"));
             detailStage.setScene(new Scene(root));
             detailStage.initModality(Modality.APPLICATION_MODAL);
-            detailStage.setResizable(false);
+            detailStage.setMaximized(true); // ✅ Full màn hình
             detailStage.showAndWait();
 
         } catch (IOException e) {
             e.printStackTrace();
-            AlertUtils.showAlert("Lỗi", "Không thể mở trang chi tiết sách: " + e.getMessage(), AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Không thể mở trang chi tiết sách: " + e.getMessage());
+            alert.showAndWait();
         }
     }
 

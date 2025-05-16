@@ -22,7 +22,7 @@
 
             <Pane prefHeight="200.0" prefWidth="300.0" styleClass="card">
                 <children>
-                    <Label fx:id="toUserLabel" layoutX="-1.0" layoutY="1.0" onMouseClicked="#ToUser" prefHeight="99.0" prefWidth="202.0" styleClass="title" text="Người dùng" textAlignment="CENTER" />
+                    <Label fx:id="toUserLabel" alignment="CENTER" layoutX="-1.0" layoutY="1.0" onMouseClicked="#ToUser" prefHeight="99.0" prefWidth="202.0" styleClass="title" text="Người dùng" textAlignment="CENTER" />
                 </children>
             </Pane>
 
@@ -31,6 +31,11 @@
                     <Label fx:id="toLibraryLabel" alignment="CENTER" layoutX="-1.0" layoutY="1.0" onMouseClicked="#ToEdit" prefHeight="101.0" prefWidth="200.0" styleClass="title" text="Thư viện" textAlignment="CENTER" />
                 </children>
             </Pane>
+         <Pane prefHeight="200.0" prefWidth="300.0" styleClass="card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <children>
+               <Label fx:id="toSearchLabel" alignment="CENTER" layoutX="-1.0" layoutY="1.0" onMouseClicked="#ToAdd" prefHeight="101.0" prefWidth="200.0" styleClass="title" text="Thêm Sách" textAlignment="CENTER" />
+            </children>
+         </Pane>
         </GridPane>
     </center>
 </BorderPane>
