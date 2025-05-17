@@ -47,7 +47,7 @@
                         <Label layoutX="20.0" layoutY="20.0"
                                style="-fx-font-size: 20px; -fx-text-fill: -fx-primary-color; -fx-font-weight: bold;"
                                text="TRUYỆN ĐÃ TRẢ"/>
-                        <TableView fx:id="borrowedBooksTable2" layoutX="14.0" layoutY="60.0" prefHeight="325.0"
+                        <TableView stylesheets="@../css/table-style.css" fx:id="borrowedBooksTable2" layoutX="14.0" layoutY="60.0" prefHeight="325.0"
                                    prefWidth="522.0">
                             <columns>
                                 <TableColumn fx:id="bookInfoColumn2" prefWidth="520.6666870117188"

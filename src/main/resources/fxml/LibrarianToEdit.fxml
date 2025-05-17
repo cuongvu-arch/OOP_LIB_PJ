@@ -13,7 +13,7 @@
 
 <BorderPane stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LibrarianToEditController">
     <stylesheets>
-        <URL value="@../css/styles.css" />
+        <URL value="@../css/table-style.css" />
     </stylesheets>
 
     <center>
@@ -24,7 +24,7 @@
 
                     <Label styleClass="title" text="Quản lý kho sách" />
 
-                    <TableView fx:id="bookTable" prefHeight="400.0">
+                    <TableView fx:id="bookTable" prefHeight="400.0" stylesheets="@../css/table-style.css">
                         <columns>
                             <TableColumn fx:id="isbnColumn" prefWidth="120" text="ISBN" />
                             <TableColumn fx:id="titleColumn" prefWidth="250" text="Tiêu đề" />

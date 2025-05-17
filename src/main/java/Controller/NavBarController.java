@@ -99,24 +99,4 @@ public class NavBarController {
             adminFunctionText.setVisible(false);
         }
     }
-
-    /**
-     * Xử lý khi nhấn nút tìm kiếm: mở một cửa sổ phụ chứa giao diện tìm kiếm sách.
-     */
-    @FXML
-    private void handleSearchButtonClick() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Search.fxml"));
-            Parent root = loader.load();
-            BookSearchController controller = loader.getController();
-            controller.setUser(SessionManager.getCurrentUser());
-            Stage searchStage = new Stage();
-            searchStage.setScene(new Scene(root));
-            searchStage.setTitle("Tìm kiếm sách");
-            searchStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Lỗi khi mở trang tìm kiếm: " + e.getMessage());
-        }
-    }
 }

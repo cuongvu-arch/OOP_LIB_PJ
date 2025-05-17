@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import java.lang.String?>
 <BorderPane stylesheets="@../css/styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1"
             fx:controller="Controller.HistoryScreenController">
     <center>
@@ -16,7 +17,7 @@
                 <Label style="-fx-font-size: 14px; -fx-text-fill: #666;" text="Trang chủ &gt;&gt; Lịch sử"/>
                 <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Lịch sử mượn sách và trả sách"/>
 
-                <TableView fx:id="historyTable" prefHeight="400" prefWidth="760">
+                <TableView stylesheets="@../css/table-style.css" fx:id="historyTable" prefHeight="400" prefWidth="760">
                     <columns>
                         <TableColumn fx:id="bookNameColumn" prefWidth="189.59997367858887" text="Tên sách"/>
                         <TableColumn fx:id="borrowDateColumn" prefWidth="160.0" text="Ngày mượn"/>

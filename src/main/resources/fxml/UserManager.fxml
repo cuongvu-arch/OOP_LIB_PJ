@@ -57,7 +57,7 @@
             </HBox>
 
             <!-- Bảng người dùng -->
-            <TableView fx:id="userTable" prefHeight="250" prefWidth="650">
+            <TableView stylesheets="@../css/table-style.css" fx:id="userTable" prefHeight="250" prefWidth="650">
                 <columns>
                     <TableColumn fx:id="nameColumn" prefWidth="200" text="Tên người dùng" />
                     <TableColumn fx:id="emailColumn" prefWidth="250" text="Email" />

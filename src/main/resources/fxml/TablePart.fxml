@@ -5,13 +5,11 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox stylesheets="@../css/styles.css" xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="300.0" spacing="10" style="-fx-padding: 15;"
-      styleClass="card" xmlns="http://javafx.com/javafx/23.0.1"
-      fx:controller="Controller.TablePartController">
-    <Label styleClass="title" text="Bảng xếp hạng sách"/>
-    <TableView fx:id="documentTableView" prefHeight="500.0" styleClass="right-pane-table">
+<VBox prefHeight="400.0" prefWidth="300.0" spacing="10" style="-fx-padding: 15;" styleClass="card" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.TablePartController">
+    <Label styleClass="title" text="Bảng xếp hạng sách" />
+    <TableView fx:id="documentTableView" prefHeight="500.0" stylesheets="@../css/table-style.css">
         <columns>
-            <TableColumn fx:id="documentInfoColumn" prefWidth="268.00001021226245" text="TOP RATING BOOKS"/>
+            <TableColumn fx:id="documentInfoColumn" prefWidth="268.00001021226245"  text="TOP RATING BOOKS" />
         </columns>
     </TableView>
 </VBox>

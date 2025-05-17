@@ -46,7 +46,7 @@
                         <Label layoutX="20.0" layoutY="20.0"
                                style="-fx-font-size: 20px; -fx-text-fill: -fx-primary-color; -fx-font-weight: bold;"
                                text="TRUYỆN ĐANG MƯỢN"/>
-                        <TableView fx:id="borrowedBooksTable" layoutX="14.0" layoutY="60.0" prefHeight="325.0"
+                        <TableView stylesheets="@../css/table-style.css" fx:id="borrowedBooksTable" layoutX="14.0" layoutY="60.0" prefHeight="325.0"
                                    prefWidth="526.0">
                             <columns>
                                 <TableColumn fx:id="bookInfoColumn" prefWidth="524.6666870117188"

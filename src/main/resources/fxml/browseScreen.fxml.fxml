@@ -50,6 +50,6 @@
             </content>
         </ScrollPane>
 
-        <TextArea fx:id="resultTextArea" editable="false" prefHeight="150" wrapText="true" VBox.vgrow="SOMETIMES" />
+        <TextArea fx:id="resultTextArea" editable="false" prefHeight="150" styleClass="text-area" wrapText="true" VBox.vgrow="SOMETIMES" />
     </children>
 </VBox>
