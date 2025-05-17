@@ -7,6 +7,6 @@
 <VBox styleClass="card-box" fx:id="bookCard" alignment="CENTER" prefWidth="140" spacing="10" style="-fx-padding: 10; -fx-background-color: #E0F2F1; -fx-border-color: #bdc3c7; -fx-border-radius: 5;" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.BookCardController">
 
     <ImageView fx:id="imageView" fitHeight="180" fitWidth="120" preserveRatio="true" />
-    <Label fx:id="titleLabel" maxHeight="40" maxWidth="120" style="-fx-font-weight: bold;" textOverrun="ellipsis" wrapText="true" />
-    <Label fx:id="returnLabel" style="-fx-text-fill: blue; -fx-cursor: hand; -fx-font-weight: bold;" styleClass="text-field" text="Trả sách" />
+    <Label fx:id="titleLabel" maxHeight="40" maxWidth="120" styleClass="title" textOverrun="ellipsis" wrapText="true" />
+    <Label fx:id="returnLabel" styleClass="subtitle" text="Trả sách" />
 </VBox>

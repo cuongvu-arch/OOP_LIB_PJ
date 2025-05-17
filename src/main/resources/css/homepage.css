@@ -1,3 +1,18 @@
+.root {
+    -fx-font-family: 'Lora';
+}
+@font-face {
+    font-family: 'Lora';
+    src: url('fonts/Lora-Regular.ttf');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Lora';
+    src: url('fonts/Lora-Bold.ttf');
+    font-weight: Bold;
+}
+
 .book-box {
     -fx-background-color: #E0F2F1;
     -fx-border-color: #e0e0e0;
