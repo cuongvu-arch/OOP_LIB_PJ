@@ -19,7 +19,7 @@
         <URL value="@../css/styles.css" />
     </stylesheets>
    <right>
-        <VBox alignment="CENTER" prefHeight="518.0" prefWidth="442.0" spacing="20" style="-fx-padding: 40; -fx-background-color:#DCE1C8;" BorderPane.alignment="CENTER">
+        <VBox alignment="CENTER" prefHeight="518.0" prefWidth="442.0" spacing="20" style="-fx-padding: 40; -fx-background-color:#DCE1C8" BorderPane.alignment="CENTER">
             <Label style="-fx-font-size: 28px;" styleClass="title" text="Đăng nhập hệ thống" />
 
             <GridPane alignment="CENTER" hgap="10" prefHeight="70.0" prefWidth="328.0" styleClass="pane-color" vgap="15">
