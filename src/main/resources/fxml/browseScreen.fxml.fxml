@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="10" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.BookBrowseController">
+<VBox spacing="10" style="-fx-background-color: #DCE1C8" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.BookBrowseController">
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
@@ -42,9 +42,9 @@
             <Button fx:id="searchButton" onAction="#handleSearchButtonClick" prefWidth="150" styleClass="button" text="Tìm kiếm" />
         </HBox>
 
-        <ScrollPane fitToWidth="true" prefViewportHeight="300" VBox.vgrow="ALWAYS">
+        <ScrollPane fitToWidth="true" prefViewportHeight="300" styleClass="outer-pane" VBox.vgrow="ALWAYS">
             <content>
-                <FlowPane fx:id="booksFlowPane" alignment="TOP_LEFT" hgap="10" prefWrapLength="650.0" style="-fx-padding: 5;" vgap="10">
+                <FlowPane fx:id="booksFlowPane" hgap="10" prefHeight="600.0" prefWidth="614.0" style="-fx-padding: 5;" styleClass="pane-color" vgap="10">
                 </FlowPane>
             </content>
         </ScrollPane>

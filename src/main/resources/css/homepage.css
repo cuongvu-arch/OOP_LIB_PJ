@@ -29,8 +29,9 @@
 }
 
 .book-title {
-    -fx-font-weight: bold;
     -fx-font-size: 14px;
+    -fx-text-fill: #8D6E63; /* Màu chữ hài hòa */
+    -fx-font-weight: bold;
     -fx-wrap-text: true;
     -fx-max-width: 150px;
 }
@@ -39,6 +40,7 @@
     -fx-font-size: 12px;
     -fx-wrap-text: true;
     -fx-max-width: 150px;
+     -fx-text-fill: #607D8B;
 }
 
 .page-button {
@@ -63,9 +65,7 @@
 }
 
 /* Các thành phần con bên trong GridPane có nền giống cha */
-.pane .label,
 .pane .button,
-.pane .text-field,
 .pane .text-area,
 .pane .combo-box,
 .pane .choice-box,

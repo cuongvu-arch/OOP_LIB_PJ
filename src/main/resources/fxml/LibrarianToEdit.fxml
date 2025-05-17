@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LibrarianToEditController">
+<BorderPane styleClass="outer-pane" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LibrarianToEditController">
     <stylesheets>
         <URL value="@../css/table-style.css" />
     </stylesheets>
@@ -20,7 +20,7 @@
         <AnchorPane style="-fx-padding: 20;">
             <children>
                 <VBox spacing="20.0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-                    <Label styleClass="subtitle" text="Trang chủ &gt;&gt; Thủ thư &gt;&gt; Quản lý sách" />
+                    <Label styleClass="subtitle" text="Trang chủ &gt;&gt; Thủ thư &gt;&gt; Quản lý kho sách" />
 
                     <Label styleClass="title" text="Quản lý kho sách" />
 

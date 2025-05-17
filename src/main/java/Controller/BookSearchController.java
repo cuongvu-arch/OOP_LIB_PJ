@@ -78,6 +78,7 @@ public class BookSearchController {
      * @param book Đối tượng Document đại diện cho sách được hiển thị chi tiết.
      */
     private void openBookDetailWindow(Document book) {
+        System.out.println("openBookDetailWindow() được gọi với book: " + book);
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/BookDetailScreen.fxml"));
             Parent root = loader.load();
@@ -89,12 +90,13 @@ public class BookSearchController {
             detailStage.setTitle("Chi tiết sách: " + (book.getTitle() != null ? book.getTitle() : "Không có tiêu đề"));
             detailStage.setScene(new Scene(root));
             detailStage.initModality(Modality.APPLICATION_MODAL);
-            detailStage.setResizable(false);
+            detailStage.setMaximized(true); // ✅ Full màn hình
             detailStage.showAndWait();
 
         } catch (IOException e) {
             e.printStackTrace();
-            AlertUtils.showAlert("Lỗi", "Không thể mở trang chi tiết sách: " + e.getMessage(), Alert.AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Không thể mở trang chi tiết sách: " + e.getMessage());
+            alert.showAndWait();
         }
     }
 

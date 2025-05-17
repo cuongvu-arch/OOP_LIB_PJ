@@ -9,23 +9,23 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LibrarianToUserController">
+<BorderPane styleClass="outer-pane" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LibrarianToUserController">
     <stylesheets>
         <URL value="@../css/styles.css" />
     </stylesheets>
    <top>
         <AnchorPane style="-fx-padding: 20;" BorderPane.alignment="CENTER">
             <children>
-                <Label layoutX="20.0" layoutY="20.0" styleClass="subtitle" text="Trang chủ &gt;&gt; Thủ thư &gt;&gt; Người dùng" />
+                <Label layoutX="20.0" layoutY="20.0" styleClass="subtitle" text="Trang chủ &gt;&gt; Thủ thư &gt;&gt; Danh Sách Thành Viên" />
 
-                <Label layoutX="20.0" layoutY="60.0" style="-fx-text-fill: #3498db;" styleClass="title" text="DANH SÁCH THÀNH VIÊN" />
+                <Label layoutX="20.0" layoutY="60.0" style="-fx-text-fill: #3498db;" styleClass="title" text="Danh Sách Thành Viên" />
 
                 <TableView fx:id="tableView" layoutX="20.0" layoutY="100.0" prefHeight="450.0" prefWidth="760.0" styleClass="card" stylesheets="@../css/table-style.css">
                     <columns>
                         <TableColumn fx:id="usernameColumn" prefWidth="176.7999496459961" text="Họ và tên" />
-                        <TableColumn fx:id="emailColumn" prefWidth="137.5999755859375" text="Email">
+                        <TableColumn fx:id="emailColumn" prefWidth="224.79989624023438" text="Email">
                         </TableColumn>
-                        <TableColumn fx:id="phoneNumberColumn" prefWidth="249.60000610351562" text="Số điện thoại">
+                        <TableColumn fx:id="phoneNumberColumn" prefWidth="163.2000732421875" text="Số điện thoại">
                         </TableColumn>
                         <TableColumn fx:id="roleColumn" prefWidth="163.199951171875" text="Vai trò">
                         </TableColumn>

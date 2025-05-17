@@ -154,9 +154,9 @@ public class HomePageScreenController {
             }
         }
 
-        Text titleText = new Text(book.getTitle() != null ? book.getTitle() : "Không có tiêu đề");
+        Label titleText = new Label(book.getTitle() != null ? book.getTitle() : "Không có tiêu đề");
         titleText.getStyleClass().add("title");
-        titleText.setWrappingWidth(180);
+        titleText.setMaxWidth(180);
         titleText.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
 
@@ -164,9 +164,9 @@ public class HomePageScreenController {
         if (book.getAuthors() != null && book.getAuthors().length > 0) {
             authorsDisplay = String.join(", ", book.getAuthors());
         }
-        Text authorText = new Text("Tác giả: " + authorsDisplay);
+        Label authorText = new Label("Tác giả: " + authorsDisplay);
         authorText.getStyleClass().add("subtitle");
-        authorText.setWrappingWidth(180);
+        authorText.setMaxWidth(180);
         authorText.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
 

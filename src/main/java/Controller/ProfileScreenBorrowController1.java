@@ -23,15 +23,19 @@ public class ProfileScreenBorrowController1 {
 
     private final BorrowRecordService borrowRecordService;
     @FXML
+    private Label Truyendangmuon;
+    @FXML
     private TableView<BookBorrowedView> borrowedBooksTable;
     @FXML
     private TableColumn<BookBorrowedView, String> bookInfoColumn;
     @FXML
-    private Label Truyendatra1;
+    private Label Truyendatra;
     @FXML
-    private Label Thongtinchung1;
+    private Label Thongtinchung;
     @FXML
-    private Label nameLabel1;
+    private Label nameLabel;
+
+
 
     /**
      * Khởi tạo controller. Khởi tạo BorrowRecordService.
@@ -53,13 +57,15 @@ public class ProfileScreenBorrowController1 {
         bookInfoColumn.setCellValueFactory(new PropertyValueFactory<>("display"));
 
         // Xử lý chuyển scene
-        Truyendatra1.setOnMouseClicked(event ->
+        Truyendatra.setOnMouseClicked(event ->
                 SceneController.getInstance().switchCenterContent("/fxml/ProfileSceneBorrow2.fxml")
         );
 
-        Thongtinchung1.setOnMouseClicked(event ->
+        Thongtinchung.setOnMouseClicked(event ->
                 SceneController.getInstance().switchCenterContent("/fxml/ProfileScene.fxml")
         );
+
+        Truyendangmuon.setOnMouseClicked(event -> SceneController.getInstance().switchToScene("/fxml/ProfileSceneBorrow1.fxml"));
 
         // Load dữ liệu sách đang mượn
         loadBorrowedBooks();
@@ -75,7 +81,7 @@ public class ProfileScreenBorrowController1 {
         loadUserTask.setOnSucceeded(event -> {
             User user = loadUserTask.getValue();
             if (user != null) {
-                nameLabel1.setText(user.getUsername());
+                nameLabel.setText(user.getUsername());
             }
         });
 

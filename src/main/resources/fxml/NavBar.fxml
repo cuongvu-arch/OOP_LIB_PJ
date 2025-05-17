@@ -12,12 +12,12 @@
         <Image smooth="true" url="@../image/logo.png" />
     </image>
 </ImageView>
-    <Label onMouseClicked="#searching" prefHeight="94.0" prefWidth="170.0" styleClass="nav-item" text="Tìm kiếm nâng cao" />
-    <Label onMouseClicked="#profile" prefHeight="77.0" prefWidth="82.0" styleClass="nav-item" text="Cá nhân" />
-    <Label onMouseClicked="#follow" prefHeight="81.0" prefWidth="159.0" styleClass="nav-item" text="Sách đang mượn" />
-    <Label onMouseClicked="#history" prefHeight="66.0" prefWidth="76.0" styleClass="nav-item" text="Lịch sử" />
-    <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" onMouseClicked="#logOut" prefHeight="65.0" prefWidth="102.0" styleClass="nav-item" text="Đăng xuất" />
-    <Label fx:id="adminFunctionText" onMouseClicked="#ToAdminScene" prefHeight="50.0" prefWidth="86.0" styleClass="nav-item" text="Thủ thư" />
+    <Label onMouseClicked="#searching" prefHeight="94.0" prefWidth="170.0" styleClass="nav-item" text="Tìm Kiếm Nâng Cao" />
+    <Label onMouseClicked="#profile" prefHeight="78.0" prefWidth="94.0" styleClass="nav-item" text="Cá Nhân" />
+    <Label onMouseClicked="#follow" prefHeight="81.0" prefWidth="159.0" styleClass="nav-item" text="Sách Đang Mượn" />
+    <Label onMouseClicked="#history" prefHeight="66.0" prefWidth="76.0" styleClass="nav-item" text="Lịch Sử" />
+    <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" onMouseClicked="#logOut" prefHeight="65.0" prefWidth="102.0" styleClass="nav-item" text="Đăng Xuất" />
+    <Label fx:id="adminFunctionText" onMouseClicked="#ToAdminScene" prefHeight="50.0" prefWidth="86.0" styleClass="nav-item" text="Thủ Thư" />
     <!-- Spacer to push button to right -->
     <HBox fx:id="spacer" HBox.hgrow="ALWAYS" />
 

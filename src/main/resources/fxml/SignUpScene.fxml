@@ -20,7 +20,7 @@
     </stylesheets>
 
     <center>
-        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 40; -fx-background-color: white;">
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 40; -fx-background-color: #DCE1C8;">
             <Label style="-fx-font-size: 28px;" styleClass="title" text="Đăng ký tài khoản"/>
             <GridPane alignment="CENTER" hgap="15" vgap="15">
                 <columnConstraints>

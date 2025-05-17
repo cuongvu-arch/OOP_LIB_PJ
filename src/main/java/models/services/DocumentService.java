@@ -88,24 +88,7 @@ public class DocumentService {
             } catch (Exception e) {
                 System.err.println("Lỗi Google Books API: " + e.getMessage());
             }
-        } else if (fetchedDoc != null && isAdmin) {
-            // Nếu sách tồn tại trong DB và là admin, cập nhật thông tin từ Google Books API
-            try {
-                Document apiDoc = GoogleBooksAPIService.fetchBookInfo(isbn);
-                if (apiDoc != null) {
-                    fetchedDoc.setTitle(apiDoc.getTitle() != null ? apiDoc.getTitle() : fetchedDoc.getTitle());
-                    fetchedDoc.setAuthors(apiDoc.getAuthors() != null ? apiDoc.getAuthors() : fetchedDoc.getAuthors());
-                    fetchedDoc.setPublisher(apiDoc.getPublisher() != null ? apiDoc.getPublisher() : fetchedDoc.getPublisher());
-                    fetchedDoc.setPublishedDate(apiDoc.getPublishedDate() != null ? apiDoc.getPublishedDate() : fetchedDoc.getPublishedDate());
-                    fetchedDoc.setDescription(apiDoc.getDescription() != null ? apiDoc.getDescription() : fetchedDoc.getDescription());
-                    fetchedDoc.setThumbnailUrl(apiDoc.getThumbnailUrl() != null ? apiDoc.getThumbnailUrl() : fetchedDoc.getThumbnailUrl());
-                    fetchedDoc.setGoogleBooksUrl(apiDoc.getGoogleBooksUrl() != null ? apiDoc.getGoogleBooksUrl() : "https://books.google.com/books?isbn=" + isbn);
-                }
-            } catch (Exception e) {
-                System.err.println("Lỗi Google Books API: " + e.getMessage());
-            }
         }
-
         System.out.println("Tìm kiếm ISBN '" + isbn + "' -> Kết quả: " + (fetchedDoc != null ? fetchedDoc.getTitle() : "null"));
         return fetchedDoc;
     }

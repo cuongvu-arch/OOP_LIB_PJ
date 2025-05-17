@@ -6,11 +6,11 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HistoryScreenController">
+<BorderPane styleClass="outer-pane" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HistoryScreenController">
     <center>
         <VBox alignment="TOP_CENTER" spacing="20" style="-fx-padding: 30;">
 
-            <VBox maxWidth="838.0" prefHeight="522.0" prefWidth="838.0" spacing="15" style="-fx-background-color: #f4f4f4; -fx-background-radius: 8; -fx-padding: 20;" styleClass="card">
+            <VBox maxWidth="838.0" prefHeight="522.0" prefWidth="838.0" spacing="15" style="-fx-background-color: #DCE1C8; -fx-background-radius: 8; -fx-padding: 20;" styleClass="card">
                 <Label style="-fx-font-size: 14px; -fx-text-fill: #666;" text="Trang chủ &gt;&gt; Lịch sử" />
                 <Label style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Lịch sử mượn sách và trả sách" />
 

@@ -6,7 +6,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import models.dao.BorrowRecordDAO;
 import models.data.DatabaseConnection;
 import models.entities.BorrowedBookInfo;
 import models.entities.User;
@@ -22,16 +21,17 @@ import java.util.List;
 public class ProfileScreenBorrowController2 {
 
     private final BorrowRecordService borrowRecordService;
+    public Label Truyendatra;
     @FXML
     private TableView<BookBorrowedView> borrowedBooksTable2;
     @FXML
     private TableColumn<BookBorrowedView, String> bookInfoColumn2;
     @FXML
-    private Label Truyendangmuon2;
+    private Label Truyendangmuon;
     @FXML
-    private Label Thongtinchung2;
+    private Label Thongtinchung;
     @FXML
-    private Label nameLabel2;
+    private Label nameLabel;
 
     /**
      * Constructor khởi tạo service để truy xuất dữ liệu mượn trả.
@@ -51,13 +51,15 @@ public class ProfileScreenBorrowController2 {
         bookInfoColumn2.setCellValueFactory(new PropertyValueFactory<>("display"));
 
         // Chuyển trang
-        Truyendangmuon2.setOnMouseClicked(event ->
+        Truyendangmuon.setOnMouseClicked(event ->
                 SceneController.getInstance().switchCenterContent("/fxml/ProfileSceneBorrow1.fxml")
         );
 
-        Thongtinchung2.setOnMouseClicked(event ->
+        Thongtinchung.setOnMouseClicked(event ->
                 SceneController.getInstance().switchCenterContent("/fxml/ProfileScene.fxml")
         );
+
+        Truyendatra.setOnMouseClicked(event -> SceneController.getInstance().switchCenterContent("/fxml/ProfileSceneBorrow2.fxml"));
 
         // Load user + dữ liệu sách đã trả
         Task<User> loadUserTask = new Task<>() {
@@ -70,7 +72,7 @@ public class ProfileScreenBorrowController2 {
         loadUserTask.setOnSucceeded(event -> {
             User user = loadUserTask.getValue();
             if (user != null) {
-                nameLabel2.setText(user.getUsername());
+                nameLabel.setText(user.getUsername());
                 loadReturnedBooks(user.getId());
             }
         });
