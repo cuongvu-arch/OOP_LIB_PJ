@@ -1,5 +1,7 @@
 package Controller;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.BorderPane;
 import models.entities.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -10,10 +12,15 @@ import utils.AlertUtils;
 import utils.SceneController;
 import utils.SessionManager;
 
+import java.io.IOException;
+
 
 public class LoginScreenController {
 
     private final UserService userService;
+
+    @FXML
+    private BorderPane rootPane;
 
     @FXML
     private TextField username;
@@ -59,7 +66,17 @@ public class LoginScreenController {
      * Xử lý khi người dùng nhấn nút "Đăng ký".
      * Chuyển sang giao diện đăng ký tài khoản.
      */
+    @FXML
     public void signUp() {
-        SceneController.getInstance().switchToScene("/fxml/SignUpScene.fxml");
+        switchToSignUp();
+    }
+
+    private void switchToSignUp() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SignUpScene.fxml"));
+            rootPane.setRight(loader.load());
+        } catch (IOException e) {
+            System.err.println("Error loading SignUpScene.fxml: " + e.getMessage());
+        }
     }
 }
