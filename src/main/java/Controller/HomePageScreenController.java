@@ -155,7 +155,7 @@ public class HomePageScreenController {
         }
 
         Text titleText = new Text(book.getTitle() != null ? book.getTitle() : "Không có tiêu đề");
-        titleText.getStyleClass().add("book-title-home");
+        titleText.getStyleClass().add("title");
         titleText.setWrappingWidth(180);
         titleText.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
@@ -165,7 +165,7 @@ public class HomePageScreenController {
             authorsDisplay = String.join(", ", book.getAuthors());
         }
         Text authorText = new Text("Tác giả: " + authorsDisplay);
-        authorText.getStyleClass().add("book-author-home");
+        authorText.getStyleClass().add("subtitle");
         authorText.setWrappingWidth(180);
         authorText.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
 
@@ -175,8 +175,6 @@ public class HomePageScreenController {
         bookBox.setOnMouseClicked(event -> {
             openBookDetailWindow(book);
         });
-        bookBox.setOnMouseEntered(e -> bookBox.setStyle("-fx-background-color: #e9e9e9; -fx-border-color: #cccccc; -fx-border-width: 1px; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);"));
-        bookBox.setOnMouseExited(e -> bookBox.setStyle("-fx-background-color: ffffff; -fx-border-color: e0e0e0;"));
 
 
         return bookBox;
