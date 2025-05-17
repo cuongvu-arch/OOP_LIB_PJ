@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
@@ -17,30 +16,30 @@
     <children>
         <HBox alignment="CENTER_LEFT" spacing="10.0">
             <children>
-                <Label minWidth="100" text="Tên sách:" />
+                <Label minWidth="100" prefHeight="27.0" prefWidth="135.0" styleClass="title" text="Tên sách:" />
                 <TextField fx:id="titleField" promptText="Nhập tên sách" HBox.hgrow="ALWAYS" />
             </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" spacing="10.0">
             <children>
-                <Label minWidth="100" text="Tác giả:" />
-                <TextField fx:id="authorField" promptText="Nhập tên tác giả" HBox.hgrow="ALWAYS" />
+                <Label minWidth="100" prefHeight="27.0" prefWidth="136.0" styleClass="title" text="Tác giả:" />
+                <TextField fx:id="authorField" prefHeight="30.0" prefWidth="489.0" promptText="Nhập tên tác giả" HBox.hgrow="ALWAYS" />
             </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" spacing="10.0">
             <children>
-                <Label minWidth="100" text="Ngày xuất bản:" />
+                <Label minWidth="100" prefHeight="27.0" prefWidth="135.0" styleClass="title" text="Ngày xuất bản:" />
                 <TextField fx:id="publishDateField" promptText="YYYY hoặc YYYY-MM hoặc YYYY-MM-DD" HBox.hgrow="ALWAYS" />
             </children>
         </HBox>
       <HBox alignment="CENTER_LEFT" spacing="10.0">
          <children>
-            <Label minWidth="100" text="ISBN:" />
+            <Label minWidth="100" prefHeight="27.0" prefWidth="136.0" styleClass="title" text="ISBN:" />
             <TextField fx:id="isbnField" promptText="Nhập ISBN" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
         <HBox alignment="CENTER">
-            <Button fx:id="searchButton" onAction="#handleSearchButtonClick" prefWidth="150" style="-fx-background-color: #4DB6AC; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;" text="Tìm kiếm" />
+            <Button fx:id="searchButton" onAction="#handleSearchButtonClick" prefWidth="150" styleClass="button" text="Tìm kiếm" />
         </HBox>
 
         <ScrollPane fitToWidth="true" prefViewportHeight="300" VBox.vgrow="ALWAYS">
@@ -49,7 +48,5 @@
                 </FlowPane>
             </content>
         </ScrollPane>
-
-        <TextArea fx:id="resultTextArea" editable="false" prefHeight="150" styleClass="text-area" wrapText="true" VBox.vgrow="SOMETIMES" />
     </children>
 </VBox>

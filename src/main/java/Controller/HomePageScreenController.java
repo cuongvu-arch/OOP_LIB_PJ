@@ -97,7 +97,6 @@ public class HomePageScreenController {
 
             for (Document book : books) {
                 VBox bookBox = createBookBox(book);
-                booksGrid.setStyle("pane");
                 booksGrid.add(bookBox, col, row);
 
                 col++;

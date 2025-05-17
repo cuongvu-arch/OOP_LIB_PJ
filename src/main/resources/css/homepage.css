@@ -1,5 +1,5 @@
 .book-box {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #E0F2F1;
     -fx-border-color: #e0e0e0;
     -fx-border-radius: 5;
     -fx-background-radius: 5;
@@ -40,4 +40,27 @@
 
 .page-button:disabled {
     -fx-background-color: #cccccc;
+}
+
+/* Áp dụng màu nền pastel chủ đạo cho các vùng layout */
+.pane {
+    -fx-background-color: -fx-light-color;
+}
+
+/* Các thành phần con bên trong GridPane có nền giống cha */
+.pane .label,
+.pane .button,
+.pane .text-field,
+.pane .text-area,
+.pane .combo-box,
+.pane .choice-box,
+.pane .list-view,
+.pane .scroll-pane,
+.pane .vbox,
+.pane .hbox,
+.pane .anchor-pane,
+.pane .stack-pane,
+.pane .grid-pane,
+.pane .tile-pane {
+    -fx-background-color: transparent; /* Kế thừa từ GridPane cha */
 }
